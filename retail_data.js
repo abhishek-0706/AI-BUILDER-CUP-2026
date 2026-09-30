@@ -59,10 +59,10 @@ const RETAIL_DATA = {
 
   // ── Customer Segments ────────────────────────────────────────────────────
   segments: [
-    { name:"Weekend Warriors",  pct:34, avgBasket:1240, visits:1.4, desc:"Bulk-buy on weekends, high-value baskets" },
-    { name:"Daily Top-Ups",     pct:28, avgBasket:310,  visits:5.8, desc:"Small daily purchases, highly loyal" },
-    { name:"Deal Seekers",      pct:22, avgBasket:680,  visits:2.1, desc:"Price-sensitive, respond to promotions" },
-    { name:"Convenience First", pct:16, avgBasket:890,  visits:2.9, desc:"Time-pressed, value speed & availability" },
+    { name:"Weekend Warriors",  pct:34, avgBasket:1150, visits:1.4, desc:"Bulk-buy on weekends, high-value baskets" },
+    { name:"Daily Top-Ups",     pct:28, avgBasket:330,  visits:5.8, desc:"Small daily purchases, highly loyal" },
+    { name:"Deal Seekers",      pct:22, avgBasket:620,  visits:2.1, desc:"Price-sensitive, respond to promotions" },
+    { name:"Convenience First", pct:16, avgBasket:575,  visits:2.9, desc:"Time-pressed, value speed & availability" },
   ],
 
   // ── Inventory Alerts ─────────────────────────────────────────────────────
@@ -76,7 +76,7 @@ const RETAIL_DATA = {
   // ── Promotions Active ────────────────────────────────────────────────────
   promotions: [
     { name:"Weekend Bonanza", discount:"15% off Snacks", validity:"Fri–Sun", uplift:"+22% category sales" },
-    { name:"Dairy Deal",      discount:"Buy 2 Amul, get ₹20 off", validity:"All week", uplift:"+11% dairy" },
+    { name:"Dairy Deal",      discount:"Buy 2 Hershey's Milkshake 200ml, get ₹10 off", validity:"All week", uplift:"+11% dairy" },
     { name:"Health Week",     discount:"10% off NutriChoice & Marie", validity:"Mon–Thu", uplift:"+18% packaged" },
   ],
 
@@ -106,7 +106,7 @@ const RETAIL_DATA = {
     name: "Anita Sharma", role: "Territory Sales Executive",
     territory: "Bengaluru South", employeeId: "TSE-4417",
     quotaMonth: 2400000, achievedMonth: 1812000, visitsPlanned: 22, visitsDone: 14,
-    monthDaysTotal: 30, monthDaysElapsed: 21,
+    monthDaysTotal: 31, monthDaysElapsed: 21,
   },
 
   // ── Target tracking (the "track targets" ask) ─────────────────────────────
@@ -134,9 +134,9 @@ const RETAIL_DATA = {
   // priority is computed, not hand-set: see computePriority() in index.html
   visitPlan: [
     { store:"FreshMart Express — Koramangala",  storeId:"BLR-KOR-014", account:"FreshMart Express",
-      daysSince:41, cadenceDays:6,  openTasks:4, revenueAtRisk:142000, targetGap:305000, scheduled:"2026-10-01 10:30" },
+      daysSince:41, cadenceDays:6,  openTasks:4, revenueAtRisk:142000, targetGap:305000, scheduled:"2026-10-22 10:30" },
     { store:"DailyNeeds Supermart — Jayanagar", storeId:"BLR-JAY-007", account:"DailyNeeds Supermart",
-      daysSince:13, cadenceDays:14, openTasks:2, revenueAtRisk:86000,  targetGap:238000, scheduled:"2026-10-02 14:00" },
+      daysSince:13, cadenceDays:14, openTasks:2, revenueAtRisk:86000,  targetGap:238000, scheduled:"2026-10-23 14:00" },
     { store:"FreshMart Express — HSR Layout",   storeId:"BLR-HSR-021", account:"FreshMart Express",
       daysSince:9,  cadenceDays:6,  openTasks:1, revenueAtRisk:118000, targetGap:305000, scheduled:null },
     { store:"DailyNeeds Supermart — BTM",       storeId:"BLR-BTM-033", account:"DailyNeeds Supermart",
@@ -165,8 +165,8 @@ const RETAIL_DATA = {
 
   // ── Marketing insights pushed to the rep (kills the marketing silo) ──────
   marketing: [
-    { title:"Health Week national campaign goes live 7 Oct", type:"Campaign",
-      detail:"TV and digital burst on health biscuits for 3 weeks. Expect category pull in urban modern trade. Secure end-cap space before launch, not after.",
+    { title:"Health Week national campaign goes live 3 Nov", type:"Campaign",
+      detail:"TV and digital burst on health biscuits for 3 weeks from 3 November. Expect category pull in urban modern trade. Secure end-cap space before launch, not after.",
       relevance:"Directly supports the NutriChoice 6-pack relist ask at FreshMart." },
     { title:"Flavoured milk is the fastest growing dairy sub-category", type:"Category signal",
       detail:"27% YoY growth in South India modern trade, with 200ml single-serve driving 71% of it.",
@@ -199,8 +199,8 @@ const RETAIL_DATA = {
   visits: [
     {
       id:"V-00118", accountId:"ACC-01", store:"FreshMart Express — Koramangala", storeId:"BLR-KOR-014",
-      date:"2026-10-01", time:"10:30", duration:"90 min", status:"scheduled",
-      lastVisit:"2026-08-21", daysSince:41, visitFrequency:"every 5-7 days (Index Score based)",
+      date:"2026-10-22", time:"10:30", duration:"90 min", status:"scheduled",
+      lastVisit:"2026-09-11", daysSince:41, visitFrequency:"every 5-7 days (Index Score based)",
       objective:"Recover the NutriChoice 6-pack listing and secure end-cap for Health Week",
       openTasks:[
         "Audit the dairy beverage bay against the Q4 planogram reset",
@@ -220,8 +220,8 @@ const RETAIL_DATA = {
     },
     {
       id:"V-00119", accountId:"ACC-02", store:"DailyNeeds Supermart — Jayanagar", storeId:"BLR-JAY-007",
-      date:"2026-10-02", time:"14:00", duration:"60 min", status:"scheduled",
-      lastVisit:"2026-09-18", daysSince:13, visitFrequency:"every 14 days",
+      date:"2026-10-23", time:"14:00", duration:"60 min", status:"scheduled",
+      lastVisit:"2026-10-10", daysSince:13, visitFrequency:"every 14 days",
       objective:"Arrest the -4% YoY decline, push value packs ahead of festive season",
       openTasks:["Resolve 2 short-supply complaints","Re-negotiate shelf share in Snacks bay"],
       history:{
@@ -257,28 +257,50 @@ const RETAIL_DATA = {
       fact:"Stores holding full planogram compliance in the dairy beverage bay averaged 14% higher category throughput than non-compliant stores in the same cluster." },
   ],
 
-  // Planogram spec used for compliance scoring
+  // Planogram spec used for compliance scoring.
+  // Rules follow the standard CPG retail-execution model: the 5P Picture of
+  // Success (Product, Placement, Price, Promotion, POSM) measured against the
+  // two headline industry KPIs, On-Shelf Availability and Share of Shelf.
   planogram: {
     id:"PG-Q4-2026", name:"Q4 2026 Dairy Beverages Reset — Modern Trade Urban",
     bay:"Aisle 2, Bay 4 — Flavoured Milk & Dairy Beverages",
+    standard:"PicOS 5P retail execution standard, scored on OSA and Share of Shelf",
+    // Standard modern-trade gondola: 5 shelves, named by shopper reach zone.
+    shelfLevels:"5 shelves. Shelf 1 stretch, shelf 2 eye level, shelf 3 hand level, shelf 4 stoop, shelf 5 floor",
+    sosTargetPct: 40,
+    minFacingsPerSKU: 2,
+    // Stated explicitly rather than inferred from SKU names, so the audit does
+    // not mistake our own second brand for a competitor.
+    ourBrands: ["Hershey's", "Sofit"],
     rules: [
-      { rule:"Facing count", spec:"Minimum 2 visible facings per SKU variant" },
-      { rule:"Product grouping", spec:"All variants of a brand blocked together, no cross-brand interleaving" },
-      { rule:"Price tag visibility", spec:"Every visible SKU has a clean, readable price tag aligned on the shelf edge" },
-      { rule:"Product condition", spec:"No crushed, expired or rear-faced packs; all packs front-faced" },
-      { rule:"Shelf position", spec:"Premium flavoured milk at eye level, soya and value packs on the shelf below" },
+      { code:"OSA", rule:"On-shelf availability",
+        spec:"Every must-stock SKU is physically present with at least one facing. No empty gap anywhere a must-stock SKU is planogrammed." },
+      { code:"SOS", rule:"Share of shelf",
+        spec:"Our brand block holds at least 40 percent of the visible facings in this bay, and every must-stock SKU holds at least 2 facings." },
+      { code:"PLC", rule:"Placement level",
+        spec:"Premium flavoured milk occupies eye level, shelf 2. Soya and value packs occupy hand level or below, shelf 3 to 5." },
+      { code:"BLK", rule:"Brand block integrity",
+        spec:"All variants of one brand are blocked contiguously as a vertical block, with no competitor SKU interleaved inside the block." },
+      { code:"PRC", rule:"Price compliance",
+        spec:"Every visible SKU carries a legible price tag on the shelf edge, aligned directly beneath the correct product, showing the current shelf price." },
+      { code:"PRM", rule:"Promotion execution",
+        spec:"Point-of-sale material for every active promotion in this bay is present, current, and sited with the promoted SKU." },
+      { code:"CND", rule:"Product condition",
+        spec:"All packs front-faced and undamaged. No crushed, bloated, leaking or out-of-date packs on shelf." },
     ],
+    // SKUs the planogram actually assigns to this bay. Used as the expected list
+    // for the audit, so the model is not asked to find butter on a milk shelf.
+    skuIds: ["P011","P012","P013"],
+    // Only promotions whose point-of-sale material belongs in this bay.
+    promoNames: ["Dairy Deal"],
   },
 
   // ── KPIs ─────────────────────────────────────────────────────────────────
   kpis: {
-    revenueToday: 446424,   // = Sunday in revenueWeek
     revenueTarget: 420000,
-    avgBasket: 712,         // = 446424 / 627 transactions
     conversionRate: 0.68,
     returnCustomerPct: 0.72,
     nps: 61,
-    outOfStockSKUs: 2,
     totalSKUs: 847,
   },
 };
