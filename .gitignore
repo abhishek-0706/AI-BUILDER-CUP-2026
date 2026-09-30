@@ -1,0 +1,34 @@
+# Secrets — never commit
+.env
+.env.*
+*.key
+*.pem
+service-account*.json
+credentials*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node
+node_modules/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+# Scratch
+*.log
+tmp/
+
+# Deck is being rewritten for the CPG field sales framing; the version on disk
+# still describes an earlier, broader framing, so it is held back from the repo.
+demo/RetailIQ_AI_Builder_Cup_2026.pptx
+demo/RetailIQ_AI_Builder_Cup_2026.pdf
