@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" role="img" aria-label="Brand mark">
+  <!-- Concept: "Daily loop" - an open replenishment ring around a geometric leaf, the leaf tip exiting through the gap. -->
+  <path id="loop" d="M20.83 8.94A9.4 9.4 0 1 1 15.06 3.11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  <path id="leaf" d="M7.6 16.4A9 9 0 0 1 16.4 7.6 9 9 0 0 1 7.6 16.4Z" fill="currentColor"/>
+</svg>

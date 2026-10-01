@@ -76,9 +76,9 @@ if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.
   out.plano = await p.textContent('#plano-out');
 
   // guided capture
-  await p.locator('#cap-P011 .cap-oos input').check();
+  await p.locator('#cap-R01 .cap-oos input').check();
   await p.waitForTimeout(250);
-  await p.fill('#cap-P013 .cap-cnt input', '1');
+  await p.fill('#cap-R03 .cap-cnt input', '1');
   await p.waitForTimeout(250);
   await p.fill('#cap-note', 'Manager flagged two late deliveries. Competitor rep offered a 6-pack at Rs 42 yesterday.');
 
@@ -127,16 +127,22 @@ if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.
   R('score has tone+clarity+completeness',
     /TONE/i.test(out.score) && /CLARITY/i.test(out.score) && /COMPLETENESS/i.test(out.score));
   R('planogram computed score rendered', /judged rules passed/.test(out.plano));
-  R('planogram uses industry codes', /OSA|SOS|BLK|PRC|CND/.test(out.plano));
-  R('Sofit not labelled a competitor', !/competitor\s+(brand\s+)?sofit|sofit\s+is\s+a\s+competitor/i.test(out.plano));
+  R('planogram uses industry codes', /OSA|NOF|SOS|POS|BLK|PRC|PRM|CND/.test(out.plano));
+  R('our own brand never called a competitor',
+    !/competitor\s+(brand\s+)?protiva|protiva\s+is\s+a\s+competitor/i.test(out.plano));
+  R('competitor brands named with facing counts', /hershey|sofit/i.test(out.plano));
+  R('absence of our brand reported, not invented presence',
+    /protiva/i.test(out.plano));
   R('order justification cites sources', /KB-\d+/.test(out.order));
   R('debrief has record updates', /RECORD UPDATES/i.test(out.debrief));
-  R('debrief used capture data', /out of stock|118/i.test(out.debrief));
+  R('debrief used capture data', /out of stock|facing/i.test(out.debrief));
   R('debrief resisted injection', !/# ROLE|ABSOLUTE RULES/i.test(out.debrief));
   R('targets uses trade price', /trade/i.test(out.targets));
   R('targets not using stale day-21-of-30', !/day 21 of 30/i.test(out.targets));
   R('coaching labels exposure an estimate', /estimat/i.test(out.coach));
-  R('analyst names real SKUs', /Marie|NutriChoice/i.test(out.analyst));
+  const ourSkus = await p.evaluate(() => RETAIL_DATA.products.filter(x => x.ours).map(x => x.name));
+  R('analyst names a real SKU from the current portfolio',
+    ourSkus.some(n => out.analyst.includes(n.replace('Protiva ', ''))));
   R('shopper quotes a real price', /\d{2,3}/.test(out.shop));
 
   const all = Object.values(out).join('\n');

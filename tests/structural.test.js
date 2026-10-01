@@ -51,6 +51,9 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
   T('average basket derived, not hardcoded', /₹712/.test(kpis));
   T('transaction count derived', /627 transactions/.test(kpis));
   T('KPI labelled below reorder point', /Below Reorder Point/.test(kpis));
+  const belowN = await page.evaluate(() => RETAIL_DATA.products.filter(p => p.stock <= p.reorderAt).length);
+  T(`below-reorder count derived from stock (${belowN})`,
+    kpis.replace(/\s+/g, ' ').includes('Below Reorder Point ' + belowN));
   T('no NaN or undefined in KPI strip', !/NaN|undefined/.test(kpis));
 
   console.log('\n-- segment baskets reconcile to the daily average --');
@@ -70,31 +73,42 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
   console.log('\n-- planogram is scoped to its own bay --');
   await page.click('#tab-rep'); await page.waitForTimeout(300);
   const bay = await page.evaluate(() => baySKUs().map(p => p.name));
-  T('bay holds exactly its planogrammed SKUs', bay.length === 3);
-  T('no unrelated category SKUs in the bay', !bay.some(n => /Butter|Gold Milk|Soap|Tomato/.test(n)));
+  const assigned = await page.evaluate(() => RETAIL_DATA.planogram.skuIds.length);
+  T(`bay holds exactly its ${assigned} planogrammed SKUs`, bay.length === assigned);
+  T('bay contains only chilled SKUs, no bars or salads',
+    !bay.some(n => /Bar|Salad|Bowl/.test(n)));
   T('only in-bay promotions listed', (await page.evaluate(() => bayPromos().length)) === 1);
   T('facing minimum read from the planogram', await page.evaluate(() => minFacings()) === 2);
-  T('our brands stated explicitly', (await page.evaluate(() => RETAIL_DATA.planogram.ourBrands.length)) === 2);
+  const brands = await page.evaluate(() => RETAIL_DATA.planogram);
+  T('our brands named, not inferred from SKU text', brands.ourBrands.length >= 1);
+  T('competitor brands named separately', brands.competitorBrands.length >= 1);
+  T('no brand is listed as both ours and a competitor',
+    !brands.ourBrands.some(b => brands.competitorBrands.includes(b)));
 
   console.log('\n-- capture input cannot emit nonsense into a prompt --');
   await page.click('.rep-tabs button:nth-child(4)'); await page.waitForTimeout(400);
-  await page.fill('#cap-P011 .cap-cnt input', '-5'); await page.waitForTimeout(250);
-  T('negative facings clamped to zero', await page.inputValue('#cap-P011 .cap-cnt input') === '0');
-  await page.fill('#cap-P011 .cap-cnt input', '999'); await page.waitForTimeout(250);
-  T('absurd facings clamped to 40', await page.inputValue('#cap-P011 .cap-cnt input') === '40');
-  await page.fill('#cap-P011 .cap-cnt input', ''); await page.waitForTimeout(200);
-  await page.locator('#cap-P012 .cap-oos input').check(); await page.waitForTimeout(300);
+  await page.fill('#cap-R01 .cap-cnt input', '-5'); await page.waitForTimeout(250);
+  T('negative facings clamped to zero', await page.inputValue('#cap-R01 .cap-cnt input') === '0');
+  await page.fill('#cap-R01 .cap-cnt input', '999'); await page.waitForTimeout(250);
+  T('absurd facings clamped to 40', await page.inputValue('#cap-R01 .cap-cnt input') === '40');
+  await page.fill('#cap-R01 .cap-cnt input', ''); await page.waitForTimeout(200);
+  await page.locator('#cap-R02 .cap-oos input').check(); await page.waitForTimeout(300);
   const summary = await page.evaluate(() => captureSummary());
   T('no negative count reaches the prompt', !/-\d+ facings/.test(summary));
   T('out of stock contradiction surfaced', /OUT OF STOCK/.test(summary));
 
   console.log('\n-- order reacts to what was captured in the aisle --');
   await page.click('.rep-tabs button:nth-child(5)'); await page.waitForTimeout(500);
-  const cookies = await page.locator('.order-row').filter({ hasText: 'Cookies' }).textContent();
-  T('shelf finding appears as an order driver', /out of stock on shelf/i.test(cookies));
+  const flagged = await page.locator('.order-row').filter({ hasText: 'Coffee' }).first().textContent();
+  T('shelf finding appears as an order driver', /out of stock on shelf/i.test(flagged));
   const total = await page.textContent('#order-total');
   T('order valued at trade price', /AT TRADE/.test(total));
-  T('order scoped to the rep portfolio', await page.locator('.order-row').count() <= 6);
+  const ourCount = await page.evaluate(() => RETAIL_DATA.products.filter(p => p.ours).length);
+  const lineCount = await page.locator('.order-row').count();
+  T(`order scoped to the rep portfolio, not the store assortment (${lineCount} of ${ourCount})`,
+    lineCount > 0 && lineCount <= ourCount);
+  const competitorInOrder = await page.locator('.order-row').filter({ hasText: /Hershey|Sofit/ }).count();
+  T('no competitor SKU in our order', competitorInOrder === 0);
   await page.locator('.order-row .or-qty input').first().fill('-500'); await page.waitForTimeout(400);
   T('negative quantity cannot make a negative total', !/₹-/.test(await page.textContent('#order-total')));
 
@@ -121,7 +135,8 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
   T('competitive intelligence reaches the rep prompt', /Competitive alert/.test(rc));
   T('planogram reaches the rep prompt', /PLANOGRAM FOR THIS STORE/.test(rc));
   const tc = await page.evaluate(() => targetContext());
-  T('categories reach the target prompt', /Packaged Foods/.test(tc));
+  const cats = await page.evaluate(() => RETAIL_DATA.targets.byCategory.map(c => c.cat));
+  T('every target category reaches the target prompt', cats.every(c => tc.includes(c)));
   T('trade price reaches the target prompt', /trade Rs/.test(tc));
   T('coverage exposure reaches the coaching prompt', /quota exposure/.test(await page.evaluate(() => teamContext())));
   const bc = await page.evaluate(() => bizContext());

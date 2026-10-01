@@ -1,9 +1,29 @@
-// RetailIQ — synthetic demo dataset (all values clearly labelled SYNTHETIC)
-// In production: replace with BigQuery API calls via Cloud Run backend
+// ═══════════════════════════════════════════════════════════════════════════
+// Protiva field execution data.
+//
+// Protiva is a fictional Indian CPG brand in protein bars, ready-to-drink
+// protein shakes and chilled salads. Every figure here is SYNTHETIC and
+// labelled as such. It is modelled on Indian urban modern-trade patterns so the
+// app behaves credibly, but no real store, buyer or sales figure is represented.
+//
+// The shelf footage this demo audits is real in-store video of a chilled bay
+// that Protiva is not yet listed in. Competitor brands are named only because
+// they are genuinely visible in that footage. Protiva therefore holds zero
+// facings in the bay today, the Q4 reset assigns it 13, and closing that gap is
+// the point of the visit. The audit reporting our absence is the correct answer,
+// not a contradiction.
+//
+// The shape of this file is mirrored by gcp/schema.sql, so pointing the app at
+// BigQuery is a swap, not a rewrite.
+// ═══════════════════════════════════════════════════════════════════════════
 
 const RETAIL_DATA = {
 
-  // ── Store & Brand ──────────────────────────────────────────────────────────
+  brand: {
+    name: "Protiva",
+    positioning: "Everyday protein nutrition for Indian households, sold through modern trade.",
+  },
+
   store: {
     name: "FreshMart Express — Koramangala",
     city: "Bengaluru",
@@ -14,28 +34,34 @@ const RETAIL_DATA = {
     openDate: "2021-03-15",
   },
 
-  // ── Categories & Products ─────────────────────────────────────────────────
-  categories: ["Dairy & Eggs", "Snacks & Beverages", "Fresh Produce", "Packaged Foods", "Personal Care"],
+  categories: ["Protein Bars", "RTD Protein Shakes", "Chilled Salads"],
 
+  // protein and addedSugar are on-pack specs, and are what this category
+  // actually sells on, so they are available to the pitch and order prompts.
   products: [
-    { id:"P001", name:"Amul Gold Milk 1L",       cat:"Dairy & Eggs",        price:68,  stock:142, reorderAt:40, unitsSoldLast30d:1240, margin:0.09, trending:true, ours:false },
-    { id:"P002", name:"Lay's Classic Salted 90g", cat:"Snacks & Beverages",  price:20,  stock:88,  reorderAt:30, unitsSoldLast30d:890,  margin:0.22, trending:false, ours:false },
-    { id:"P003", name:"Tropicana Orange 1L",      cat:"Snacks & Beverages",  price:130, stock:34,  reorderAt:25, unitsSoldLast30d:410,  margin:0.18, trending:false, ours:false },
-    { id:"P004", name:"Britannia NutriChoice",    cat:"Packaged Foods",      price:45,  stock:12,  reorderAt:20, unitsSoldLast30d:670,  margin:0.20, trending:true, ours:true },
-    { id:"P005", name:"Dove Soap 100g",           cat:"Personal Care",       price:60,  stock:56,  reorderAt:15, unitsSoldLast30d:320,  margin:0.28, trending:false, ours:false },
-    { id:"P006", name:"Farm Fresh Tomatoes 1kg",  cat:"Fresh Produce",       price:40,  stock:95,  reorderAt:30, unitsSoldLast30d:1100, margin:0.15, trending:true, ours:false },
-    { id:"P007", name:"Haldiram Bhujia 400g",     cat:"Snacks & Beverages",  price:110, stock:67,  reorderAt:20, unitsSoldLast30d:540,  margin:0.21, trending:false, ours:false },
-    { id:"P008", name:"Nescafe Classic 200g",     cat:"Packaged Foods",      price:395, stock:28,  reorderAt:15, unitsSoldLast30d:190,  margin:0.25, trending:true, ours:true },
-    { id:"P009", name:"Amul Butter 500g",         cat:"Dairy & Eggs",        price:275, stock:41,  reorderAt:20, unitsSoldLast30d:380,  margin:0.11, trending:false, ours:false },
-    { id:"P010", name:"Sunfeast Marie Light",     cat:"Packaged Foods",      price:30,  stock:8,   reorderAt:25, unitsSoldLast30d:820,  margin:0.19, trending:false, ours:true },
-    { id:"P011", name:"Hershey's Milkshake Vanilla 200ml", cat:"Dairy & Eggs", price:45, stock:118, reorderAt:40, unitsSoldLast30d:960,  margin:0.24, trending:true, ours:true },
-    { id:"P012", name:"Hershey's Milkshake Cookies 200ml", cat:"Dairy & Eggs", price:45, stock:74,  reorderAt:40, unitsSoldLast30d:710,  margin:0.24, trending:true, ours:true },
-    { id:"P013", name:"Sofit Soya Almond 200ml",  cat:"Dairy & Eggs",        price:35,  stock:62,  reorderAt:30, unitsSoldLast30d:480,  margin:0.26, trending:false, ours:true },
+    { id:"B01", name:"Protiva Oats and Nut Bar",               cat:"Protein Bars",       pack:"40g",   price:45,  stock:110, reorderAt:50, unitsSoldLast30d:960, margin:0.26, protein:8,  addedSugar:4, trending:false, ours:true },
+    { id:"B02", name:"Protiva Protein Bar Peanut Jaggery",     cat:"Protein Bars",       pack:"45g",   price:55,  stock:84,  reorderAt:40, unitsSoldLast30d:740, margin:0.24, protein:10, addedSugar:5, trending:false, ours:true },
+    { id:"B03", name:"Protiva Protein Bar Choco Almond",       cat:"Protein Bars",       pack:"45g",   price:60,  stock:96,  reorderAt:40, unitsSoldLast30d:820, margin:0.24, protein:12, addedSugar:5, trending:true,  ours:true },
+    { id:"B04", name:"Protiva Protein Bar Coffee Cocoa",       cat:"Protein Bars",       pack:"45g",   price:65,  stock:52,  reorderAt:30, unitsSoldLast30d:410, margin:0.23, protein:12, addedSugar:4, trending:true,  ours:true },
+
+    { id:"R01", name:"Protiva Protein Shake Chocolate",        cat:"RTD Protein Shakes", pack:"200ml", price:70,  stock:64,  reorderAt:36, unitsSoldLast30d:520, margin:0.22, protein:20, addedSugar:3, trending:true,  ours:true },
+    { id:"R02", name:"Protiva Protein Shake Coffee",           cat:"RTD Protein Shakes", pack:"200ml", price:75,  stock:48,  reorderAt:30, unitsSoldLast30d:430, margin:0.22, protein:20, addedSugar:3, trending:true,  ours:true },
+    { id:"R03", name:"Protiva Protein Shake Vanilla",          cat:"RTD Protein Shakes", pack:"200ml", price:70,  stock:28,  reorderAt:30, unitsSoldLast30d:310, margin:0.21, protein:20, addedSugar:4, trending:false, ours:true },
+    { id:"R04", name:"Protiva High Protein Shake 30g",         cat:"RTD Protein Shakes", pack:"330ml", price:125, stock:26,  reorderAt:18, unitsSoldLast30d:180, margin:0.20, protein:30, addedSugar:2, trending:false, ours:true },
+
+    { id:"S01", name:"Protiva Chickpea and Quinoa Salad Bowl", cat:"Chilled Salads",     pack:"200g",  price:149, stock:7,   reorderAt:8,  unitsSoldLast30d:88,  margin:0.30, protein:18, addedSugar:0, trending:false, ours:true, shelfLifeDays:4 },
+    { id:"S02", name:"Protiva Paneer Tikka Protein Salad",     cat:"Chilled Salads",     pack:"200g",  price:179, stock:14,  reorderAt:10, unitsSoldLast30d:124, margin:0.28, protein:22, addedSugar:0, trending:true,  ours:true, shelfLifeDays:4 },
+    { id:"S03", name:"Protiva Chicken Caesar Protein Salad",   cat:"Chilled Salads",     pack:"220g",  price:199, stock:11,  reorderAt:8,  unitsSoldLast30d:96,  margin:0.28, protein:26, addedSugar:0, trending:true,  ours:true, shelfLifeDays:4 },
+
+    // Competitors holding the chilled bay. Named only because they are visible
+    // in the real shelf footage, which is what makes share of shelf measurable.
+    { id:"C01", name:"Hershey's Milkshake 200ml", cat:"RTD Protein Shakes", pack:"200ml", price:45, stock:186, reorderAt:60, unitsSoldLast30d:960, margin:0.19, protein:5, addedSugar:21, trending:false, ours:false },
+    { id:"C02", name:"Sofit Soya 200ml",          cat:"RTD Protein Shakes", pack:"200ml", price:55, stock:118, reorderAt:40, unitsSoldLast30d:540, margin:0.20, protein:7, addedSugar:12, trending:false, ours:false },
   ],
 
-  // ── Revenue (last 7 days, daily totals in ₹) ────────────────────────────
-  // revenue = transactions x that day's average basket, so the KPI tiles below
-  // derive from this table rather than contradicting it.
+  // Store performance for the manager surface. revenue = transactions x that
+  // day's average basket, so the KPI tiles derive from this rather than
+  // contradicting it.
   revenueWeek: [
     { day:"Mon", revenue:212160, transactions:312 },
     { day:"Tue", revenue:184870, transactions:278 },
@@ -46,7 +72,6 @@ const RETAIL_DATA = {
     { day:"Sun", revenue:446424, transactions:627 },
   ],
 
-  // ── Demand Forecast (next 7 days) ────────────────────────────────────────
   forecast: [
     { day:"Mon", predicted:208000, lower:186000, upper:230000 },
     { day:"Tue", predicted:195000, lower:174000, upper:216000 },
@@ -57,50 +82,41 @@ const RETAIL_DATA = {
     { day:"Sun", predicted:444000, lower:401000, upper:487000 },
   ],
 
-  // ── Customer Segments ────────────────────────────────────────────────────
+  // Share-weighted mean of avgBasket equals the actual daily average basket.
   segments: [
-    { name:"Weekend Warriors",  pct:34, avgBasket:1150, visits:1.4, desc:"Bulk-buy on weekends, high-value baskets" },
-    { name:"Daily Top-Ups",     pct:28, avgBasket:330,  visits:5.8, desc:"Small daily purchases, highly loyal" },
-    { name:"Deal Seekers",      pct:22, avgBasket:620,  visits:2.1, desc:"Price-sensitive, respond to promotions" },
-    { name:"Convenience First", pct:16, avgBasket:575,  visits:2.9, desc:"Time-pressed, value speed & availability" },
+    { name:"Weekend Stock-Up", pct:34, avgBasket:1150, visits:1.4, desc:"Bulk weekend trips, high-value baskets" },
+    { name:"Daily Top-Ups",    pct:28, avgBasket:330,  visits:5.8, desc:"Small daily purchases, highly loyal" },
+    { name:"Deal Seekers",     pct:22, avgBasket:620,  visits:2.1, desc:"Price-sensitive, respond to promotions" },
+    { name:"Grab and Go",      pct:16, avgBasket:575,  visits:2.9, desc:"Single-serve immediate consumption" },
   ],
 
-  // ── Inventory Alerts ─────────────────────────────────────────────────────
   alerts: [
-    { product:"Sunfeast Marie Light",     level:"critical", stock:8,  reorderAt:25, action:"Reorder 200 units TODAY" },
-    { product:"Britannia NutriChoice",    level:"critical", stock:12, reorderAt:20, action:"Reorder 150 units TODAY" },
-    { product:"Tropicana Orange 1L",      level:"warning",  stock:34, reorderAt:25, action:"Reorder within 2 days" },
-    { product:"Nescafe Classic 200g",     level:"warning",  stock:28, reorderAt:15, action:"Monitor — trending up" },
+    { product:"Protiva Chickpea and Quinoa Salad Bowl", level:"critical", stock:7,  reorderAt:8,  action:"Daily drop required, 4-day shelf life" },
+    { product:"Protiva Protein Shake Vanilla",          level:"critical", stock:28, reorderAt:30, action:"Reorder 240 units today" },
+    { product:"Protiva Chicken Caesar Protein Salad",   level:"warning",  stock:11, reorderAt:8,  action:"Two days of cover, watch shrink" },
+    { product:"Protiva High Protein Shake 30g",         level:"warning",  stock:26, reorderAt:18, action:"Furthest behind on must-win target" },
   ],
 
-  // ── Promotions Active ────────────────────────────────────────────────────
   promotions: [
-    { name:"Weekend Bonanza", discount:"15% off Snacks", validity:"Fri–Sun", uplift:"+22% category sales", skuIds:["P002","P007"] },
-    { name:"Dairy Deal",      discount:"Buy 2 Hershey's Milkshake 200ml, get ₹10 off", validity:"All week", uplift:"+11% dairy", skuIds:["P011","P012"] },
-    { name:"Health Week",     discount:"10% off NutriChoice & Marie", validity:"Mon–Thu", uplift:"+18% packaged", skuIds:["P004","P010"] },
+    { name:"Protein Pledge Bundle", discount:"Buy 1 bar with 1 shake, save ₹20", validity:"3 Nov to 30 Nov", uplift:"+23% units, +41% basket value", skuIds:["B01","B02","B03","B04","R01","R02"] },
+    { name:"Choco Almond Offer",    discount:"10% off Choco Almond bar",          validity:"All month",       uplift:"+9% units",                      skuIds:["B03"] },
+    { name:"Salad Fresh Hour",      discount:"₹20 off chilled salads before 6pm", validity:"Daily",           uplift:"shrink 6.1% down to 2.4%",       skuIds:["S01","S02","S03"] },
   ],
 
-  // ── Shopper Persona Catalogue (for conversational assistant) ─────────────
   shopperProfiles: [
-    {
-      id:"S1", name:"Priya", age:32, role:"Software Engineer",
-      preferences:["organic", "low-sugar", "quick meals"],
-      recentBuys:["Farm Fresh Tomatoes", "Amul Gold Milk", "Nescafe Classic"],
-      basket:["Amul Gold Milk 1L", "Farm Fresh Tomatoes 1kg"],
-    },
-    {
-      id:"S2", name:"Rahul", age:45, role:"Business Owner",
-      preferences:["bulk", "value packs", "household staples"],
-      recentBuys:["Amul Butter 500g", "Haldiram Bhujia 400g", "Sunfeast Marie Light"],
-      basket:[],
-    },
-    {
-      id:"S3", name:"Guest Shopper", age:null, role:null,
-      preferences:[], recentBuys:[], basket:[],
-    },
+    { id:"S1", name:"Priya", age:32, role:"Software Engineer",
+      preferences:["high protein","low added sugar","quick breakfast"],
+      recentBuys:["Protiva Protein Shake Chocolate","Protiva Protein Bar Choco Almond"],
+      basket:["Protiva Protein Shake Chocolate"] },
+    { id:"S2", name:"Rahul", age:45, role:"Gym Owner",
+      preferences:["bulk","most protein per rupee","value packs"],
+      recentBuys:["Protiva High Protein Shake 30g","Protiva Oats and Nut Bar"],
+      basket:[] },
+    { id:"S3", name:"Guest Shopper", age:null, role:null,
+      preferences:[], recentBuys:[], basket:[] },
   ],
 
-  // ══ SALES REP SURFACE ═════════════════════════════════════════════════════
+  // ══ FIELD REP ════════════════════════════════════════════════════════════
 
   rep: {
     name: "Anita Sharma", role: "Territory Sales Executive",
@@ -109,112 +125,62 @@ const RETAIL_DATA = {
     monthDaysTotal: 31, monthDaysElapsed: 22,
   },
 
-  // ── Target tracking (the "track targets" ask) ─────────────────────────────
   targets: {
     period: "October 2026",
     byAccount: [
-      { account:"FreshMart Express",   target:1400000, achieved:1095000 },
+      { account:"FreshMart Express",    target:1400000, achieved:1095000 },
       { account:"DailyNeeds Supermart", target:700000,  achieved:462000  },
       { account:"General Trade (misc)", target:300000,  achieved:255000  },
     ],
     byCategory: [
-      { cat:"Dairy & Eggs",       target:820000, achieved:698000, focus:true  },
-      { cat:"Packaged Foods",     target:640000, achieved:401000, focus:true  },
-      { cat:"Snacks & Beverages", target:560000, achieved:480000, focus:false },
-      { cat:"Personal Care",      target:380000, achieved:233000, focus:false },
+      { cat:"Protein Bars",       target:900000, achieved:760000, focus:true  },
+      { cat:"RTD Protein Shakes", target:820000, achieved:520000, focus:true  },
+      { cat:"Chilled Salads",     target:430000, achieved:352000, focus:false },
+      { cat:"Trade Promotions",   target:250000, achieved:180000, focus:false },
     ],
     mustWinSKUs: [
-      { name:"Britannia NutriChoice",            target:900, achieved:512 },
-      { name:"Hershey's Milkshake Vanilla 200ml", target:1200, achieved:1104 },
-      { name:"Nescafe Classic 200g",             target:400, achieved:191 },
+      { name:"Protiva Protein Shake Chocolate",    target:650, achieved:520 },
+      { name:"Protiva High Protein Shake 30g",     target:400, achieved:180 },
+      { name:"Protiva Paneer Tikka Protein Salad", target:140, achieved:124 },
     ],
   },
 
-  // ── Visit plan (the "schedule visits" ask) ────────────────────────────────
-  // priority is computed, not hand-set: see computePriority() in index.html
-  visitPlan: [
-    { store:"FreshMart Express — Koramangala",  storeId:"BLR-KOR-014", account:"FreshMart Express",
-      daysSince:41, cadenceDays:6,  openTasks:4, revenueAtRisk:142000, targetGap:305000, scheduled:"2026-10-22 10:30" },
-    { store:"DailyNeeds Supermart — Jayanagar", storeId:"BLR-JAY-007", account:"DailyNeeds Supermart",
-      daysSince:13, cadenceDays:14, openTasks:2, revenueAtRisk:86000,  targetGap:238000, scheduled:"2026-10-23 14:00" },
-    { store:"FreshMart Express — HSR Layout",   storeId:"BLR-HSR-021", account:"FreshMart Express",
-      daysSince:9,  cadenceDays:6,  openTasks:1, revenueAtRisk:118000, targetGap:305000, scheduled:null },
-    { store:"DailyNeeds Supermart — BTM",       storeId:"BLR-BTM-033", account:"DailyNeeds Supermart",
-      daysSince:22, cadenceDays:14, openTasks:3, revenueAtRisk:74000,  targetGap:238000, scheduled:null },
-    { store:"FreshMart Express — Indiranagar",  storeId:"BLR-IND-008", account:"FreshMart Express",
-      daysSince:4,  cadenceDays:6,  openTasks:0, revenueAtRisk:96000,  targetGap:305000, scheduled:null },
-    { store:"DailyNeeds Supermart — Banashankari", storeId:"BLR-BAN-019", account:"DailyNeeds Supermart",
-      daysSince:31, cadenceDays:14, openTasks:2, revenueAtRisk:58000,  targetGap:238000, scheduled:null },
-  ],
-
-  // ── Manager view: the team (rep-wise performance + coverage + coaching) ──
-  team: [
-    { name:"Anita Sharma",   territory:"Bengaluru South", quota:2400000, achieved:1812000,
-      visitsPlanned:22, visitsDone:14, outletsCovered:18, outletsTotal:24,
-      avgPitchScore:71, rehearsalsDone:9, complianceRate:0.82, strikeRate:0.58 },
-    { name:"Rohit Menon",    territory:"Bengaluru East",  quota:2200000, achieved:2046000,
-      visitsPlanned:20, visitsDone:19, outletsCovered:21, outletsTotal:22,
-      avgPitchScore:84, rehearsalsDone:16, complianceRate:0.91, strikeRate:0.72 },
-    { name:"Kavya Reddy",    territory:"Bengaluru North", quota:2000000, achieved:1180000,
-      visitsPlanned:20, visitsDone:11, outletsCovered:12, outletsTotal:23,
-      avgPitchScore:54, rehearsalsDone:2,  complianceRate:0.64, strikeRate:0.39 },
-    { name:"Imran Qureshi",  territory:"Bengaluru West",  quota:2100000, achieved:1743000,
-      visitsPlanned:21, visitsDone:16, outletsCovered:17, outletsTotal:21,
-      avgPitchScore:68, rehearsalsDone:7,  complianceRate:0.79, strikeRate:0.55 },
-  ],
-
-  // ── Marketing insights pushed to the rep (kills the marketing silo) ──────
-  marketing: [
-    { title:"Health Week national campaign goes live 3 Nov", type:"Campaign",
-      detail:"TV and digital burst on health biscuits for 3 weeks from 3 November. Expect category pull in urban modern trade. Secure end-cap space before launch, not after.",
-      relevance:"Directly supports the NutriChoice 6-pack relist ask at FreshMart." },
-    { title:"Flavoured milk is the fastest growing dairy sub-category", type:"Category signal",
-      detail:"27% YoY growth in South India modern trade, with 200ml single-serve driving 71% of it.",
-      relevance:"Use in the dairy beverage bay conversation. Supports a facings increase ask." },
-    { title:"Competitor launched a 6-pack at Rs 42 in Bengaluru", type:"Competitive alert",
-      detail:"Priced 7% below our 6-pack. Early listing seen in 4 modern trade chains, not yet at FreshMart.",
-      relevance:"Pre-empt at FreshMart. Lead with the 20% margin and Q4 rebate, not with price." },
-    { title:"Shopper search demand: 'low sugar' up 34% in app queries", type:"Consumer signal",
-      detail:"Derived from the shopper assistant's own query logs across the territory over 30 days.",
-      relevance:"Evidence that health positioning is pulling, not just being pushed." },
-  ],
-
-  // Retail accounts the rep sells INTO (we are the brand/CPG side)
   accounts: [
     {
       id:"ACC-01", name:"FreshMart Express", type:"Modern Trade — Urban Grocery",
       stores:14, tier:"Platinum", relationship:"7 years",
       ytdValue:18400000, growthYoY:0.12,
-      contact:{ name:"Vikram Rao", role:"Category Buyer — Packaged Foods", style:"Data-driven, margin-focused, time-pressed" },
+      contact:{ name:"Vikram Rao", role:"Category Buyer — Chilled and Packaged Foods",
+        style:"Arrives with his own numbers, trades facings only against proven throughput per facing, and ends the meeting at the stated time whether or not you are finished" },
     },
     {
       id:"ACC-02", name:"DailyNeeds Supermart", type:"Modern Trade — Value Format",
       stores:31, tier:"Gold", relationship:"3 years",
       ytdValue:9200000, growthYoY:-0.04,
-      contact:{ name:"Meera Iyer", role:"Regional Merchandising Head", style:"Price-sensitive, wants promo support, sceptical of new SKUs" },
+      contact:{ name:"Meera Iyer", role:"Regional Merchandising Head",
+        style:"Opens on price and promo funding, benchmarks every ask against her private label, and will not discuss range before she has a fill-rate answer" },
     },
   ],
 
-  // Specific store visits on the rep's plan
   visits: [
     {
       id:"V-00118", accountId:"ACC-01", store:"FreshMart Express — Koramangala", storeId:"BLR-KOR-014",
       date:"2026-10-22", time:"10:30", duration:"90 min", status:"scheduled",
       lastVisit:"2026-09-11", daysSince:41, visitFrequency:"every 5-7 days (Index Score based)",
-      objective:"Recover the NutriChoice 6-pack listing and secure end-cap for Health Week",
+      objective:"Get the Q4 reset executed in the chilled bay. Protiva is listed for 13 facings and currently has none on shelf.",
       openTasks:[
-        "Audit the dairy beverage bay against the Q4 planogram reset",
-        "Close pending audit on 4 assets (chillers BLR-KOR-014-C1 to C4)",
-        "Collect signed planogram acknowledgement for Q4 reset",
-        "Present Nescafe Classic 200g margin case",
+        "Audit the chilled protein bay against the Q4 planogram reset",
+        "Establish the first Protiva facings in the chilled bay",
+        "Resolve 18 salad write-offs raised last visit",
+        "Present the cost per gram of protein case against Hershey's and Sofit",
       ],
       history:{
-        lastOrderValue:142000, ordersLast6m:7, avgOrderValue:128000,
-        listingsLost:["Britannia NutriChoice 6-pack (delisted Jul 2026)"],
+        lastOrderValue:58000, ordersLast6m:29, avgOrderValue:52000,
+        listingsLost:["Chilled bay reset agreed in Q4 but never executed, Protiva at 0 of 13 assigned facings"],
         pastObjections:[
-          "Your NutriChoice 6-pack moved 40% slower than the single pack last quarter, why should I relist it?",
-          "Nescafe at Rs 395 is Rs 20 above the competing SKU and my margin is thinner.",
-          "I only have one end-cap free and three brands are asking for it.",
+          "Your 330ml shake sits at Rs 125 next to a Hershey's milkshake at Rs 45, and it moved 180 units last month against 960 for the Hershey's vanilla. Tell me why it earns a facing at all.",
+          "You want 13 of the 44 facings in that bay, so 30 percent, for a brand that has never held a facing in it. Name the SKU I pull to pay for it.",
+          "Your Chicken Caesar is Rs 199 on a four-day life and I wrote off 18 salad packs last month. A 28 percent margin does not survive that shrink, so your real margin is closer to 22.",
         ],
       },
     },
@@ -222,80 +188,137 @@ const RETAIL_DATA = {
       id:"V-00119", accountId:"ACC-02", store:"DailyNeeds Supermart — Jayanagar", storeId:"BLR-JAY-007",
       date:"2026-10-23", time:"14:00", duration:"60 min", status:"scheduled",
       lastVisit:"2026-10-09", daysSince:13, visitFrequency:"every 14 days",
-      objective:"Arrest the -4% YoY decline, push value packs ahead of festive season",
-      openTasks:["Resolve 2 short-supply complaints","Re-negotiate shelf share in Snacks bay"],
+      objective:"Arrest the 4 percent YoY decline and open the RTD shake range before the Protein Pledge burst",
+      openTasks:["Close the August fill-rate complaint with the September scorecard","Re-negotiate shelf share in the bar bay"],
       history:{
-        lastOrderValue:86000, ordersLast6m:5, avgOrderValue:91000,
+        lastOrderValue:31000, ordersLast6m:16, avgOrderValue:29000,
         listingsLost:[],
         pastObjections:[
-          "Your fill rate dropped to 82% last month, I lost sales because of you.",
-          "DailyNeeds shoppers want value packs, your portfolio is premium-heavy.",
+          "Rs 60 for one 45g bar in a value format. My best-selling bar is Rs 30 and my own label is Rs 25. Where is your Rs 35 pack or your six-pack under Rs 300?",
+          "Your chilled fill rate was 86 percent in August and I had empty hooks for eleven days on a line I was promoting. I am not adding four shake SKUs until I see three clean months.",
+          "I funded 15 percent off your Choco Almond bar and got 9 percent more units. That cost me money per unit. Why would I run the same promotion again this quarter?",
         ],
       },
     },
   ],
 
-  // Knowledge base — every pitch proof point must cite one of these
-  kbDocs: [
-    { id:"KB-101", title:"[SYNTHETIC] Nielsen Retail Audit — South India Biscuits Q3 2026",
-      fact:"Health-positioned biscuits grew 18.4% YoY in South India modern trade, versus 3.1% for the total biscuit category." },
-    { id:"KB-102", title:"[SYNTHETIC] FreshMart Koramangala — Category Performance Report Aug 2026",
-      fact:"Packaged Foods contributed 22% of store revenue but only 14% of shelf space, the widest gap of any category." },
-    { id:"KB-103", title:"[SYNTHETIC] Internal Margin Sheet — Q4 2026 Trade Terms",
-      fact:"NutriChoice 6-pack carries a 20% retailer margin versus 19% on the single pack, with a 4% Q4 volume rebate above 500 units." },
-    { id:"KB-104", title:"[SYNTHETIC] Shopper Panel Study — Bengaluru Urban, Jul 2026",
-      fact:"63% of urban Bengaluru shoppers buying health biscuits purchase multipacks when placed at eye level, versus 31% at bottom shelf." },
-    { id:"KB-105", title:"[SYNTHETIC] Health Week Campaign Post-Mortem — Mar 2026",
-      fact:"The Health Week end-cap delivered an 18% category uplift at 6 comparable FreshMart stores, with zero cannibalisation of the single pack." },
-    { id:"KB-106", title:"[SYNTHETIC] Supply Chain Scorecard — Sep 2026",
-      fact:"Fill rate recovered to 96.2% in September after the Hosur depot expansion, up from 82% in August." },
-    { id:"KB-107", title:"[SYNTHETIC] Coffee Category Tracker — Sep 2026",
-      fact:"Nescafe Classic 200g holds 34% value share and 25% retailer margin, the highest margin SKU in the instant coffee bay." },
-    { id:"KB-108", title:"[SYNTHETIC] Flavoured Milk Category Review — South India, Sep 2026",
-      fact:"Flavoured milk grew 27% YoY in South India modern trade, the fastest growing dairy sub-category, with 200ml single-serve driving 71% of that growth." },
-    { id:"KB-109", title:"[SYNTHETIC] Planogram Compliance Benchmark — Q3 2026",
-      fact:"Stores holding full planogram compliance in the dairy beverage bay averaged 14% higher category throughput than non-compliant stores in the same cluster." },
+  // Priority is computed in index.html, not hand-set here.
+  visitPlan: [
+    { store:"FreshMart Express — Koramangala",     storeId:"BLR-KOR-014", account:"FreshMart Express",
+      daysSince:41, cadenceDays:6,  openTasks:4, revenueAtRisk:142000, targetGap:305000, scheduled:"2026-10-22 10:30" },
+    { store:"DailyNeeds Supermart — Jayanagar",    storeId:"BLR-JAY-007", account:"DailyNeeds Supermart",
+      daysSince:13, cadenceDays:14, openTasks:2, revenueAtRisk:86000,  targetGap:238000, scheduled:"2026-10-23 14:00" },
+    { store:"FreshMart Express — HSR Layout",      storeId:"BLR-HSR-021", account:"FreshMart Express",
+      daysSince:9,  cadenceDays:6,  openTasks:1, revenueAtRisk:118000, targetGap:305000, scheduled:null },
+    { store:"DailyNeeds Supermart — BTM",          storeId:"BLR-BTM-033", account:"DailyNeeds Supermart",
+      daysSince:22, cadenceDays:14, openTasks:3, revenueAtRisk:74000,  targetGap:238000, scheduled:null },
+    { store:"FreshMart Express — Indiranagar",     storeId:"BLR-IND-008", account:"FreshMart Express",
+      daysSince:4,  cadenceDays:6,  openTasks:0, revenueAtRisk:96000,  targetGap:305000, scheduled:null },
+    { store:"DailyNeeds Supermart — Banashankari", storeId:"BLR-BAN-019", account:"DailyNeeds Supermart",
+      daysSince:31, cadenceDays:14, openTasks:2, revenueAtRisk:58000,  targetGap:238000, scheduled:null },
   ],
 
-  // Planogram spec used for compliance scoring.
+  marketing: [
+    { title:"Protein Pledge burst goes live 3 November", type:"Campaign",
+      detail:"A four-week digital and in-store burst across Bengaluru, Hyderabad and Chennai, built around the bar plus shake bundle rather than a price cut. Chiller cling and shelf-edge strips ship to stores from 27 October.",
+      relevance:"The bundle mechanic answers Meera's discount objection directly, and it is the reason to get chilled facings executed before 3 November, not after." },
+    { title:"RTD protein is the fastest growing chilled beverage format", type:"Category signal",
+      detail:"The format grew 31.2 percent YoY in Indian modern trade while total packaged dairy beverages grew 4.8 percent. Single-serve 200ml accounts for 68 percent of occasions.",
+      relevance:"Gives Vikram a category reason to reallocate facings rather than a brand reason, which is the only argument that moves him." },
+    { title:"Hershey's and Sofit hold 23 of the 44 facings in this bay", type:"Competitive alert",
+      detail:"Hershey's added two 200ml milkshake flavours in September and holds 14 facings. Sofit holds 9 after putting a high-protein soya claim on pack at Rs 55. Neither carries more than 7g protein per 200ml.",
+      relevance:"Protiva holds none of the 44 against 13 assigned by the Q4 reset, so the facings ask has to be made at this visit, using the cost per gram of protein line in KB-108." },
+    { title:"In-store searches for 'high protein' up 41 percent in 30 days", type:"Consumer signal",
+      detail:"Measured across the shopper assistant's query logs in Bengaluru South. Searches for 'protein shake' outgrew 'milkshake' for the first time in September.",
+      relevance:"Evidence that demand is pulling the format, which supports taking eye level rather than accepting a bottom shelf compromise." },
+  ],
+
+  team: [
+    { name:"Anita Sharma",  territory:"Bengaluru South", quota:2400000, achieved:1812000,
+      visitsPlanned:22, visitsDone:14, outletsCovered:18, outletsTotal:24,
+      avgPitchScore:71, rehearsalsDone:9, complianceRate:0.82, strikeRate:0.58 },
+    { name:"Rohit Menon",   territory:"Bengaluru East",  quota:2200000, achieved:2046000,
+      visitsPlanned:20, visitsDone:19, outletsCovered:21, outletsTotal:22,
+      avgPitchScore:84, rehearsalsDone:16, complianceRate:0.91, strikeRate:0.72 },
+    { name:"Kavya Reddy",   territory:"Bengaluru North", quota:2000000, achieved:1180000,
+      visitsPlanned:20, visitsDone:11, outletsCovered:12, outletsTotal:23,
+      avgPitchScore:54, rehearsalsDone:2,  complianceRate:0.64, strikeRate:0.39 },
+    { name:"Imran Qureshi", territory:"Bengaluru West",  quota:2100000, achieved:1743000,
+      visitsPlanned:21, visitsDone:16, outletsCovered:17, outletsTotal:21,
+      avgPitchScore:68, rehearsalsDone:7,  complianceRate:0.79, strikeRate:0.55 },
+  ],
+
+  // Every pitch proof point must cite one of these.
+  kbDocs: [
+    { id:"KB-101", title:"[SYNTHETIC] Nielsen Retail Audit, India Protein and Active Nutrition, Q3 2026",
+      fact:"Ready-to-drink protein grew 31.2% YoY in Indian modern trade against 4.8% for total packaged dairy beverages." },
+    { id:"KB-102", title:"[SYNTHETIC] FreshMart Koramangala Category Performance Report, Sep 2026",
+      fact:"Protein and active nutrition delivered 2.8% of store revenue from 1.1% of store shelf space, the highest revenue per running foot of any chilled sub-category." },
+    { id:"KB-103", title:"[SYNTHETIC] Internal Margin Sheet, Q4 2026 Trade Terms",
+      fact:"Protiva RTD shakes carry a 20 to 22% retailer margin against a 19% chilled dairy drinks bay average, with a 3% Q4 volume rebate above 1,200 units per store per quarter." },
+    { id:"KB-104", title:"[SYNTHETIC] Shopper Panel Study, Bengaluru Urban Protein Buyers, Aug 2026",
+      fact:"68% of RTD protein purchases in Bengaluru modern trade are single-bottle immediate-consumption trips, and 54% of those shoppers also pick up a bar in the same basket." },
+    { id:"KB-105", title:"[SYNTHETIC] Planogram Placement Test, 9 Bengaluru Modern Trade Stores, Jul 2026",
+      fact:"Moving a 330ml high-protein SKU from shelf 4 to shelf 2 at eye level lifted its units per store per week from 11 to 26, a 136% increase, with no decline in the 200ml packs beside it." },
+    { id:"KB-106", title:"[SYNTHETIC] Protein Pledge Promotion Post-Mortem, Jun 2026",
+      fact:"A 15% price cut on Protiva Choco Almond bars delivered 9% unit uplift, while a buy-one-bar-with-one-shake bundle at full price delivered 23% uplift and a 41% higher basket value." },
+    { id:"KB-107", title:"[SYNTHETIC] Supply Chain Scorecard, Sep 2026",
+      fact:"Chilled fill rate on Protiva RTD shakes recovered to 97.1% in September from 86% in August, after the Hoskote cold-chain hub went live." },
+    { id:"KB-108", title:"[SYNTHETIC] Competitive Price Tracker, Bengaluru Chilled Bay, Sep 2026",
+      fact:"Hershey's 200ml milkshake retails at Rs 45 with 5g protein and Sofit 200ml soya at Rs 55 with 7g protein, against Protiva 200ml at Rs 70 with 20g protein, giving Protiva the lowest cost per gram of protein in the bay at Rs 3.50 versus Rs 9.00 and Rs 7.86." },
+    { id:"KB-109", title:"[SYNTHETIC] Chilled Salad Shrink Review, South India, Sep 2026",
+      fact:"Chilled salad shrink averaged 6.1% of units dispatched on a 4-day shelf life, falling to 2.4% in stores taking daily rather than alternate-day drops." },
+    { id:"KB-110", title:"[SYNTHETIC] Share of Shelf Benchmark, Chilled Protein Bay, Q3 2026",
+      fact:"Stores holding at least 30% share of shelf in the chilled protein bay recorded 19% higher brand throughput than stores under 20% share, measured across 22 comparable urban stores." },
+  ],
+
+  // ── Planogram ─────────────────────────────────────────────────────────────
   // Rules follow the standard CPG retail-execution model: the 5P Picture of
-  // Success (Product, Placement, Price, Promotion, POSM) measured against the
-  // two headline industry KPIs, On-Shelf Availability and Share of Shelf.
+  // Success measured against the two headline industry KPIs, On-Shelf
+  // Availability and Share of Shelf.
   planogram: {
-    id:"PG-Q4-2026", name:"Q4 2026 Dairy Beverages Reset — Modern Trade Urban",
-    bay:"Aisle 2, Bay 4 — Flavoured Milk & Dairy Beverages",
+    id:"PG-Q4-2026-CP", name:"Q4 2026 Chilled Protein Reset — Modern Trade Urban",
+    bay:"Aisle 2, Bay 4 — Chilled Protein and Dairy Drinks",
     standard:"PicOS 5P retail execution standard, scored on OSA and Share of Shelf",
-    // Standard modern-trade gondola: 5 shelves, named by shopper reach zone.
     shelfLevels:"5 shelves. Shelf 1 stretch, shelf 2 eye level, shelf 3 hand level, shelf 4 stoop, shelf 5 floor",
-    sosTargetPct: 40,
+    totalBayFacings: 44,
+    assignedFacings: 13,
+    sosTargetPct: 30,
     minFacingsPerSKU: 2,
     // Stated explicitly rather than inferred from SKU names, so the audit does
-    // not mistake our own second brand for a competitor.
-    ourBrands: ["Hershey's", "Sofit"],
+    // not mistake a competitor for us or the reverse.
+    ourBrands: ["Protiva"],
+    competitorBrands: ["Hershey's", "Sofit", "store private label"],
+    // The reset was agreed but never executed, so the audit is expected to find
+    // our SKUs absent. That finding is the point of the visit.
+    executionNote: "Q4 reset assigns Protiva 13 of 44 facings. Last audit found 0 executed. Competitors hold the bay.",
     rules: [
+      // Industry dimensions. Presence and accuracy are deliberately separate:
+      // a compliance programme that only checks presence misses reset drift,
+      // substitution and position error, which is where execution actually fails.
       { code:"OSA", rule:"On-shelf availability",
-        spec:"Every must-stock SKU is physically present with at least one facing. No empty gap anywhere a must-stock SKU is planogrammed." },
+        spec:"Every Protiva SKU assigned to this bay is physically present with at least one facing. Report any assigned SKU with no facing, and say what occupies the slot instead." },
+      { code:"NOF", rule:"Number of facings",
+        spec:"Each present Protiva SKU holds at least the 2-facing minimum, and the brand holds 13 facings in total as assigned by the reset." },
       { code:"SOS", rule:"Share of shelf",
-        spec:"Our brand block holds at least 40 percent of the visible facings in this bay, and every must-stock SKU holds at least 2 facings." },
-      { code:"PLC", rule:"Placement level",
-        spec:"Premium flavoured milk occupies eye level, shelf 2. Soya and value packs occupy hand level or below, shelf 3 to 5." },
+        spec:"Protiva holds at least 30 percent of the 44 visible facings in this bay. State the percentage you estimate for Protiva and for each competitor." },
+      { code:"POS", rule:"Position accuracy",
+        spec:"Each SKU sits on the shelf level the planogram specifies, not merely somewhere in the bay. The 200ml shakes and the 330ml high-protein shake belong at eye level on shelf 2, Vanilla at hand level on shelf 3." },
       { code:"BLK", rule:"Brand block integrity",
-        spec:"All variants of one brand are blocked contiguously as a vertical block, with no competitor SKU interleaved inside the block." },
+        spec:"Each brand is blocked contiguously as a vertical block, with no competing brand interleaved inside another brand's block." },
       { code:"PRC", rule:"Price compliance",
-        spec:"Every visible SKU carries a legible price tag on the shelf edge, aligned directly beneath the correct product, showing the current shelf price." },
+        spec:"Every visible SKU carries a legible price tag on the shelf edge, aligned directly beneath the correct product, showing the current shelf price. The price ladder across pack sizes reads correctly." },
       { code:"PRM", rule:"Promotion execution",
         spec:"Point-of-sale material for every active promotion in this bay is present, current, and sited with the promoted SKU." },
       { code:"CND", rule:"Product condition",
         spec:"All packs front-faced and undamaged. No crushed, bloated, leaking or out-of-date packs on shelf." },
     ],
-    // SKUs the planogram actually assigns to this bay. Used as the expected list
-    // for the audit, so the model is not asked to find butter on a milk shelf.
-    skuIds: ["P011","P012","P013"],
-    // Only promotions whose point-of-sale material belongs in this bay.
-    promoNames: ["Dairy Deal"],
+    // SKUs the reset assigns to this bay, so the audit is not asked to look for
+    // a cereal bar on a chiller shelf.
+    skuIds: ["R01","R02","R03","R04"],
+    promoNames: ["Protein Pledge Bundle"],
   },
 
-  // ── KPIs ─────────────────────────────────────────────────────────────────
   kpis: {
     revenueTarget: 420000,
     conversionRate: 0.68,
