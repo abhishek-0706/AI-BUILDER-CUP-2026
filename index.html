@@ -250,6 +250,15 @@ button,input,textarea{font-family:inherit}
 }
 .cite:hover{border-color:var(--primary);background:var(--primary-50);color:var(--text)}
 .cite b{color:var(--primary);font-weight:700;font-family:ui-monospace,Consolas,monospace;font-size:10.5px}
+.cite .vfy{
+  color:var(--success);font-weight:800;font-size:10px;margin-left:-3px;
+}
+.cite-open .prov{
+  margin-top:9px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;line-height:1.5;
+}
+.cite-open .prov.pub{color:var(--success)}
+.cite-open .prov.syn{color:var(--text-3);font-style:italic}
+.cite-open .prov a{color:var(--primary);font-weight:600;margin-left:6px}
 .cite-open{
   background:var(--info-bg);border:1px solid var(--info-br);border-radius:6px;
   padding:11px 13px;font-size:12px;line-height:1.55;margin-top:9px;color:var(--text-2);
@@ -2000,8 +2009,14 @@ function repContext(){
     `MARKETING AND COMPETITIVE INTELLIGENCE CURRENTLY LIVE IN THIS TERRITORY:`,
     D.marketing.map(m=>`[${m.type}] ${m.title}. ${m.detail} Relevance: ${m.relevance}`).join('\n'),
     ``,
-    `SOURCE DOCUMENTS — every factual claim must cite one of these by ID:`,
-    D.kbDocs.map(k=>`[${k.id}] ${k.title}\n    FACT: ${k.fact}`).join('\n'),
+    `SOURCE DOCUMENTS — every factual claim must cite one of these by ID.`,
+    `PUBLISHED means the buyer can open the source and check it. MODELLED means it is internal to this demo and cannot be independently checked, so it carries less weight in an argument:`,
+    D.kbDocs.map(k=>{
+      const prov = k.url
+        ? `PUBLISHED${k.publisher ? ', ' + k.publisher : ''}${k.published ? ', ' + k.published : ''}`
+        : 'MODELLED';
+      return `[${k.id}] (${prov}) ${k.title}\n    FACT: ${k.fact}`;
+    }).join('\n'),
   ].filter(Boolean).join('\n');
 }
 
@@ -2017,6 +2032,7 @@ function pitchPrompt(){
     '- Use ONLY facts from the SOURCE DOCUMENTS and the portfolio and history data below.',
     '- If you cannot support a claim with a source, LEAVE IT OUT. Never invent a statistic, a percentage or a study.',
     '- Do not cite a source for a fact it does not contain.',
+    '- Where a PUBLISHED source and a MODELLED source would both support a point, cite the PUBLISHED one. A buyer who can open the source is harder to argue with than one who cannot.',
     '',
     '# WHAT TO PRODUCE',
     'Write the pitch in these labelled sections, in this order:',
@@ -2058,11 +2074,19 @@ async function genPitch(){
 function renderCitations(text, el){
   const ids = [...new Set((text.match(/KB-\d+/g)||[]))];
   if(!ids.length){ el.innerHTML = ''; return; }
-  el.innerHTML = `<div class="sec-title" style="margin:18px 0 8px">Sources cited (${ids.length}) — tap to read</div>` +
-    ids.map(id=>{
-      const d = D.kbDocs.find(k=>k.id===id);
-      return d ? `<div class="cite" onclick="toggleCite('${id}')"><b>${id}</b> ${d.title.replace('[SYNTHETIC] ','')}</div>` : '';
-    }).join('') +
+  const docs = ids.map(id => D.kbDocs.find(k => k.id === id)).filter(Boolean);
+  const verified = docs.filter(d => d.url).length;
+  // A citation a buyer can open is worth more than one they cannot, so the
+  // split between published and modelled sources is stated up front.
+  const note = verified
+    ? `${verified} published, ${docs.length - verified} modelled for this demo`
+    : `all modelled for this demo`;
+  el.innerHTML =
+    `<div class="sec-title" style="margin:18px 0 8px">Sources cited (${docs.length}) · ${note}</div>` +
+    docs.map(d => `<div class="cite" onclick="toggleCite('${d.id}')">
+        <b>${d.id}</b>${d.url ? '<span class="vfy" title="Published source">✓</span>' : ''}
+        ${esc(d.title.replace('[SYNTHETIC] ',''))}
+      </div>`).join('') +
     `<div id="cite-open"></div>`;
 }
 
@@ -2071,7 +2095,13 @@ function toggleCite(id){
   const box = document.getElementById('cite-open');
   if(box.dataset.open === id){ box.innerHTML=''; box.dataset.open=''; return; }
   box.dataset.open = id;
-  box.innerHTML = `<div class="cite-open"><b>${d.id} · ${d.title}</b>${d.fact}</div>`;
+  const prov = d.url
+    ? `<div class="prov pub">Published source${d.publisher ? ' · ' + esc(d.publisher) : ''}${d.published ? ' · ' + esc(d.published) : ''}
+         <a href="${esc(d.url)}" target="_blank" rel="noopener">Open the source</a></div>`
+    : `<div class="prov syn">Modelled for this demo. Not a real study, and labelled as such wherever it is cited.</div>`;
+  box.innerHTML = `<div class="cite-open">
+      <b>${esc(d.id)} · ${esc(d.title)}</b>${esc(d.fact)}${prov}
+    </div>`;
 }
 
 /* ── 2. Buyer rehearsal + separate scoring ──────────────── */
