@@ -354,6 +354,7 @@ button,input,textarea{font-family:inherit}
 .cap-flag .bad{color:var(--danger);font-weight:600}
 .cap-flag .warn{color:var(--warning);font-weight:600}
 .cap-flag .ok{color:var(--success);font-weight:600}
+.cap-flag .ev{display:block;color:var(--text-3);font-weight:400;font-size:10.5px;margin-top:3px;line-height:1.45}
 
 /* visit planner */
 .plan-row{
@@ -1663,6 +1664,11 @@ function askBiz(el){
 let activeVisit = D.visits[0];
 let rehHistory = [];
 let shelfFrames = [];   // [{b64, mime, url}]
+// An audit that ends in a score is a report. The published evidence is that
+// availability performance comes from sensing, execution and empowerment acting
+// together, not from any one detection technology, so the verdict is retained
+// and fed into the pitch and the debrief rather than just displayed.
+let lastAudit = null;
 let recog = null, micLive = false;
 
 function repTab(n, el){
@@ -1974,6 +1980,20 @@ function renderMarketing(){
     </div>`).join('');
 }
 
+/* The audit result as prompt text, so a finding on the shelf becomes an
+   argument in the pitch and a line in the debrief rather than a dead score. */
+function auditSummary(){
+  if(!lastAudit || lastAudit.storeId !== activeVisit.storeId) return '';
+  const a = lastAudit;
+  return [
+    `SHELF AUDIT COMPLETED ON THIS VISIT (${a.frames} frames of ${a.bay}):`,
+    `Result ${a.status}${a.score===null?'':', '+a.score+' percent of judged rules passed'}.`,
+    a.rules.map(r=>`  ${r.code}: ${r.verdict}. ${r.note}`).join('\n'),
+    `This was observed on the shelf today. Treat it as fact and use it, because a finding the buyer can walk over and look at is the strongest evidence available in the room.`,
+    ``,
+  ].join('\n');
+}
+
 /* ── Shared rep grounding block ─────────────────────────── */
 function repContext(){
   const v = activeVisit, a = account();
@@ -2006,6 +2026,7 @@ function repContext(){
     `EXECUTION GAP, THE REASON FOR THIS VISIT: the reset assigns ${D.planogram.ourBrands.join(' and ')} ${D.planogram.assignedFacings} of the ${D.planogram.totalBayFacings} facings in this bay, a ${D.planogram.sosTargetPct} percent share of shelf target. ${D.planogram.executionNote} Competitors in the bay: ${D.planogram.competitorBrands.join(', ')}.`,
     D.planogram.rules.map(r=>`- ${r.rule}: ${r.spec}`).join('\n'),
     ``,
+    auditSummary(),
     `MARKETING AND COMPETITIVE INTELLIGENCE CURRENTLY LIVE IN THIS TERRITORY:`,
     D.marketing.map(m=>`[${m.type}] ${m.title}. ${m.detail} Relevance: ${m.relevance}`).join('\n'),
     ``,
@@ -2603,6 +2624,14 @@ function renderPlanoResult(reply){
   const judged = pass + fail;
   const score = judged ? Math.round(pass/judged*100) : null;
   const status = !judged ? 'NOT ASSESSABLE' : fail === 0 ? 'COMPLIANT' : pass === 0 ? 'NON-COMPLIANT' : 'PARTIAL';
+  lastAudit = {
+    storeId: activeVisit.storeId,
+    store: activeVisit.store,
+    bay: D.planogram.bay,
+    score, status, pass, fail, notVisible: nv,
+    frames: shelfFrames.length,
+    rules: rules.map(r => ({ code: r.rule, verdict: r.verdict, note: r.note })),
+  };
   const col = status==='COMPLIANT' ? 'var(--success)' : status==='PARTIAL' ? 'var(--warning)' : 'var(--danger)';
   const ic = { 'PASS':'✓', 'FAIL':'✕', 'NOT VISIBLE':'–' };
   const vc = { 'PASS':'var(--success)', 'FAIL':'var(--danger)', 'NOT VISIBLE':'var(--text-2)' };
@@ -2688,8 +2717,9 @@ function flag(id){
   const el = document.getElementById('flag-'+id);
   if(c.oos){
     el.innerHTML = p.stock > 0
-      ? `<span class="bad">Out of stock on shelf, but system shows ${p.stock}. Likely in the back room.</span>`
-      : `<span class="bad">Out of stock, system agrees. Reorder.</span>`;
+      ? `<span class="bad">Phantom stock. Nothing on shelf, system still shows ${p.stock}.</span>
+         <span class="ev">This is the exact condition where an audit produced the whole of an 11 percent sales lift in a study of 24,000 SKUs [KB-201], and the effect was strongest on perishables [KB-202].</span>`
+      : `<span class="bad">Out of stock, and the system agrees. Reorder.</span>`;
     return;
   }
   if(c.onShelf == null || isNaN(c.onShelf)){ el.innerHTML = ''; return; }

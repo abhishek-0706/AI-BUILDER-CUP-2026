@@ -116,6 +116,21 @@ The model may only make a factual claim if it attaches a document ID from `kbDoc
 source are omitted rather than invented. The citation chips are tappable and open the underlying
 document, so a judge can check the claim against its source in one click.
 
+The knowledge base mixes two kinds of source, and the interface says which is which at the point of
+citation. **11 entries are published and verifiable**: they carry a publisher, a date and a URL, the
+chip shows a tick, and the panel offers a link out. **10 are modelled for this demo** and say so
+plainly, because they describe a brand that does not exist. The pitch prompt is told to prefer a
+published source where either would support the point, on the grounds that a buyer who can open the
+source is harder to argue with than one who cannot.
+
+Every published source was verified at the publisher rather than taken from an aggregator, and all
+were published April 2025 or later. They include peer-reviewed work in the International Journal of
+Retail and Distribution Management, an arXiv preprint on inventory record inaccuracy, NielsenIQ
+India FMCG quarterlies, Bain with Flipkart, and a listed company's own shareholder letter. Vendor
+marketing was excluded regardless of how quotable it was. The full audit trail, including the figures
+that were rejected as too old, vendor-sourced or untraceable, is in
+[`INDUSTRY_EVIDENCE.md`](INDUSTRY_EVIDENCE.md).
+
 **2. The buyer never grades its own conversation.**
 The rehearsal buyer runs in character and is forbidden from coaching. Scoring is a second, separate
 model call over the finished transcript. It returns an overall score plus TONE, CLARITY and
@@ -127,9 +142,15 @@ The browser samples 14 frames across the clip, skipping the first and last 6% wh
 shakes worst, scores each with a gradient-energy blur proxy (`sharpness()`), keeps the 6 sharpest and
 sends them to Gemini vision as one exhibit.
 
-Rules follow the standard CPG retail execution model, the 5P Picture of Success measured on the two
-headline industry KPIs, On-Shelf Availability and Share of Shelf. The seven rules as specified in
-`retail_data.js`:
+Rules follow the 5P Picture of Success model, measured on On-Shelf Availability and Share of Shelf.
+A deliberate wording note: this is an industry **convention**, not a standard. No standards body or
+consulting firm has published a formal definition of PicOS or of the five Ps, and the composition
+varies by whoever is writing, so calling it a standard would overclaim. The 30 percent share-of-shelf
+figure here is likewise a commercial target negotiated with a retailer, not a researched optimum.
+
+The rules deliberately separate **presence** from **accuracy**, because a compliance programme that
+only asks whether a product is on the shelf misses substitution, position error and reset drift,
+which is where execution actually fails. The eight rules as specified in `retail_data.js`:
 
 | Code | Rule | Specification for this bay |
 |---|---|---|
@@ -247,9 +268,11 @@ Tested, not asserted from the prompt. The suites are in [`tests/`](tests/) and y
   the footage rather than the footage chosen to flatter the data.
 - **Hershey's and Sofit are real brands** and appear only as competitors visible in that footage,
   with no claim made about them beyond price, pack size and on-pack protein.
-- **All demo figures are synthetic and labelled**, including the source documents behind the pitch
-  citations. Every `kbDocs` entry carries a `[SYNTHETIC]` tag in its own title, so a cited fact is
-  visibly synthetic at the point of citation. They are modelled on Indian modern-trade patterns in
+- **Every brand-level figure is synthetic and labelled**, because the brand is invented. Those
+  `kbDocs` entries carry a `[SYNTHETIC]` tag in the title and the citation panel states that the
+  source is modelled for this demo and is not a real study. The industry-level sources are real,
+  carry a `[VERIFIED]` tag and a working link, and are listed separately above. They are modelled on
+  Indian modern-trade patterns in
   this category so the behaviour is credible, but no real store, buyer or sales figure is represented.
 - **`gcp/` is built but is not live.** It holds the production path: BigQuery schema and analytics
   queries, BigQuery ML `ARIMA_PLUS` forecasting, and a FastAPI Cloud Run service with a Vertex AI
