@@ -1,0 +1,50 @@
+[
+  {
+    "id": "00_hook",
+    "text": "This is real footage from a real supermarket, shot on a phone while walking past the chiller. Seconds later, it found something nobody in that building knew. This brand has zero shelf facings here, against the thirteen it was promised."
+  },
+  {
+    "id": "01_problem",
+    "text": "The shelf plan was agreed, and never actually put in place. That is called reset drift. Today nobody catches it, because a sales rep checks the shelf by eye, with a paper checklist. This is RetailIQ."
+  },
+  {
+    "id": "02_honest",
+    "text": "Two things about that result. The score is calculated from the model's own verdicts, so anyone can recount it. And one rule came back as not visible, because the brand is not on the shelf to judge. It refuses to guess."
+  },
+  {
+    "id": "03_phantom",
+    "text": "She also counts by hand, because a camera misses things. The shelf is empty, but the system still says sixty four in stock. That is phantom stock. One study of twenty four thousand products found an eleven percent sales lift, and all of it came from fixing exactly this."
+  },
+  {
+    "id": "04_pitch",
+    "text": "Now rewind to before the visit. AI writing a sales pitch normally invents numbers, and a buyer catches that instantly. So the rule here is cite, or stay silent. Every fact carries its source. Anything it cannot source is dropped."
+  },
+  {
+    "id": "05_cite",
+    "text": "And the sources open. Eleven are real published research. This one found out of stocks are still stuck near eight percent, despite everything bought to fix them. The sources invented for this demo say so, in the same panel."
+  },
+  {
+    "id": "06_rehearse",
+    "text": "She can also rehearse. The AI buyer uses this store's real recorded objections, and they are hard. You want thirty percent of my shelf, for a brand that has never had one facing here. Tell me what I remove to pay for it."
+  },
+  {
+    "id": "07_score",
+    "text": "Then a completely separate model scores her. The buyer never marks its own conversation, because one agent doing both is always kind to the rep. It quotes her own words, and names the evidence she had but did not use."
+  },
+  {
+    "id": "08_order",
+    "text": "The order builds itself from what she just found, priced at trade value. Note the salads. Four day shelf life, so they are capped at four days of stock, not twenty one. Otherwise you are shipping waste."
+  },
+  {
+    "id": "09_debrief",
+    "text": "She writes two lines. It writes the summary, the commitments, the next actions with dates, and the record updates. The admin that normally eats the visit is gone."
+  },
+  {
+    "id": "10_manager",
+    "text": "Her manager sees the team instead. This rep is ahead on quota, but covering only three quarters of her territory. That is concentration risk, not performance. And it says who to coach, and why."
+  },
+  {
+    "id": "11_close",
+    "text": "The shelf footage is real. The research is real and linked. The brand is invented, and labelled as invented. The score is calculated, not claimed. And where it does not know, it says so."
+  }
+]

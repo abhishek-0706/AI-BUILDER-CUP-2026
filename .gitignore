@@ -34,3 +34,8 @@ demo/RetailIQ_AI_Builder_Cup_2026.pptx
 demo/RetailIQ_AI_Builder_Cup_2026.pdf
 
 .vercel
+
+# Video pipeline working files. The tooling is committed, the artefacts are not.
+demo/tooling/audio/
+demo/tooling/rec/
+demo/tooling/durations.json
