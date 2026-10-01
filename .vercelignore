@@ -1,0 +1,10 @@
+# Keep the deployment to what the app actually serves.
+# gcp/ holds a Dockerfile and a FastAPI service for the production path; without
+# this, Vercel would try to interpret main.py as a serverless function.
+gcp/
+tests/
+brand/
+INDUSTRY_EVIDENCE.md
+DATA_PLAN.md
+demo/samples/shelf_compliant.jpg
+demo/samples/shelf_sample_2.jpg

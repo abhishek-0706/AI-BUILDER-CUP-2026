@@ -1,0 +1,3 @@
+# Hackathon submission. Reachable by link, deliberately not indexed.
+User-agent: *
+Disallow: /

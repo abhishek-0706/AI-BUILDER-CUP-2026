@@ -32,3 +32,5 @@ tmp/
 # still describes an earlier, broader framing, so it is held back from the repo.
 demo/RetailIQ_AI_Builder_Cup_2026.pptx
 demo/RetailIQ_AI_Builder_Cup_2026.pdf
+
+.vercel

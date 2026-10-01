@@ -304,10 +304,31 @@ Tested, not asserted from the prompt. The suites are in [`tests/`](tests/) and y
 
 ## Run it
 
+No build step and no dependencies. It is a static folder.
+
 ```bash
+git clone https://github.com/abhishek-0706/AI-BUILDER-CUP-2026.git
+cd AI-BUILDER-CUP-2026
 python -m http.server 5190
 # open http://localhost:5190
 ```
+
+Then add a Gemini API key through the gear icon, top right. Get one free at
+[aistudio.google.com/apikey](https://aistudio.google.com/apikey). The key is held in this
+browser's `localStorage` only. It is never uploaded, never committed, and never written to a file.
+
+### Hosted deployment
+
+A production build is deployed to Vercel at `retailiq-protiva.vercel.app`. **Deployment protection
+is deliberately on**, so that URL currently returns a Vercel login page to anyone who is not the
+project owner. That is intentional until the submission date. Running locally with the three
+commands above is the supported path in the meantime, and gives the identical application, because
+the deployment serves exactly these files.
+
+Two notes on the hosted build. No API key is deployed with it: the application asks the viewer for
+their own, so there is nothing to leak and no cost exposure. And `gcp/` is excluded from the
+deployment through `.vercelignore`, because it contains a Dockerfile and a FastAPI service that
+Vercel would otherwise try to interpret as serverless functions.
 
 Then turn the AI on:
 
