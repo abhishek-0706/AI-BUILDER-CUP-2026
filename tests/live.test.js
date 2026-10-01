@@ -15,12 +15,22 @@ if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.
   await p.goto(URL, { waitUntil:'networkidle' });
   await p.waitForTimeout(700);
 
+  /* Responses stream, and the typing indicator is replaced by the first chunk,
+     so "long enough and not typing" can be true halfway through a reply. Wait
+     until the text actually stops growing. */
   const st = async (s, m = 200, to = 90000) => {
-    await p.waitForFunction(([x, y]) => {
-      const e = document.querySelector(x);
-      return e && e.textContent.length > y && !e.querySelector('.typing');
-    }, [s, m], { timeout: to }).catch(() => {});
-    await p.waitForTimeout(1400);
+    const deadline = Date.now() + to;
+    let prev = '', stable = 0;
+    while (Date.now() < deadline) {
+      await p.waitForTimeout(700);
+      const now = (await p.textContent(s).catch(() => '')) || '';
+      if (now.length > m && now === prev) {
+        if (++stable >= 2) break;      // unchanged across two polls
+      } else {
+        stable = 0;
+      }
+      prev = now;
+    }
     return (await p.textContent(s)).trim();
   };
   const tab = n => p.click('.rep-tabs button:nth-child(' + n + ')');
