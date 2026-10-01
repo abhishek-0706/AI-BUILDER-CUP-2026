@@ -2055,6 +2055,7 @@ function pitchPrompt(){
     '- If you cannot support a claim with a source, LEAVE IT OUT. Never invent a statistic, a percentage or a study.',
     '- Do not cite a source for a fact it does not contain.',
     '- Where a PUBLISHED source and a MODELLED source would both support a point, cite the PUBLISHED one. A buyer who can open the source is harder to argue with than one who cannot.',
+    '- At least one of your proof points MUST cite a PUBLISHED source. A pitch built only on our own internal numbers is the weakest kind, because the buyer has no way to check any of it and knows it.',
     '',
     '# WHAT TO PRODUCE',
     'Write the pitch in these labelled sections, in this order:',
@@ -2107,7 +2108,7 @@ function renderCitations(text, el){
     `<div class="sec-title" style="margin:18px 0 8px">Sources cited (${docs.length}) · ${note}</div>` +
     docs.map(d => `<div class="cite" onclick="toggleCite('${d.id}')">
         <b>${d.id}</b>${d.url ? '<span class="vfy" title="Published source">✓</span>' : ''}
-        ${esc(d.title.replace('[SYNTHETIC] ',''))}
+        ${esc(d.title.replace(/^\[(SYNTHETIC|VERIFIED)\]\s*/, ''))}
       </div>`).join('') +
     `<div id="cite-open"></div>`;
 }
