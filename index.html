@@ -380,6 +380,10 @@ body{
 .plano-rules-out .vd{font-weight:750;font-size:10.5px;letter-spacing:.5px}
 .plano-rules-out .nt{color:var(--txt2);line-height:1.45}
 .plano-body{white-space:pre-wrap;font-size:13px;line-height:1.65}
+.plano-warn{
+  background:rgba(251,191,36,.10);border:1px solid rgba(251,191,36,.35);border-radius:9px;
+  padding:11px 13px;font-size:12px;color:var(--amber);line-height:1.5;margin-bottom:12px;
+}
 @media(max-width:820px){.plano-rules-out .pr{grid-template-columns:18px 1fr}}
 
 /* guided capture */
@@ -791,7 +795,7 @@ body{
           <div class="order-total" id="order-total"></div>
           <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px">
             <button class="run-btn" id="order-btn" onclick="justifyOrder()">Ask AI to justify this order to the buyer</button>
-            <button class="run-btn ghost" onclick="renderOrder()">Reset quantities</button>
+            <button class="run-btn ghost" onclick="renderOrder(true)">Reset quantities</button>
           </div>
           <div class="out-box" id="order-out" style="display:none"></div>
         </div>
@@ -2129,7 +2133,8 @@ function resetPlano(){
   document.getElementById('sample-status').style.display = 'none';
   document.getElementById('plano-btn').style.display = 'none';
   document.getElementById('plano-reset').style.display = 'none';
-  document.getElementById('plano-out').style.display = 'none';
+  const po = document.getElementById('plano-out');
+  po.style.display = 'none'; po.textContent = '';
   document.getElementById('shelf-file').value = '';
 }
 
@@ -2374,7 +2379,9 @@ function renderPlanoResult(reply){
   const rules = [];
   const body = [];
   reply.split('\n').forEach(line => {
-    const m = line.match(/^\s*RULE:\s*(.+?)\s*\|\s*(PASS|FAIL|NOT VISIBLE)\s*\|\s*(.*)$/i);
+    // The evidence field is optional: a model that writes only a verdict must
+    // still be counted, not silently dropped into the prose.
+    const m = line.match(/^\s*RULE:\s*(.+?)\s*\|\s*(PASS|FAIL|NOT VISIBLE)\s*(?:\|\s*(.*))?$/i);
     if(!m){ body.push(line); return; }
     // The model sometimes appends its own parenthetical to the rule name, which
     // can even repeat the verdict. Match back to the planogram's own rule list.
@@ -2382,14 +2389,29 @@ function renderPlanoResult(reply){
     const bare = raw.replace(/\s*\([^)]*\)\s*$/, '').trim();
     const known = D.planogram.rules.find(r =>
       r.rule.toLowerCase() === bare.toLowerCase() || r.code.toLowerCase() === bare.toLowerCase());
-    rules.push({
+    const entry = {
+      key: known ? known.code : (bare || raw).toLowerCase(),
       rule: known ? `${known.rule} (${known.code})` : bare || raw,
       verdict: m[2].toUpperCase(),
-      note: m[3].trim(),
-    });
+      note: (m[3] || '').trim(),
+    };
+    // A model that repeats a rule must not have it counted twice.
+    const dup = rules.findIndex(r => r.key === entry.key);
+    if(dup >= 0) rules[dup] = entry; else rules.push(entry);
   });
 
   if(!rules.length){ out.textContent = reply; return; }
+
+  // A score computed from a partial parse is worse than no score: it reads as
+  // confident while silently ignoring rules the model did judge.
+  const expected = D.planogram.rules.length;
+  if(rules.length < expected){
+    out.innerHTML =
+      `<div class="plano-warn">Could not read a verdict for every rule
+        (${rules.length} of ${expected} parsed), so no score is shown. The model's reply is below unchanged.</div>
+       <div class="plano-body">${esc(reply)}</div>`;
+    return;
+  }
 
   const pass = rules.filter(r=>r.verdict==='PASS').length;
   const fail = rules.filter(r=>r.verdict==='FAIL').length;
@@ -2540,13 +2562,13 @@ function orderLines(){
     let priority = 0;
     if(cover < LEAD_DAYS){ reasons.push(`${cover.toFixed(1)}d cover, under ${LEAD_DAYS}d lead time`); priority += 40; }
     if(cap && cap.oos){ reasons.push('found out of stock on shelf'); priority += 35; }
-    else if(cap && cap.onShelf != null && cap.onShelf < 2){ reasons.push('below planogram minimum'); priority += 20; }
+    else if(cap && cap.onShelf != null && cap.onShelf < minFacings()){ reasons.push('below planogram minimum'); priority += 20; }
     if(mustWin){
       const gap = mustWin.target - mustWin.achieved;
       if(gap > 0){ reasons.push(`must-win SKU, ${gap} units behind target`); priority += 30; }
     }
     if(p.trending){ reasons.push('trending up'); priority += 10; }
-    const promo = D.promotions.find(pr => pr.discount.toLowerCase().includes(p.cat.split(' ')[0].toLowerCase()));
+    const promo = D.promotions.find(pr => (pr.skuIds||[]).includes(p.id));
     if(promo){ reasons.push(`covered by ${promo.name}`); priority += 8; }
 
     // Suggest enough to reach the cover target, rounded up to a case of 12.
@@ -2556,14 +2578,21 @@ function orderLines(){
     return { p, cover, reasons, priority, suggested };
   })
   .filter(l => l.priority > 0 && l.suggested > 0)
-  .sort((a,b) => (b.priority * b.suggested * b.p.price) - (a.priority * a.suggested * a.p.price));
+  .sort((a,b) => (b.priority * b.suggested * tradePrice(b.p)) - (a.priority * a.suggested * tradePrice(a.p)));
 }
 
-function renderOrder(){
+function renderOrder(reset){
   document.getElementById('order-out').style.display = 'none';
   const lines = orderLines();
+  // Capturing a shelf re-ranks the order, but must not discard quantities the
+  // rep has already typed. Only unedited lines take the fresh suggestion.
+  const edited = reset ? {} : orderQty;
   orderQty = {};
-  lines.forEach(l => orderQty[l.p.id] = l.suggested);
+  lines.forEach(l => {
+    orderQty[l.p.id] = Object.prototype.hasOwnProperty.call(edited, l.p.id)
+      ? edited[l.p.id]
+      : l.suggested;
+  });
   document.getElementById('order-list').innerHTML = lines.map(l=>{
     const cc = l.cover < 4 ? 'var(--red)' : l.cover < 7 ? 'var(--amber)' : 'var(--green)';
     return `<div class="order-row">
@@ -2574,10 +2603,10 @@ function renderOrder(){
       <div class="or-why">${l.reasons.map(r=>`<span>${r}</span>`).join('')}</div>
       <div class="or-cov" style="color:${cc}">${l.cover.toFixed(1)}d</div>
       <div class="or-qty">
-        <input type="number" min="0" step="12" value="${l.suggested}"
+        <input type="number" min="0" step="12" value="${orderQty[l.p.id]}"
                oninput="setQty('${l.p.id}',this.value)">
       </div>
-      <div class="or-val" id="val-${l.p.id}">₹${(l.suggested*tradePrice(l.p)).toLocaleString('en-IN')}</div>
+      <div class="or-val" id="val-${l.p.id}">₹${(orderQty[l.p.id]*tradePrice(l.p)).toLocaleString('en-IN')}</div>
     </div>`;
   }).join('') || '<div style="color:var(--txt2);font-size:13px;padding:12px 0">No lines need an order right now. Every SKU has cover beyond the lead time.</div>';
   totalOrder();

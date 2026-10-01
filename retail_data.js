@@ -75,9 +75,9 @@ const RETAIL_DATA = {
 
   // ── Promotions Active ────────────────────────────────────────────────────
   promotions: [
-    { name:"Weekend Bonanza", discount:"15% off Snacks", validity:"Fri–Sun", uplift:"+22% category sales" },
-    { name:"Dairy Deal",      discount:"Buy 2 Hershey's Milkshake 200ml, get ₹10 off", validity:"All week", uplift:"+11% dairy" },
-    { name:"Health Week",     discount:"10% off NutriChoice & Marie", validity:"Mon–Thu", uplift:"+18% packaged" },
+    { name:"Weekend Bonanza", discount:"15% off Snacks", validity:"Fri–Sun", uplift:"+22% category sales", skuIds:["P002","P007"] },
+    { name:"Dairy Deal",      discount:"Buy 2 Hershey's Milkshake 200ml, get ₹10 off", validity:"All week", uplift:"+11% dairy", skuIds:["P011","P012"] },
+    { name:"Health Week",     discount:"10% off NutriChoice & Marie", validity:"Mon–Thu", uplift:"+18% packaged", skuIds:["P004","P010"] },
   ],
 
   // ── Shopper Persona Catalogue (for conversational assistant) ─────────────
@@ -106,7 +106,7 @@ const RETAIL_DATA = {
     name: "Anita Sharma", role: "Territory Sales Executive",
     territory: "Bengaluru South", employeeId: "TSE-4417",
     quotaMonth: 2400000, achievedMonth: 1812000, visitsPlanned: 22, visitsDone: 14,
-    monthDaysTotal: 31, monthDaysElapsed: 21,
+    monthDaysTotal: 31, monthDaysElapsed: 22,
   },
 
   // ── Target tracking (the "track targets" ask) ─────────────────────────────
@@ -221,7 +221,7 @@ const RETAIL_DATA = {
     {
       id:"V-00119", accountId:"ACC-02", store:"DailyNeeds Supermart — Jayanagar", storeId:"BLR-JAY-007",
       date:"2026-10-23", time:"14:00", duration:"60 min", status:"scheduled",
-      lastVisit:"2026-10-10", daysSince:13, visitFrequency:"every 14 days",
+      lastVisit:"2026-10-09", daysSince:13, visitFrequency:"every 14 days",
       objective:"Arrest the -4% YoY decline, push value packs ahead of festive season",
       openTasks:["Resolve 2 short-supply complaints","Re-negotiate shelf share in Snacks bay"],
       history:{

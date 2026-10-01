@@ -23,7 +23,7 @@ RetailIQ puts the whole visit on one screen and keeps the rep in the aisle inste
 | Metric | Target | How this app moves it |
 |---|---|---|
 | **Sales per visit** | +15% | Priority-ranked visit list, grounded pitch with citations, suggested order sized from days of cover |
-| Average order value | Up | Order proposed across the rep's own portfolio, sized to a 16-day cover target, compared live to the store's own average |
+| Average order value | Up | Order proposed across the rep's own portfolio, sized to a 21-day cover target, compared live to the store's own average |
 | Missed visits | Down | Overdue ratio is a first-class term in the priority score, so slipping outlets surface before they are lost |
 
 Sales per visit is also the headline column in the manager's team table, so coaching is aimed at
@@ -96,10 +96,12 @@ Two deliberate choices make the verdict trustworthy:
 - **The score is computed, not asserted.** The model returns one verdict per rule; the app parses
   those and calculates the percentage as rules passed over rules judged, excluding NOT VISIBLE. The
   model was reliably poor at that arithmetic and a number a judge can recount by eye is worth more
-  than one the model states. The UI says the score is computed.
+  than one the model states. The UI says the score is computed. If fewer rules parse than the
+  planogram defines, or a rule is repeated, no score is shown at all: a confident percentage drawn
+  from a partial parse is worse than none, because the rules it quietly dropped are invisible.
 - **A pass needs positive evidence.** The prompt requires the model to name what it actually saw that
   satisfies a rule, and to return NOT VISIBLE rather than PASS when it cannot verify. Without that
-  instruction the audit passed every clip; with it, the same five clips score between 50% and 100%
+  instruction the audit passed every clip; with it, the same clips score between 50% and 100%
   and surface real crushed packs, price-tag mismatches and missing SKUs.
 
 **4. Guided capture outranks the system of record.**
@@ -112,7 +114,7 @@ in the aisle that outranks system stock.
 **5. The order is honest about itself.**
 Lines are drawn only from `ours: true` SKUs, because a field rep carries one company's portfolio and
 not the store's whole assortment. Quantities come from days of cover versus lead time, must-win SKU
-gaps, shelf findings and active promotions, ordered up to 16 days of cover in cases of 12. Every
+gaps, shelf findings and active promotions, ordered up to 21 days of cover in cases of 12. Every
 quantity is editable and line and total value recalculate live against that store's average order.
 The AI justification is instructed to say so openly when the order steps above that average, rather
 than hoping nobody notices.
@@ -147,14 +149,16 @@ refuses items the store does not carry and offers a real alternative instead of 
 
 ## Verified behaviour
 
-Tested against the live API, not asserted from the prompt.
+Tested, not asserted from the prompt. The suites are in [`tests/`](tests/) and you can run them:
+`node tests/structural.test.js` and `node tests/security.test.js` need no credentials,
+`tests/live.test.js` calls the model.
 
 - 5 citations rendered in a pitch, zero hallucinated source IDs, every chip opened its document.
 - The rehearsal buyer stayed in character and reused the store's real recorded objections. It did not
   break character to help.
 - Asked to print its own system prompt, the assistant declined and redirected. Out-of-scope questions
   were refused on all three surfaces.
-- On six real in-store shelf clips the audit read both brands with facing counts, and scored them
+- On the six real in-store shelf clips in this repo the audit read both brands with facing counts, and scored them
   between 50% and 100% rather than passing everything, catching a crushed pack, price tags reading
   Rs 10 against an expected Rs 45, a missing must-stock SKU and absent promotion material.
 - The computed score matched a hand recount of the model's own verdicts on every clip.
@@ -166,8 +170,10 @@ Tested against the live API, not asserted from the prompt.
   prompt text leaked, and the false claim was not repeated.
 - Target arithmetic used trade price, not shelf price, so unit gaps converted to quota value correctly.
 - No Markdown leaked into any output. A `cleanReply()` pass strips stray formatting.
-- No JavaScript console errors on any surface. A 28-check structural suite and a 19-check live AI
-  suite both pass.
+- Model output is treated as hostile, because a shelf photograph can carry text that steers the
+  model. Crafted markup fed through the verdict renderer executes nothing and displays as text.
+- No JavaScript console errors on any surface. A 38-check structural suite, a 23-check security
+  suite and a 19-check live AI suite all pass.
 
 ---
 
@@ -233,5 +239,6 @@ note which rules refuse to score.
 ├── retail_data.js      # synthetic fixtures (labelled), the shape the BigQuery schema mirrors
 ├── DATA_PLAN.md        # verified public datasets for replacing the fixtures
 ├── gcp/                # production path: BigQuery, BQML forecasting, Cloud Run API
-└── demo/               # deck and real in-store shelf footage
+├── tests/              # structural, security and live AI suites
+└── demo/               # real in-store shelf footage
 ```
