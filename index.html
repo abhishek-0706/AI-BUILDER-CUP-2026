@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <meta name="robots" content="noindex, nofollow">
-<title>Protiva Field Execution — RetailIQ</title>
+<title>Protiva Field Execution | RetailIQ</title>
 <style>
 /* ═══════════════════════════════════════════════════════════════════
    RetailIQ — enterprise CPG field execution design system
@@ -1625,7 +1625,7 @@ body.splash-on{overflow:hidden}
 
     <div class="grid2">
       <div class="card">
-        <h3>Revenue — last 7 days against forecast, in lakh rupees</h3>
+        <h3>Revenue for the last 7 days against forecast, in lakh rupees</h3>
         <div class="cap">Actuals in solid fill, and the BigQuery machine learning demand forecast for the coming week in outline, with its 90 percent confidence band.</div>
         <div class="bars" id="rev-bars"></div>
       </div>
@@ -1665,7 +1665,7 @@ body.splash-on{overflow:hidden}
   <div class="modal">
     <h3>Gemini Key</h3>
     <p>The AI assistant and analyst run on Google Gemini. Your key is stored only in this browser's
-       <code>localStorage</code> — it is never uploaded or committed.
+       <code>localStorage</code>. It is never uploaded or committed.
        Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>.</p>
     <input id="key-in" type="password" placeholder="Paste your Gemini key">
     <div class="modal-btns">
@@ -1704,7 +1704,7 @@ function fmtWhen(s){
 const SURFACE_TITLE = {
   rep:  ['Field Execution', () => D.rep.territory],
   biz:  ['Team and Analytics', () => D.rep.territory + ' region'],
-  shop: ['Shopper Insights', () => D.store.name.split(' — ').pop()],
+  shop: ['Shopper Insights', () => D.store.name.split(', ').pop()],
 };
 
 function switchSurface(s){
@@ -2006,7 +2006,7 @@ async function sendChat(){
       bot.textContent = t;
       document.getElementById('chat-body').scrollTop = 1e9;
     });
-    bot.textContent = reply || 'No response — please try rephrasing.';
+    bot.textContent = reply || 'No response. Please try rephrasing.';
     chatHistory.push({role:'user',text:q},{role:'model',text:reply});
   }catch(e){
     bot.textContent = errMsg(e);
@@ -2033,7 +2033,7 @@ async function sendBiz(){
 
   try{
     const reply = await callGemini(bizPrompt(), q, [], t => { out.textContent = t; });
-    out.textContent = reply || 'No response — please try rephrasing.';
+    out.textContent = reply || 'No response. Please try rephrasing.';
   }catch(e){
     out.textContent = errMsg(e);
   }
@@ -3658,13 +3658,13 @@ function renderPlanoResult(reply){
     rules: rules.map(r => ({ code: r.rule, verdict: r.verdict, note: r.note })),
   };
   const col = status==='COMPLIANT' ? 'var(--success)' : status==='PARTIAL' ? 'var(--warning)' : 'var(--danger)';
-  const ic = { 'PASS':'✓', 'FAIL':'✕', 'NOT VISIBLE':'–' };
+  const ic = { 'PASS':'✓', 'FAIL':'✕', 'NOT VISIBLE':'○' };
   const vc = { 'PASS':'var(--success)', 'FAIL':'var(--danger)', 'NOT VISIBLE':'var(--text-2)' };
 
   out.innerHTML = `
     <div class="plano-hd">
       <div class="ps" style="border-color:${col};color:${col}">
-        ${score===null ? '—' : score+'%'}
+        ${score===null ? '?' : score+'%'}
       </div>
       <div>
         <div class="stt" style="color:${col}">${status}</div>
@@ -3706,7 +3706,7 @@ function renderCapture(){
       </label>
       <div class="cap-cnt">
         <span>Facings</span>
-        <input type="number" min="0" max="40" placeholder="—"
+        <input type="number" min="0" max="40" placeholder="0"
                oninput="setFacings('${p.id}',this.value)">
       </div>
       <div class="cap-flag" id="flag-${p.id}"></div>
@@ -4078,7 +4078,7 @@ function initSplash(){
 
 /* ── Boot ───────────────────────────────────────────────── */
 (function init(){
-  document.getElementById('store-lbl').textContent = D.store.name.split(' — ')[1] || D.store.name;
+  document.getElementById('store-lbl').textContent = D.store.name.split(', ')[1] || D.store.name;
   document.getElementById('nav-init').textContent = D.rep.name[0];
   document.getElementById('nav-name').textContent = D.rep.name;
   document.getElementById('nav-role').textContent = D.rep.role;

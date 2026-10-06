@@ -75,7 +75,7 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
     RETAIL_DATA.planogram.rules.map(r => `RULE: ${r.rule} | NOT VISIBLE | nothing readable`).join('\n')));
   await page.waitForTimeout(250);
   const none = await page.textContent('#plano-out');
-  T('nothing judged shows a dash, not a divide by zero', /—/.test(none) && !/NaN/.test(none));
+  T('nothing judged shows a question mark, not a divide by zero', /\?/.test(none) && !/NaN/.test(none));
   T('nothing judged is reported as not assessable', /NOT ASSESSABLE/.test(none));
 
   console.log('\n-- a repeated rule is counted once --');

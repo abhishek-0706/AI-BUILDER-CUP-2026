@@ -25,7 +25,7 @@ const RETAIL_DATA = {
   },
 
   store: {
-    name: "FreshMart Express — Koramangala",
+    name: "FreshMart Express, Koramangala",
     city: "Bengaluru",
     zone: "South India",
     storeId: "BLR-KOR-014",
@@ -147,14 +147,14 @@ const RETAIL_DATA = {
 
   accounts: [
     {
-      id:"ACC-01", name:"FreshMart Express", type:"Modern Trade — Urban Grocery",
+      id:"ACC-01", name:"FreshMart Express", type:"Modern Trade, Urban Grocery",
       stores:14, tier:"Platinum", relationship:"7 years",
       ytdValue:18400000, growthYoY:0.12,
-      contact:{ name:"Vikram Rao", role:"Category Buyer — Chilled and Packaged Foods",
+      contact:{ name:"Vikram Rao", role:"Category Buyer, Chilled and Packaged Foods",
         style:"Arrives with his own numbers, trades facings only against proven throughput per facing, and ends the meeting at the stated time whether or not you are finished" },
     },
     {
-      id:"ACC-02", name:"DailyNeeds Supermart", type:"Modern Trade — Value Format",
+      id:"ACC-02", name:"DailyNeeds Supermart", type:"Modern Trade, Value Format",
       stores:31, tier:"Gold", relationship:"3 years",
       ytdValue:9200000, growthYoY:-0.04,
       contact:{ name:"Meera Iyer", role:"Regional Merchandising Head",
@@ -164,7 +164,7 @@ const RETAIL_DATA = {
 
   visits: [
     {
-      id:"V-00118", accountId:"ACC-01", store:"FreshMart Express — Koramangala", storeId:"BLR-KOR-014",
+      id:"V-00118", accountId:"ACC-01", store:"FreshMart Express, Koramangala", storeId:"BLR-KOR-014",
       date:"2026-10-22", time:"10:30", duration:"90 minutes", status:"scheduled",
       lastVisit:"2026-09-11", daysSince:41, visitFrequency:"every 5-7 days (Index Score based)",
       objective:"Get the fourth-quarter reset executed in the chilled bay. Protiva is listed for 13 facings and currently has none on shelf.",
@@ -185,7 +185,7 @@ const RETAIL_DATA = {
       },
     },
     {
-      id:"V-00119", accountId:"ACC-02", store:"DailyNeeds Supermart — Jayanagar", storeId:"BLR-JAY-007",
+      id:"V-00119", accountId:"ACC-02", store:"DailyNeeds Supermart, Jayanagar", storeId:"BLR-JAY-007",
       date:"2026-10-23", time:"14:00", duration:"60 minutes", status:"scheduled",
       lastVisit:"2026-10-09", daysSince:13, visitFrequency:"every 14 days",
       objective:"Arrest the 4 percent year on year decline and open the ready-to-drink shake range before the Protein Pledge burst",
@@ -204,17 +204,17 @@ const RETAIL_DATA = {
 
   // Priority is computed in index.html, not hand-set here.
   visitPlan: [
-    { store:"FreshMart Express — Koramangala",     storeId:"BLR-KOR-014", account:"FreshMart Express",
+    { store:"FreshMart Express, Koramangala",     storeId:"BLR-KOR-014", account:"FreshMart Express",
       daysSince:41, cadenceDays:6,  openTasks:4, revenueAtRisk:142000, targetGap:305000, scheduled:"2026-10-22 10:30" },
-    { store:"DailyNeeds Supermart — Jayanagar",    storeId:"BLR-JAY-007", account:"DailyNeeds Supermart",
+    { store:"DailyNeeds Supermart, Jayanagar",    storeId:"BLR-JAY-007", account:"DailyNeeds Supermart",
       daysSince:13, cadenceDays:14, openTasks:2, revenueAtRisk:86000,  targetGap:238000, scheduled:"2026-10-23 14:00" },
-    { store:"FreshMart Express — HSR Layout",      storeId:"BLR-HSR-021", account:"FreshMart Express",
+    { store:"FreshMart Express, HSR Layout",      storeId:"BLR-HSR-021", account:"FreshMart Express",
       daysSince:9,  cadenceDays:6,  openTasks:1, revenueAtRisk:118000, targetGap:305000, scheduled:null },
-    { store:"DailyNeeds Supermart — BTM",          storeId:"BLR-BTM-033", account:"DailyNeeds Supermart",
+    { store:"DailyNeeds Supermart, BTM",          storeId:"BLR-BTM-033", account:"DailyNeeds Supermart",
       daysSince:22, cadenceDays:14, openTasks:3, revenueAtRisk:74000,  targetGap:238000, scheduled:null },
-    { store:"FreshMart Express — Indiranagar",     storeId:"BLR-IND-008", account:"FreshMart Express",
+    { store:"FreshMart Express, Indiranagar",     storeId:"BLR-IND-008", account:"FreshMart Express",
       daysSince:4,  cadenceDays:6,  openTasks:0, revenueAtRisk:96000,  targetGap:305000, scheduled:null },
-    { store:"DailyNeeds Supermart — Banashankari", storeId:"BLR-BAN-019", account:"DailyNeeds Supermart",
+    { store:"DailyNeeds Supermart, Banashankari", storeId:"BLR-BAN-019", account:"DailyNeeds Supermart",
       daysSince:31, cadenceDays:14, openTasks:2, revenueAtRisk:58000,  targetGap:238000, scheduled:null },
   ],
 
@@ -327,8 +327,8 @@ const RETAIL_DATA = {
   // Success measured against the two headline industry KPIs, On-Shelf
   // Availability and Share of Shelf.
   planogram: {
-    id:"PG-Q4-2026-CP", name:"October to December 2026 Chilled Protein Reset — Modern Trade Urban",
-    bay:"Aisle 2, Bay 4 — Chilled Protein and Dairy Drinks",
+    id:"PG-Q4-2026-CP", name:"October to December 2026 Chilled Protein Reset, Modern Trade Urban",
+    bay:"Aisle 2, Bay 4, Chilled Protein and Dairy Drinks",
     standard:"Picture of Success retail execution standard, scored on on-shelf availability and share of shelf",
     shelfLevels:"5 shelves. Shelf 1 stretch, shelf 2 eye level, shelf 3 hand level, shelf 4 stoop, shelf 5 floor",
     totalBayFacings: 44,
