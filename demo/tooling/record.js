@@ -36,7 +36,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   const warm = await browser.newContext({ viewport: { width: 1600, height: 900 } });
   const w = await warm.newPage();
   await w.addInitScript(k => localStorage.setItem('retailiq_gemini_key', k), KEY);
-  await w.goto('http://localhost:5190/index.html', { waitUntil: 'networkidle' });
+  await w.goto('http://localhost:5190/index.html?role=rep', { waitUntil: 'networkidle' });
   await w.waitForTimeout(800);
   const cache = {};
   const grab = async (label, run, sel, min) => {
@@ -83,7 +83,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     return m.map(x => ({ who: x.classList.contains('user') ? 'rep' : 'buyer', text: x.textContent }));
   });
   console.log('  cached rehearsal turns', cache.buyer.length);
-  await w.click('text=End & score');
+  await w.click('text=End and score');
   await settle(w, '#reh-score', 250);
   cache.score = await w.textContent('#reh-score');
   console.log('  cached score', cache.score.length, 'chars');
@@ -97,7 +97,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   const recStart = Date.now();   // capture begins here, not at the first beat
   const p = await ctx.newPage();
   await p.addInitScript(k => localStorage.setItem('retailiq_gemini_key', k), KEY);
-  await p.goto('http://localhost:5190/index.html', { waitUntil: 'networkidle' });
+  await p.goto('http://localhost:5190/index.html?role=rep', { waitUntil: 'networkidle' });
   await p.waitForTimeout(700);
 
   // Put the warmed audit on screen instantly, so the capture opens on the result.

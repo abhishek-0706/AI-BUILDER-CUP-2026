@@ -3,7 +3,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 
-const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html';
+const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html?role=rep';
 const VIDEO = path.resolve(__dirname, '..', 'demo', 'samples', 'shelf_videos', 'shelf_walk_03.mp4');
 
 let pass = 0, fail = 0;

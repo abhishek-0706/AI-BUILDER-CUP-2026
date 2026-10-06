@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 const KEY = process.env.GEMINI_API_KEY || process.env.GK;
-const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html';
+const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html?role=rep';
 const V = path.resolve(__dirname, '..', 'demo', 'samples', 'shelf_videos', 'shelf_walk_05.mp4');
 if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.exit(2); }
 
@@ -63,7 +63,7 @@ if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.
     await p.click('#pane-rehearse .chat-input button');
     await p.waitForTimeout(8000);
   }
-  await p.click('text=End & score');
+  await p.click('text=End and score');
   out.score = await st('#reh-score', 250);
 
   // 4 planogram
@@ -127,7 +127,7 @@ if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.
   R('score has tone+clarity+completeness',
     /TONE/i.test(out.score) && /CLARITY/i.test(out.score) && /COMPLETENESS/i.test(out.score));
   R('planogram computed score rendered', /judged rules passed/.test(out.plano));
-  R('planogram uses industry codes', /OSA|NOF|SOS|POS|BLK|PRC|PRM|CND/.test(out.plano));
+  R('planogram names the industry rules', /availability|facings|share of shelf/i.test(out.plano));
   R('our own brand never called a competitor',
     !/competitor\s+(brand\s+)?protiva|protiva\s+is\s+a\s+competitor/i.test(out.plano));
   R('competitor brands named with facing counts', /hershey|sofit/i.test(out.plano));

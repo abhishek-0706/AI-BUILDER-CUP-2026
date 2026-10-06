@@ -1087,7 +1087,8 @@ body::before{
 .alert .pthumb{width:60px;height:44px}
 .alert .ic{position:absolute;left:7px;top:6px;width:22px;height:22px;border-radius:50%}
 .alert .ic svg{width:13px;height:13px}
-.bar-col{overflow:hidden}
+.bar-col{overflow:visible;min-width:0}
+.bar-col .lb{font-size:9.5px;letter-spacing:-.4px;white-space:nowrap;align-self:center;background:#fff;margin-top:-6px;padding:5px 2px 0;z-index:2}
 
 /* menu-board protein figure */
 .ptile{display:inline-flex;align-items:stretch;flex-shrink:0;border-radius:11px;overflow:hidden;box-shadow:0 1px 3px rgba(10,58,51,.08)}
@@ -1111,9 +1112,151 @@ body::before{
 .brief-card.compact{padding-bottom:0}
 .brief-card.compact > :not(.brief-hd){display:none}
 .brief-card.compact .brief-hd{margin-bottom:0;padding-top:12px;padding-bottom:12px}
+
+/* ══ Role splash ═════════════════════════════════════════════ */
+body.splash-on{overflow:hidden}
+#splash{position:fixed;inset:0;z-index:500;overflow-y:auto;background:#F4F8F6;
+  display:flex;flex-direction:column;align-items:center;transition:opacity .45s ease,transform .45s ease}
+#splash.out{opacity:0;transform:scale(1.02);pointer-events:none}
+.sp-band{position:absolute;top:0;left:0;right:0;height:430px;overflow:hidden;
+  background:radial-gradient(120% 130% at 15% 0%,#14897A 0%,var(--primary) 38%,var(--brand-900) 100%)}
+.sp-band::before,.sp-band::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+.sp-band::before{width:620px;height:620px;right:-160px;top:-260px;border:70px solid rgba(198,240,74,.07)}
+.sp-band::after{width:380px;height:380px;left:-140px;bottom:-220px;border:46px solid rgba(255,255,255,.05)}
+.sp-band .sp-wave{position:absolute;left:0;width:100%;bottom:-1px;height:70px}
+.sp-packs{position:absolute;inset:0;pointer-events:none}
+.sp-pack{position:absolute;width:200px;filter:drop-shadow(0 14px 22px rgba(0,0,0,.35));animation:sp-float 6s ease-in-out infinite}
+.sp-pack svg{width:100%;height:auto}
+.sp-pack.p1{left:4%;top:120px;transform:rotate(-12deg);animation-delay:0s}
+.sp-pack.p2{left:13%;top:250px;width:150px;animation-delay:1.2s}
+.sp-pack.p3{right:5%;top:110px;width:190px;animation-delay:.6s}
+.sp-pack.p4{right:14%;top:255px;width:160px;transform:rotate(10deg);animation-delay:1.8s}
+@keyframes sp-float{0%,100%{translate:0 0}50%{translate:0 -10px}}
+.sp-inner{position:relative;z-index:1;width:100%;max-width:1060px;padding:46px 24px 30px;display:flex;flex-direction:column;align-items:center}
+.sp-logo{display:flex;align-items:center;gap:16px}
+.sp-mark{width:74px;height:74px;border-radius:22px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#0E7F70,#0A3A33);border:1.5px solid rgba(198,240,74,.45);
+  box-shadow:0 12px 30px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12)}
+.sp-word{color:#fff;font-size:52px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+.sp-word small{display:block;font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--lime);margin-top:7px}
+.sp-tag{margin-top:18px;color:rgba(255,255,255,.82);font-size:15px;text-align:center;max-width:540px;line-height:1.5}
+.sp-chips{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.sp-chip{font-size:11px;font-weight:700;color:#fff;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);padding:5px 11px;border-radius:20px}
+.sp-chip b{color:var(--lime)}
+.sp-q{margin-top:44px;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;
+  background:rgba(10,58,51,.55);border:1px solid rgba(198,240,74,.35);padding:7px 16px;border-radius:30px}
+.sp-roles{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;width:100%;margin-top:26px}
+@media(max-width:960px){.sp-roles{grid-template-columns:1fr;max-width:440px}.sp-pack{display:none}}
+.sp-role{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border-radius:20px;overflow:hidden;
+  border:1px solid #DDE7E4;box-shadow:0 2px 4px rgba(10,58,51,.05),0 18px 40px rgba(10,58,51,.12);
+  display:flex;flex-direction:column;transition:transform .25s cubic-bezier(.16,1,.3,1),box-shadow .25s ease,border-color .25s ease}
+.sp-role:hover,.sp-role:focus-visible{transform:translateY(-8px);border-color:var(--rc);
+  box-shadow:0 4px 8px rgba(10,58,51,.06),0 28px 56px rgba(10,58,51,.2)}
+.sp-role:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+.sp-art{height:186px;position:relative;display:flex;align-items:flex-end;justify-content:center;padding:66px 12px 6px;box-sizing:border-box;background:var(--rbg);overflow:hidden}
+.sp-art .hr-item{width:46%;margin:0 -5%}
+.sp-art .hr-item svg{width:100%;height:auto}
+.sp-ic{position:absolute;z-index:2;top:14px;left:14px;width:42px;height:42px;border-radius:13px;background:#fff;display:grid;place-items:center;
+  box-shadow:0 6px 14px rgba(10,58,51,.14)}
+.sp-ic svg{width:21px;height:21px;fill:none;stroke:var(--rc);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sp-stat{position:absolute;z-index:2;top:22px;right:14px;box-shadow:0 4px 10px rgba(10,58,51,.15);background:var(--lime);color:var(--lime-ink);font-size:10.5px;font-weight:900;
+  padding:4px 9px;border-radius:20px;letter-spacing:.3px}
+.sp-body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
+.sp-who{font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--rc)}
+.sp-title{font-size:19px;font-weight:850;color:var(--brand-900);letter-spacing:-.3px;margin-top:4px}
+.sp-desc{font-size:12.5px;color:#5B6B67;line-height:1.55;margin-top:7px}
+.sp-list{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
+.sp-list li{font-size:12px;color:#26413C;display:flex;gap:8px;align-items:flex-start;line-height:1.4}
+.sp-list li::before{content:'';flex-shrink:0;width:16px;height:16px;border-radius:50%;margin-top:-1px;
+  background:var(--rc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.3 2.3 4.7-4.9' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.sp-cta{margin-top:auto;padding-top:18px}
+.sp-cta span{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:12px;
+  background:var(--rc);color:#fff;font-size:13px;font-weight:800;transition:filter .2s}
+.sp-role:hover .sp-cta span{filter:brightness(1.08)}
+.sp-foot{margin-top:26px;font-size:11px;color:#7A8A86;text-align:center}
+.nav-switch{display:flex;align-items:center;gap:7px;width:100%;margin-top:10px;padding:8px 10px;border-radius:9px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.8);
+  font:inherit;font-size:11.5px;font-weight:650;cursor:pointer}
+.nav-switch:hover{background:rgba(255,255,255,.12);color:#fff}
+.nav-switch svg{width:14px;height:14px;fill:none;stroke:var(--lime);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 </head>
 <body>
+
+<!-- ── ROLE SPLASH ───────────────────────────────────────── -->
+<div id="splash" role="dialog" aria-modal="true" aria-labelledby="sp-q">
+  <div class="sp-band">
+    <div class="sp-packs" id="sp-packs"></div>
+    <svg class="sp-wave" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40C240 75 480 75 720 45S1200 5 1440 35V70H0Z" fill="#F4F8F6"/></svg>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-logo">
+      <div class="sp-mark"><svg viewBox="0 0 28 28" width="44" height="44" fill="none" aria-hidden="true"><path d="M24.5 14a10.5 10.5 0 1 1-4.3-8.4" stroke="#C6F04A" stroke-width="2.4" stroke-linecap="round"/><path d="M9 19C9 13.5 14.5 9 19 9C19 14.5 13.5 19 9 19Z" fill="#C6F04A"/></svg></div>
+      <div class="sp-word">Protiva<small>Everyday protein</small></div>
+    </div>
+    <div class="sp-tag">Protein bars, ready-to-drink shakes and chilled salads, sold into modern trade across India. One workspace for everyone who gets them onto the shelf.</div>
+    <div class="sp-chips">
+      <span class="sp-chip"><b>11</b> products on shelf</span>
+      <span class="sp-chip"><b>Up to 30g</b> protein</span>
+      <span class="sp-chip"><b>AI</b> field assistant</span>
+    </div>
+    <div class="sp-q" id="sp-q">What brings you here today?</div>
+    <div class="sp-roles">
+      <button class="sp-role" style="--rc:#0C6B5F;--rbg:radial-gradient(120% 100% at 30% 10%,#EEF8F5,#CFEAE2)" onclick="pickRole('rep')">
+        <div class="sp-art" id="sp-art-rep">
+          <div class="sp-ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
+          <div class="sp-stat" id="sp-visits">Visit plan</div>
+        </div>
+        <div class="sp-body">
+          <div class="sp-who">Field sales rep</div>
+          <div class="sp-title">I am visiting stores</div>
+          <div class="sp-desc">Plan the day, pitch the buyer, audit the shelf and place the order.</div>
+          <ul class="sp-list">
+            <li>Visit brief and AI pitch for each buyer</li>
+            <li>Shelf photo audit against the planogram</li>
+            <li>Suggested order and visit debrief</li>
+          </ul>
+          <div class="sp-cta"><span>Start my day <b>&rarr;</b></span></div>
+        </div>
+      </button>
+      <button class="sp-role" style="--rc:#0A3A33;--rbg:radial-gradient(120% 100% at 30% 10%,#F3FAE3,#DDF0B4)" onclick="pickRole('biz')">
+        <div class="sp-art" id="sp-art-biz">
+          <div class="sp-ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M14 7h7v7"/></svg></div>
+          <div class="sp-stat">Team view</div>
+        </div>
+        <div class="sp-body">
+          <div class="sp-who">Sales manager</div>
+          <div class="sp-title">I lead a sales team</div>
+          <div class="sp-desc">See coverage, sell-through and stock risk across the territory, and coach your reps.</div>
+          <ul class="sp-list">
+            <li>Territory sales numbers and category performance</li>
+            <li>Stock-out and expiry alerts</li>
+            <li>AI coaching notes per rep</li>
+          </ul>
+          <div class="sp-cta"><span>Open team dashboard <b>&rarr;</b></span></div>
+        </div>
+      </button>
+      <button class="sp-role" style="--rc:#B5582A;--rbg:radial-gradient(120% 100% at 30% 10%,#FFF6E8,#FBE0BF)" onclick="pickRole('shop')">
+        <div class="sp-art" id="sp-art-shop">
+          <div class="sp-ic"><svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div>
+          <div class="sp-stat">Demand signal</div>
+        </div>
+        <div class="sp-body">
+          <div class="sp-who">Brand and category</div>
+          <div class="sp-title">I want to know the shopper</div>
+          <div class="sp-desc">Understand what shoppers ask for and what goes in their basket, in their own words.</div>
+          <ul class="sp-list">
+            <li>Shopper segments and missions</li>
+            <li>Conversational shopping assistant</li>
+            <li>Basket and recommendation insight</li>
+          </ul>
+          <div class="sp-cta"><span>Explore shoppers <b>&rarr;</b></span></div>
+        </div>
+      </button>
+    </div>
+    <div class="sp-foot">Demo data for a fictional brand. You can switch roles anytime from the side menu.</div>
+  </div>
+</div>
 
 <div class="app">
 
@@ -1137,7 +1280,7 @@ body::before{
     </button>
     <button id="tab-biz" onclick="switchSurface('biz')">
       <svg class="nav-ic" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-      <span>Team &amp; Analytics<span class="nd">Coverage and coaching</span></span>
+      <span>Team and Analytics<span class="nd">Coverage and coaching</span></span>
     </button>
     <button id="tab-shop" onclick="switchSurface('shop')">
       <svg class="nav-ic" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
@@ -1158,6 +1301,7 @@ body::before{
         <div class="rl" id="nav-role">Territory Sales</div>
       </div>
     </div>
+    <button class="nav-switch" onclick="showSplash()"><svg viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>Switch role</button>
   </div>
 </aside>
 
@@ -1310,7 +1454,7 @@ body::before{
           <div id="tgt-account"></div>
           <div class="sec-title" style="margin:20px 0 10px">By category</div>
           <div id="tgt-cat"></div>
-          <div class="sec-title" style="margin:20px 0 10px">Must-win SKUs (units)</div>
+          <div class="sec-title" style="margin:20px 0 10px">Must-win products (units)</div>
           <div id="tgt-sku"></div>
           <div style="margin-top:18px">
             <button class="run-btn" id="tgt-btn" onclick="askTargets()">Where will I miss, and what closes the gap?</button>
@@ -1340,7 +1484,7 @@ body::before{
           <div class="reh-ctl">
             <button class="run-btn" onclick="startReh()">Start session</button>
             <button class="run-btn ghost" id="mic-btn" onclick="toggleMic()">Voice input</button>
-            <button class="run-btn ghost" onclick="scoreReh()">End &amp; score</button>
+            <button class="run-btn ghost" onclick="scoreReh()">End and score</button>
             <label class="tts-tog"><input type="checkbox" id="tts-on"> Speak replies</label>
           </div>
           <div class="reh-body" id="reh-body">
@@ -1402,10 +1546,10 @@ body::before{
         <div class="card">
           <h3>Suggested order</h3>
           <div class="cap">Priority-based selling across this rep's own portfolio, not the store's whole assortment.
-            Lines are proposed from days of cover, must-win SKU gaps, shelf findings and the active promotion, then
+            Lines are proposed from days of cover, must-win product gaps, shelf findings and the active promotion, then
             ranked by what each line is worth. Edit any quantity; the value recalculates live.</div>
           <div class="order-head">
-            <span>SKU</span><span>Why</span><span>Cover</span><span>Qty</span><span>Line value (trade)</span>
+            <span>Product</span><span>Why</span><span>Cover</span><span>Quantity</span><span>Line value (trade)</span>
           </div>
           <div id="order-list"></div>
           <div class="order-total" id="order-total"></div>
@@ -1423,8 +1567,8 @@ body::before{
           <h3>After-visit debrief</h3>
           <div class="cap">Summarise what happened, and the assistant turns it into next actions, a follow-up
             task list and an updated account note.</div>
-          <textarea id="debrief-in" class="ta" placeholder="What happened on the visit? e.g. Vikram agreed to relist the 6-pack from Nov 1 but wants 2 weeks of end-cap support. Still blocked on the chiller audit."></textarea>
-          <button class="run-btn" id="debrief-btn" onclick="genDebrief()">Generate debrief &amp; next actions</button>
+          <textarea id="debrief-in" class="ta" placeholder="What happened on the visit? For example: Vikram agreed to relist the six-pack from 1 November but wants two weeks of end-cap support. Still blocked on the chiller audit."></textarea>
+          <button class="run-btn" id="debrief-btn" onclick="genDebrief()">Generate debrief and next actions</button>
           <div class="out-box" id="debrief-out">Nothing logged yet.</div>
         </div>
       </div>
@@ -1458,7 +1602,7 @@ body::before{
       <div class="suggest" style="padding:12px 0 0" id="biz-suggest"></div>
       <div class="biz-ai-out" id="biz-out">Ask a question to get started, or tap a suggestion above.</div>
       <div class="biz-ai-in">
-        <input id="biz-in" placeholder="e.g. Which SKUs will stock out before the weekend?" onkeydown="if(event.key==='Enter')sendBiz()">
+        <input id="biz-in" placeholder="For example: Which products will run out before the weekend?" onkeydown="if(event.key==='Enter')sendBiz()">
         <button id="biz-send" onclick="sendBiz()">Analyse</button>
       </div>
     </div>
@@ -1469,8 +1613,8 @@ body::before{
       <div class="cap">Rep-wise view for the territory manager. Coverage is outlets visited at least once
         this cycle against outlets owned, so a rep hitting quota on half their territory shows up as a risk, not a win.</div>
       <div class="team-head">
-        <span>Rep</span><span>Quota</span><span>Coverage</span><span>Sales / visit</span>
-        <span>Avg pitch</span><span>Compliance</span><span>Strike rate</span>
+        <span>Rep</span><span>Quota</span><span>Coverage</span><span>Sales per visit</span>
+        <span>Average pitch</span><span>Compliance</span><span>Strike rate</span>
       </div>
       <div id="team-list"></div>
       <div style="margin-top:16px">
@@ -1481,13 +1625,13 @@ body::before{
 
     <div class="grid2">
       <div class="card">
-        <h3>Revenue — last 7 days vs forecast</h3>
-        <div class="cap">Actuals in solid fill, and the BigQuery ML demand forecast for the coming week in outline, with its 90 percent confidence band.</div>
+        <h3>Revenue — last 7 days against forecast, in lakh rupees</h3>
+        <div class="cap">Actuals in solid fill, and the BigQuery machine learning demand forecast for the coming week in outline, with its 90 percent confidence band.</div>
         <div class="bars" id="rev-bars"></div>
       </div>
       <div class="card">
         <h3>Inventory alerts</h3>
-        <div class="cap">SKUs at or below reorder threshold, ranked by urgency.</div>
+        <div class="cap">Products at or below their reorder level, ranked by urgency.</div>
         <div id="alerts-list"></div>
       </div>
     </div>
@@ -1519,11 +1663,11 @@ body::before{
 <!-- ── SETTINGS MODAL ─────────────────────────────────────── -->
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <h3>Gemini API Key</h3>
+    <h3>Gemini Key</h3>
     <p>The AI assistant and analyst run on Google Gemini. Your key is stored only in this browser's
        <code>localStorage</code> — it is never uploaded or committed.
        Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>.</p>
-    <input id="key-in" type="password" placeholder="Paste your Gemini API key">
+    <input id="key-in" type="password" placeholder="Paste your Gemini key">
     <div class="modal-btns">
       <button class="btn-ghost" onclick="closeSettings()">Cancel</button>
       <button class="btn-primary" onclick="saveKey()">Save</button>
@@ -1542,11 +1686,24 @@ let activeProfile = D.shopperProfiles[0];
 let basket = [];
 let chatHistory = [];
 const MODEL = 'gemini-3.5-flash-lite';
+// The site spells everything out, so model output is held to the same rule.
+const PLAIN_WORDS = '\n\nWRITING STYLE FOR EVERYTHING YOU OUTPUT: write every word in full, with no abbreviations or shorthand. Write "product" not "SKU", "ready-to-drink" not "RTD", "versus" not "vs", "for example" not "e.g.", "average" not "avg", "year on year" not "YoY", "₹4.6 lakh" or "₹52,000" not "₹4.6L" or "₹52K", "October to December" not "Q4", and full rule names such as "on-shelf availability" rather than codes such as OSA. Never use the long dash characters — or –; use a comma, a full stop or the word "to" instead.';
+function inr(v){
+  v = Math.round(v);
+  if (Math.abs(v) >= 100000) return '₹' + (v/100000).toFixed(2).replace(/\.?0+$/, '') + ' lakh';
+  return '₹' + v.toLocaleString('en-IN');
+}
+function fmtWhen(s){
+  const [d, t] = String(s).split(' ');
+  const dt = new Date(d + 'T00:00:00');
+  if (isNaN(dt)) return s;
+  return dt.getDate() + ' ' + dt.toLocaleString('en-GB', { month:'long' }) + (t ? ', ' + t : '');
+}
 
 /* ── Surface switching ──────────────────────────────────── */
 const SURFACE_TITLE = {
   rep:  ['Field Execution', () => D.rep.territory],
-  biz:  ['Team & Analytics', () => D.rep.territory + ' region'],
+  biz:  ['Team and Analytics', () => D.rep.territory + ' region'],
   shop: ['Shopper Insights', () => D.store.name.split(' — ').pop()],
 };
 
@@ -1576,7 +1733,7 @@ function saveKey(){
 }
 function updateStatus(){
   const ok = !!getKey();
-  document.getElementById('ai-status').textContent = ok ? 'AI connected' : 'API key needed';
+  document.getElementById('ai-status').textContent = ok ? 'AI connected' : 'Gemini key needed';
   document.getElementById('ai-pill').classList.toggle('warn', !ok);
 }
 
@@ -1588,7 +1745,11 @@ function cleanReply(t){
     .replace(/(^|\s)\*(?!\s)([^*\n]+?)\*(?=\s|$|[.,;:!?])/g,'$1$2')
     .replace(/`([^`]+)`/g,'$1')
     .replace(/^#{1,6}\s+/gm,'')
-    .replace(/^\s*[\*•]\s+/gm,'- ');
+    .replace(/^\s*[\*•]\s+/gm,'- ')
+    .replace(/(\d)[ \t]*[–—][ \t]*(?=\d)/g,'$1 to ')
+    .replace(/^[ \t]*[–—][ \t]*/gm,'- ')
+    .replace(/[ \t]*[–—][ \t]*/g,', ')
+    .replace(/,[ \t]*([.,;:!?])/g,'$1');
 }
 
 /* ── Grounding context builders ─────────────────────────── */
@@ -1716,7 +1877,7 @@ async function callGemini(systemPrompt, userText, history, onChunk){
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({
-      systemInstruction:{ parts:[{text:systemPrompt}] },
+      systemInstruction:{ parts:[{text:systemPrompt + PLAIN_WORDS}] },
       contents,
       generationConfig:{ temperature:0.6, maxOutputTokens:700, thinkingConfig:{ thinkingLevel:'MINIMAL' } },
     }),
@@ -1780,7 +1941,7 @@ async function callGeminiVision(systemPrompt, userText, frames, onChunk){
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body: JSON.stringify({
-      systemInstruction:{ parts:[{text:systemPrompt}] },
+      systemInstruction:{ parts:[{text:systemPrompt + PLAIN_WORDS}] },
       contents:[{ role:'user', parts }],
       generationConfig:{ temperature:0.25, maxOutputTokens:900, thinkingConfig:{ thinkingLevel:'MINIMAL' } },
     }),
@@ -1923,83 +2084,276 @@ const T = (x, y, size, weight, fill, txt, extra) =>
 const MID = ' text-anchor="middle"';
 const SVG_OPEN = '<svg viewBox="0 0 200 116" width="100%" height="116" preserveAspectRatio="xMidYMid meet" aria-hidden="true">';
 
+// Pack type matches loosely so category labels can be renamed freely.
+function packKind(p){
+  const c = String(p.cat || '');
+  return /bar/i.test(c) ? 'bar' : /salad|bowl/i.test(c) ? 'salad' : 'shake';
+}
+function flavourKey(p){
+  const n = String(p.name || '').toLowerCase();
+  return /choc\w*\s+almond/.test(n) ? 'chocoAlmond' : /coffee\s+cocoa/.test(n) ? 'coffeeCocoa'
+    : /peanut/.test(n) ? 'peanut' : /oat/.test(n) ? 'oats' : /paneer/.test(n) ? 'paneer'
+    : /chicken|caesar/.test(n) ? 'caesar' : /chickpea|quinoa/.test(n) ? 'chickpea'
+    : /coffee/.test(n) ? 'coffee' : /vanilla/.test(n) ? 'vanilla' : /choc/.test(n) ? 'chocolate' : 'plain';
+}
+function packLabel(p){
+  const f = flavourOf(p).replace(/\s+Bar$/i, '');
+  return /^\d+\s*(g|ml)$/i.test(f) ? '' : esc(f).toUpperCase();
+}
+const PK_LG = (id, x2, y2, stops) => '<linearGradient id="' + id + '" x1="0" y1="0" x2="' + x2 + '" y2="' + y2 + '">' +
+  stops.map(s => '<stop offset="' + s[0] + '" stop-color="' + s[1] + '"' + (s[2] == null ? '' : ' stop-opacity="' + s[2] + '"') + '/>').join('') +
+  '</linearGradient>';
+const PK_BLUR = u => '<filter id="' + u + 'f" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="2"/></filter>';
+const PK_SHINE = u => PK_LG(u + 'h', 1, 0, [[0,'#000',.42],[.14,'#000',0],[.25,'#fff',.45],[.34,'#fff',0],[.7,'#000',0],[1,'#000',.45]]);
+const PK_NUM = g => g + '<tspan font-size="62%" dx=".3">g</tspan>';
+const PK_ING = {
+  oat: '<ellipse rx="4.2" ry="2.6" fill="#EBD5A5"/><path d="M-3.4 0H3.4" stroke="#C3A064" stroke-width=".6"/><ellipse cx="-1" cy="-1" rx="2" ry=".7" fill="#fff" opacity=".55"/>',
+  hazel: '<circle r="3.4" fill="#8E5229"/><path d="M-3.3-.6a3.4 3.4 0 0 1 6.6 0z" fill="#D2A56C"/><circle cx="-1.3" cy="1" r=".9" fill="#fff" opacity=".35"/>',
+  almond: '<path d="M0-5.5C3.4-3 3.4 3 0 5.5-3.4 3-3.4-3 0-5.5z" fill="#A9652F"/><path d="M-1-3.5Q-1.8 0-1 3.5M1.2-3Q.7 0 1.2 3" stroke="#6E3A17" stroke-width=".5" fill="none"/><path d="M-.6-4.2Q-2 0-1.2 2" stroke="#E8B884" stroke-width=".8" fill="none" opacity=".8"/>',
+  peanut: '<g fill="#D9A864"><ellipse cx="-2.7" rx="3.5" ry="2.9"/><ellipse cx="2.7" rx="3.5" ry="2.6"/></g><path d="M-5 0h10M-3.6-1.8h2M1.6-1.6h2M-3.6 1.6h2M1.6 1.5h2" stroke="#A97836" stroke-width=".45"/><ellipse cx="-3" cy="-1.4" rx="1.6" ry=".6" fill="#fff" opacity=".45"/>',
+  jaggery: '<path d="M-4.5-2 0-4.2 4.5-2 0 .2z" fill="#D9963F"/><path d="M-4.5-2 0 .2v4.6l-4.5-2.2z" fill="#A9661F"/><path d="M0 .2 4.5-2v4.6L0 4.8z" fill="#7E4512"/><circle cx="-1" cy="-2.2" r=".5" fill="#F4C97A"/><circle cx="1.5" cy="-1.6" r=".4" fill="#F4C97A"/>',
+  choc: '<rect x="-5" y="-4" width="10" height="8" rx="1" fill="#3A1D11"/><path d="M-5-4h10l-1.3 1.3h-7.4v5.4L-5 4z" fill="#6E3D25"/><path d="M0-2.7v5.4M-3.7 0h7.4" stroke="#24110A" stroke-width=".7"/>',
+  bean: '<ellipse rx="3.8" ry="2.7" fill="#4A2817"/><path d="M-3.2.2C-1.5-1.3 1.5 1.3 3.2-.2" stroke="#1C0E06" stroke-width=".9" fill="none"/><ellipse cx="-1" cy="-1.5" rx="1.7" ry=".6" fill="#fff" opacity=".3"/>',
+  pod: '<ellipse rx="7" ry="3.6" fill="#A2552A"/><path d="M-6-1.5Q0-2.8 6-1.5M-6.8.4H6.8M-6 2Q0 3.1 6 2" stroke="#6A3012" stroke-width=".55" fill="none"/><ellipse cx="-2" cy="-1.9" rx="3" ry=".8" fill="#fff" opacity=".25"/>',
+  flower: '<g fill="#FFF9EA" stroke="#E2D2A4" stroke-width=".35">' +
+    [0, 72, 144, 216, 288].map(r => '<path transform="rotate(' + r + ')" d="M0 0C-1.8-2-1.5-5 0-6 1.5-5 1.8-2 0 0z"/>').join('') +
+    '</g><circle r="1.3" fill="#F2C94C"/>',
+  vpod: '<path d="M-7 1.5Q0-2.5 7 1" stroke="#3A2414" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+};
+const PK_PUT = (k, x, y, r, s) => '<g transform="translate(' + x + ' ' + y + ') rotate(' + (r || 0) + ') scale(' + (s || 1) + ')">' + PK_ING[k] + '</g>';
+
+const PK_BAR = {
+  oats:        { c:['#EDD39F','#C3914F'], ink:'#5C3B16', it:[['oat',142,44,-25,1.7],['oat',158,40,20,1.6],['hazel',168,50,0,1.6],['oat',150,54,-10,1.8],['hazel',140,60,0,1.4],['oat',163,63,30,1.5]] },
+  peanut:      { c:['#E3A65E','#A9652B'], ink:'#fff', it:[['peanut',142,44,-20,1.6],['jaggery',161,46,0,2.2],['peanut',149,59,15,1.6],['jaggery',168,62,0,1.3],['peanut',138,62,-40,1.2]] },
+  chocoAlmond: { c:['#93614A','#4A2A1B'], ink:'#fff', it:[['choc',148,49,-12,2],['almond',166,43,35,1.6],['almond',163,61,-20,1.5],['choc',138,62,15,1.1],['almond',139,42,-50,1.2]] },
+  coffeeCocoa: { c:['#A06E4D','#45291B'], ink:'#fff', it:[['pod',157,48,-15,1.9],['bean',140,44,-25,1.6],['bean',146,60,20,1.6],['bean',167,62,-10,1.4],['bean',171,40,40,1.2]] },
+  plain:       { c:['#E3C48F','#B5824A'], ink:'#5C3B16', it:[['oat',146,48,0,1.7],['almond',162,52,30,1.5]] },
+};
+
+function pkBar(p, u){
+  const cmp = !p.ours, g = String(p.protein);
+  const F = PK_BAR[flavourKey(p)] || PK_BAR.plain;
+  const body = 'M22 33Q100 29.5 178 33V85Q100 88.5 22 85Z';
+  const seal = (x, d) => {
+    let z = 'M' + x + ' 33.4L' + (x + d * 10) + ' 34.4';
+    for (let i = 0; i < 16; i++) z += 'l' + (d * 1.3) + ' 1.5l' + (-d * 1.3) + ' 1.5';
+    return z + 'L' + x + ' 84.6Z';
+  };
+  const ridges = (x, d) => { let z = ''; for (let i = 2; i < 10; i += 2) z += 'M' + (x + d * i) + ' 35V84'; return z; };
+  const sL = seal(22, -1), sR = seal(178, 1);
+  const base = cmp ? [[0,'#E4E7EB'],[.5,'#CDD2D8'],[1,'#A9B0B9']] : [[0,'#118270'],[.5,'#0C6B5F'],[1,'#053B34']];
+  let s = SVG_OPEN + '<defs>' + PK_BLUR(u) +
+    PK_LG(u + 'w', 0, 1, base) +
+    PK_LG(u + 'v', 0, 1, [[0,'#fff',0],[.1,'#fff',.5],[.22,'#fff',0],[.68,'#000',0],[1,'#000',.32]]) +
+    (cmp ? '' : PK_LG(u + 'p', 1, 1, [[0,F.c[0]],[1,F.c[1]]]) + PK_LG(u + 'b', 0, 1, [[0,'#DDFB7C'],[1,'#AEDB2E']])) +
+    '<clipPath id="' + u + 'c"><path d="' + body + '"/><path d="' + sL + '"/><path d="' + sR + '"/></clipPath></defs>' +
+    '<ellipse cx="100" cy="90" rx="84" ry="3.6" fill="#000" opacity=".35" filter="url(#' + u + 'f)"/>' +
+    '<g clip-path="url(#' + u + 'c)"><rect x="8" y="28" width="184" height="62" fill="url(#' + u + 'w)"/>' +
+    '<path d="' + ridges(22, -1) + ridges(178, 1) + '" stroke="#000" stroke-opacity=".22" stroke-width=".6"/>' +
+    '<path d="M22 33V85M178 33V85" stroke="#000" stroke-opacity=".3" stroke-width=".8"/>';
+  if (cmp) {
+    s += T(100, 55, 7, 800, '#6B7280', 'OTHER BRAND', MID + ' letter-spacing="1.2"') +
+      T(100, 68, 9, 700, '#6B7280', g + 'g protein', MID);
+  } else {
+    s += '<path d="M140 28H182V90H124Z" fill="url(#' + u + 'p)"/>' +
+      '<path d="M140 29L124 89" stroke="#fff" stroke-opacity=".45" stroke-width="1.1"/>' +
+      '<path d="M138.6 29L122.6 89" stroke="#000" stroke-opacity=".25" stroke-width="1.4"/>' +
+      F.it.map(i => PK_PUT.apply(null, i)).join('') +
+      '<path d="M127 73H178V85Q150 87.2 124 85.5Z" fill="#000" opacity=".22"/>' +
+      T(152, 80.6, 4.4, 800, '#fff', packLabel(p), MID + ' letter-spacing=".4"') +
+      '<rect x="27" y="41" width="36" height="37" rx="5" fill="#000" opacity=".22"/>' +
+      '<rect x="27" y="40" width="36" height="37" rx="5" fill="url(#' + u + 'b)"/>' +
+      T(45, 62, 18, 900, '#0A3A33', PK_NUM(g), MID + ' letter-spacing="-.6"') +
+      T(45, 71, 5.4, 800, '#0A3A33', 'PROTEIN', MID + ' letter-spacing=".8"') +
+      protivaMark(68, 41.5, 11, '#fff') +
+      T(82, 50.4, 8.6, 800, '#fff', 'PROTIVA', ' letter-spacing=".8"') +
+      T(69, 59, 4.4, 700, '#9FD9CC', 'PROTEIN BAR', ' letter-spacing="1.3"') +
+      '<path d="M69 64H96" stroke="#fff" stroke-opacity=".25" stroke-width=".5"/>' +
+      T(69, 72, 5, 700, '#D8F3EC', esc(p.pack));
+  }
+  return s + '<rect x="8" y="28" width="184" height="62" fill="url(#' + u + 'v)"/>' +
+    '<path d="M58 28H72L50 90H36Z" fill="#fff" opacity=".08"/>' +
+    '<path d="M22 36q7 3 14 2M22 82q7-3 15-2M178 36q-7 3-14 2M178 82q-7-3-15-2" stroke="#fff" stroke-opacity=".3" stroke-width=".7" fill="none"/></g>' +
+    '<path d="' + body + '" fill="none" stroke="#000" stroke-opacity=".18" stroke-width=".6"/></svg>';
+}
+
+const PK_SH = {
+  chocolate: { c:['#74463A','#43271A'], ink:'#fff', sub:'#E9CFB8', it:[['choc',83,89,-15,.85],['choc',117,88,20,.8]] },
+  coffee:    { c:['#BC8C62','#86583A'], ink:'#fff', sub:'#F8E6D2', it:[['bean',83,89,-20,1],['bean',117,87,25,1],['bean',115,91,-5,.75]] },
+  vanilla:   { c:['#FAF2DC','#E5D3A6'], ink:'#0A3A33', sub:'#8A7444', it:[['vpod',84,91,-10,.6],['flower',83,88,0,.85],['flower',117,88,30,.75]] },
+  high:      { c:['#105349','#06231F'], ink:'#fff', sub:'#9FD9CC', it:[] },
+  other:     { c:['#E6E9ED','#C4CAD2'], ink:'#6B7280', sub:'#8B93A0', it:[] },
+};
+function pkBottle(H, yN, yS, yW, yB){
+  const L = 100 - H, R = 100 + H, a = 89.5, b = 110.5, w = 1.6;
+  return 'M' + a + ' ' + yN + 'C' + a + ' ' + (yN + 6) + ' ' + L + ' ' + (yS - 9) + ' ' + L + ' ' + yS +
+    'V' + (yW - 12) + 'C' + L + ' ' + (yW - 6) + ' ' + (L + w) + ' ' + (yW - 4) + ' ' + (L + w) + ' ' + yW +
+    'C' + (L + w) + ' ' + (yW + 4) + ' ' + L + ' ' + (yW + 6) + ' ' + L + ' ' + (yW + 12) +
+    'V' + (yB - 5) + 'Q' + L + ' ' + yB + ' ' + (L + 5) + ' ' + yB + 'H' + (R - 5) + 'Q' + R + ' ' + yB + ' ' + R + ' ' + (yB - 5) +
+    'V' + (yW + 12) + 'C' + R + ' ' + (yW + 6) + ' ' + (R - w) + ' ' + (yW + 4) + ' ' + (R - w) + ' ' + yW +
+    'C' + (R - w) + ' ' + (yW - 4) + ' ' + R + ' ' + (yW - 6) + ' ' + R + ' ' + (yW - 12) +
+    'V' + yS + 'C' + R + ' ' + (yS - 9) + ' ' + b + ' ' + (yN + 6) + ' ' + b + ' ' + yN + 'Z';
+}
+function pkShake(p, u){
+  const cmp = !p.ours, g = String(p.protein);
+  const hi = !cmp && (p.protein >= 25 || /330/.test(p.pack));
+  const S = cmp ? PK_SH.other : hi ? PK_SH.high : PK_SH[flavourKey(p)] || PK_SH.chocolate;
+  const G = hi ? { H:23, yC:2, yN:15, yS:40, yW:76, yB:109 } : { H:20, yC:12, yN:25, yS:47, yW:80, yB:107 };
+  const path = pkBottle(G.H, G.yN, G.yS, G.yW, G.yB);
+  const cap = cmp ? [[0,'#8E96A1'],[.3,'#DDE1E6'],[.55,'#B3BAC3'],[1,'#7C8591']]
+    : [[0,'#053F37'],[.3,'#1DA390'],[.55,'#0E7D6F'],[1,'#043A33']];
+  let ridge = '';
+  for (let x = 89.6; x < 111; x += 1.7) ridge += 'M' + x.toFixed(1) + ' ' + (G.yC + 1.5) + 'V' + (G.yN - 3.5);
+  let s = SVG_OPEN + '<defs>' + PK_BLUR(u) + PK_SHINE(u) +
+    PK_LG(u + 's', 0, 1, [[0,S.c[0]],[1,S.c[1]]]) + PK_LG(u + 'k', 1, 0, cap) +
+    '<clipPath id="' + u + 'c"><path d="' + path + '"/></clipPath></defs>' +
+    '<ellipse cx="100" cy="' + (G.yB + 1) + '" rx="' + (G.H + 12) + '" ry="3" fill="#000" opacity=".4" filter="url(#' + u + 'f)"/>' +
+    '<rect x="90" y="' + (G.yN - 4) + '" width="20" height="5" fill="url(#' + u + 'k)"/>' +
+    '<path d="M90 ' + (G.yN - 2.6) + 'h20" stroke="#000" stroke-opacity=".3" stroke-width=".5" stroke-dasharray="1.4 .8"/>' +
+    '<rect x="88.5" y="' + G.yC + '" width="23" height="' + (G.yN - 4 - G.yC) + '" rx="1.8" fill="url(#' + u + 'k)"/>' +
+    '<path d="' + ridge + '" stroke="#000" stroke-opacity=".2" stroke-width=".55"/>' +
+    '<rect x="89" y="' + G.yC + '" width="22" height="1.4" rx=".7" fill="#fff" opacity=".35"/>' +
+    '<g clip-path="url(#' + u + 'c)"><rect x="60" y="0" width="80" height="116" fill="url(#' + u + 's)"/>';
+  const y = G.yS;
+  if (cmp) {
+    s += T(100, y + 18, 3.6, 800, S.ink, 'OTHER BRAND', MID + ' letter-spacing=".6"') +
+      '<rect x="80" y="' + (y + 24) + '" width="40" height="18" fill="#D2D6DC"/>' +
+      T(100, y + 35, 8, 800, S.ink, g + 'g', MID) + T(100, y + 40, 3.6, 700, S.ink, 'PROTEIN', MID) +
+      T(100, y + 54, 3.6, 600, S.sub, esc(p.pack), MID);
+  } else {
+    s += '<path d="M60 ' + (G.yN - 2) + 'H140V' + (y + 2) + 'Q100 ' + (y + 9) + ' 60 ' + (y + 2) + 'Z" fill="' + (hi ? '#0C6B5F' : '#0A4F46') + '"/>' +
+      '<path d="M60 ' + (y + 2) + 'Q100 ' + (y + 9) + ' 140 ' + (y + 2) + '" stroke="#fff" stroke-opacity=".35" stroke-width=".6" fill="none"/>' +
+      protivaMark(100 - (hi ? 5 : 4.5), y - (hi ? 16 : 14), hi ? 10 : 9, '#fff');
+    if (hi) {
+      s += T(100, y + 11, 7.6, 800, S.ink, 'PROTIVA', MID + ' letter-spacing=".7"') +
+        T(100, y + 16.5, 3.3, 700, S.sub, 'HIGH PROTEIN SHAKE', MID + ' letter-spacing=".5"') +
+        '<rect x="82" y="' + (y + 20) + '" width="36" height="31" rx="5" fill="#000" fill-opacity=".28" stroke="#C6F04A" stroke-width="1"/>' +
+        T(100, y + 41.5, 20, 900, '#C6F04A', PK_NUM(g), MID + ' letter-spacing="-.8"') +
+        T(100, y + 47.5, 4.2, 800, '#fff', 'PROTEIN', MID + ' letter-spacing=".9"') +
+        T(100, y + 58, 4.2, 800, S.ink, 'HIGH PROTEIN', MID + ' letter-spacing=".4"') +
+        T(100, y + 63.5, 3.3, 600, S.sub, esc(p.pack), MID);
+    } else {
+      s += T(100, y + 10.5, 6.6, 800, S.ink, 'PROTIVA', MID + ' letter-spacing=".6"') +
+        T(100, y + 15.5, 3.1, 700, S.sub, 'PROTEIN SHAKE', MID + ' letter-spacing=".7"') +
+        '<rect x="85" y="' + (y + 20) + '" width="30" height="22" rx="4" fill="#000" opacity=".25"/>' +
+        '<rect x="85" y="' + (y + 19) + '" width="30" height="22" rx="4" fill="#0C6B5F"/>' +
+        T(100, y + 33.6, 14, 900, '#C6F04A', PK_NUM(g), MID + ' letter-spacing="-.6"') +
+        T(100, y + 38.6, 3.6, 800, '#fff', 'PROTEIN', MID + ' letter-spacing=".7"') +
+        S.it.map(i => PK_PUT.apply(null, i)).join('') +
+        T(100, y + 49, 4.3, 800, S.ink, packLabel(p), MID + ' letter-spacing=".4"') +
+        T(100, y + 54, 3.1, 600, S.sub, esc(p.pack), MID);
+    }
+  }
+  return s + '<rect x="60" y="0" width="80" height="116" fill="url(#' + u + 'h)"/>' +
+    '<rect x="' + (100 - G.H + 3.5) + '" y="' + (G.yS + 2) + '" width="2" height="' + (G.yB - G.yS - 10) + '" rx="1" fill="#fff" opacity=".25"/></g>' +
+    '<path d="' + path + '" fill="none" stroke="#000" stroke-opacity=".2" stroke-width=".6"/></svg>';
+}
+
+const PK_FOOD = {
+  leaf: '<path d="M-6.5 1.2C-5.6-3-2.4-4.2 0-3.3 2.4-4.4 5.8-3 6.5 1.2 3.4 3-3.4 3-6.5 1.2z" fill="#6DB446"/><path d="M-4.5.6Q0-1.6 4.5.4" stroke="#C3E88E" stroke-width=".5" fill="none" opacity=".7"/>',
+  leafD: '<path d="M-6.5 1.2C-5.6-3-2.4-4.2 0-3.3 2.4-4.4 5.8-3 6.5 1.2 3.4 3-3.4 3-6.5 1.2z" fill="#3B8A2C"/><path d="M-4.5.6Q0-1.6 4.5.4" stroke="#8ECB60" stroke-width=".5" fill="none" opacity=".7"/>',
+  romaine: '<path d="M-7 .8C-5-2.8 5-2.8 7 .8 3 2.6-3 2.6-7 .8z" fill="#B3DB7A"/><path d="M-6 .6Q0-1 6 .6" stroke="#F0F9DA" stroke-width=".9" fill="none"/>',
+  pea: '<circle r="2.6" fill="#D9AB62"/><circle cx="-.8" cy="-.9" r=".9" fill="#F6DCA4"/><path d="M-1.6 1.5q1.6 1 3.2-.4" stroke="#AA7A35" stroke-width=".5" fill="none"/>',
+  quinoa: '<circle r=".9" fill="#F4E8C6"/><circle cx="2" cy="1" r=".8" fill="#B8492F"/><circle cx="-1.6" cy="1.4" r=".8" fill="#EADBB0"/>',
+  cuke: '<ellipse rx="3.6" ry="2" fill="#2E6B22"/><ellipse rx="3" ry="1.5" fill="#DDEFB5"/><circle r=".5" fill="#A8C878"/>',
+  tomato: '<ellipse rx="3.4" ry="2.5" fill="#C92B20"/><ellipse cx="-.6" cy="-.4" rx="2.2" ry="1.5" fill="#EE5A42"/><ellipse cx="-1.2" cy="-1" rx=".9" ry=".4" fill="#fff" opacity=".6"/>',
+  paneer: '<path d="M-3.4-1.7 0-3.4 3.4-1.7 0 0z" fill="#F6B46C"/><path d="M-3.4-1.7 0 0v3.4l-3.4-1.7z" fill="#E4813A"/><path d="M0 0 3.4-1.7v3.4L0 3.4z" fill="#BE5B24"/><circle cx="-.6" cy="-1.8" r=".55" fill="#4A2010" opacity=".7"/><circle cx="1.4" cy="-1.4" r=".4" fill="#4A2010" opacity=".6"/>',
+  pepR: '<path d="M-4 1Q0-3 4 1" stroke="#D3271E" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+  pepY: '<path d="M-4 1Q0-3 4 1" stroke="#F2BE22" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+  pepG: '<path d="M-4 1Q0-3 4 1" stroke="#3D8A2A" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+  onion: '<ellipse rx="3.2" ry="1.8" fill="none" stroke="#D9A3C8" stroke-width=".8"/>',
+  chicken: '<rect x="-5.5" y="-2" width="11" height="4" rx="1.8" fill="#DDA56B"/><path d="M-3-1.8l1 3.6M0-1.8l1 3.6M3-1.8l1 3.6" stroke="#7A4720" stroke-width=".6"/><rect x="-4.5" y="-1.6" width="9" height="1" rx=".5" fill="#fff" opacity=".3"/>',
+  crouton: '<path d="M-2.6-1.3 0-2.6 2.6-1.3 0 0z" fill="#F0C66A"/><path d="M-2.6-1.3 0 0v2.6l-2.6-1.3z" fill="#C88A2E"/><path d="M0 0 2.6-1.3v2.6L0 2.6z" fill="#A86E1E"/>',
+  parm: '<path d="M-2.6-.8 2.8-1.3 2.2-.1-2.2.7z" fill="#FBF4DC"/>',
+};
+const PK_BOWL = {
+  chickpea: [['romaine',3],['quinoa',9],['cuke',4],['pea',11],['tomato',4]],
+  paneer:   [['onion',3],['pepG',4],['pepY',4],['pepR',4],['paneer',9]],
+  caesar:   [['romaine',7],['parm',6],['chicken',6],['crouton',7]],
+  plain:    [['leaf',8]],
+};
+function pkScatter(seed, n, rx, ry, cy){
+  let v = seed;
+  const r = () => (v = (v * 9301 + 49297) % 233280) / 233280;
+  const out = [];
+  while (out.length < n) {
+    const x = r() * 2 - 1, y = r() * 2 - 1, a = Math.round(r() * 360);
+    if (x * x + y * y < 1) out.push([Math.round(100 + x * rx), Math.round(cy + y * ry), a]);
+  }
+  return out.sort((m, n2) => m[1] - n2[1]);
+}
+function pkSalad(p, u){
+  const cmp = !p.ours, g = String(p.protein);
+  const key = cmp ? 'plain' : flavourKey(p);
+  const mix = PK_BOWL[key] || PK_BOWL.plain;
+  const flat = k => /paneer|crouton|pea|quinoa|tomato/.test(k);
+  const use = (k, x, y, a, sc) => '<use href="#' + u + k + '" transform="translate(' + x + ' ' + y + ')' +
+    (flat(k) ? '' : ' rotate(' + a + ')') + (sc ? ' scale(' + sc + ')' : '') + '"/>';
+  const kinds = ['leaf', 'leafD'].concat(mix.map(m => m[0]).filter(k => !/^leaf/.test(k)));
+  const bowl = 'M38 42L50 96A50 10 0 0 0 150 96L162 42A62 13 0 0 0 38 42Z';
+  const band = 'M41.1 56Q100 80 158.9 56L153.1 82Q100 106 46.9 82Z';
+  const mound = 'M40 42C42 27 158 27 160 42A60 12.5 0 0 1 40 42Z';
+  let top = pkScatter(7, 15, 55, 11, 41).map((q, i) => use(i % 2 ? 'leaf' : 'leafD', q[0], q[1], q[2], 1.9)).join('');
+  mix.forEach((m, j) => { top += pkScatter(31 + j * 17, m[1], 52, 10, 42).map(q => use(m[0], q[0], q[1], q[2], m[0] === 'paneer' ? 1.7 : m[0] === 'romaine' ? 1.6 : 1.4)).join(''); });
+  const kraft = cmp ? [[0,'#E2E5EA'],[1,'#B9C0C9']] : [[0,'#DDBF8F'],[1,'#A9824F']];
+  const bandFill = cmp ? [[0,'#C4CAD2'],[1,'#AEB5BF']] : [[0,'#0E7A6C'],[1,'#0A4F46']];
+  let s = SVG_OPEN + '<defs>' + PK_BLUR(u) + PK_SHINE(u) +
+    kinds.map(k => '<g id="' + u + k + '">' + PK_FOOD[k] + '</g>').join('') +
+    PK_LG(u + 'g', 0, 1, kraft) + PK_LG(u + 'n', 0, 1, bandFill) +
+    PK_LG(u + 'l', 0, 1, [[0,'#fff',.35],[.5,'#fff',.06],[1,'#fff',.16]]) +
+    '<radialGradient id="' + u + 'r" cx=".5" cy=".35" r=".65"><stop offset="0" stop-color="#7DBE52"/><stop offset="1" stop-color="#3A7426"/></radialGradient>' +
+    '<clipPath id="' + u + 'c"><path d="' + bowl + '"/></clipPath>' +
+    '<clipPath id="' + u + 't"><path d="' + mound + '"/></clipPath></defs>' +
+    '<ellipse cx="100" cy="106" rx="62" ry="4" fill="#000" opacity=".4" filter="url(#' + u + 'f)"/>' +
+    '<g clip-path="url(#' + u + 'c)"><rect x="30" y="40" width="140" height="70" fill="url(#' + u + 'g)"/>' +
+    '<path d="M38 50Q100 66 162 50" stroke="#000" stroke-opacity=".08" stroke-width="3" fill="none"/>' +
+    '<path d="' + band + '" fill="url(#' + u + 'n)"/>' +
+    '<path d="M41.1 56Q100 80 158.9 56M46.9 82Q100 106 153.1 82" stroke="#fff" stroke-opacity=".3" stroke-width=".7" fill="none"/>';
+  if (cmp) {
+    s += T(100, 76, 5, 800, '#6B7280', 'OTHER BRAND', MID + ' letter-spacing=".8"') +
+      T(100, 86, 7, 700, '#6B7280', g + 'g protein', MID);
+  } else {
+    const words = packLabel(p).split(' ');
+    let l1 = packLabel(p), l2 = '';
+    if (l1.length > 12 && words.length > 1) {
+      const h = Math.ceil(words.length / 2);
+      l1 = words.slice(0, h).join(' '); l2 = words.slice(h).join(' ');
+    }
+    s += protivaMark(55, 66, 9, '#fff') +
+      T(66, 73.2, 7, 800, '#fff', 'PROTIVA', ' letter-spacing=".6"') +
+      T(56, 78.6, 3.2, 700, '#9FD9CC', 'PROTEIN SALAD', ' letter-spacing="1"') +
+      T(56, 84, 4.2, 800, '#fff', l1, ' letter-spacing=".3"') +
+      (l2 ? T(56, 88.8, 4.2, 800, '#fff', l2, ' letter-spacing=".3"') : '') +
+      '<rect x="108" y="69" width="38" height="22" rx="4" fill="#000" opacity=".25"/>' +
+      '<rect x="108" y="68" width="38" height="22" rx="4" fill="#C6F04A"/>' +
+      T(127, 82.4, 15, 900, '#0A3A33', PK_NUM(g), MID + ' letter-spacing="-.5"') +
+      T(127, 87.8, 3.8, 800, '#0A3A33', 'PROTEIN', MID + ' letter-spacing=".7"');
+  }
+  return s + '<rect x="30" y="40" width="140" height="70" fill="url(#' + u + 'h)" opacity=".75"/></g>' +
+    '<path d="M50 96A50 10 0 0 0 150 96" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".8"/>' +
+    '<ellipse cx="100" cy="42" rx="61" ry="12.6" fill="#3A2A18"/>' +
+    '<path d="' + mound + '" fill="url(#' + u + 'r)"/>' +
+    '<g clip-path="url(#' + u + 't)">' + top + '<path d="' + mound + '" fill="none" stroke="#000" stroke-opacity=".28" stroke-width="3"/></g>' +
+    '<ellipse cx="100" cy="42" rx="61.6" ry="12.9" fill="none" stroke="' + (cmp ? '#D5DAE0' : '#E9D2A6') + '" stroke-width="1.6"/>' +
+    '<path d="M36 42C37 18 163 18 164 42A64 14 0 0 1 36 42Z" fill="url(#' + u + 'l)"/>' +
+    '<path d="M36 42C37 18 163 18 164 42" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width=".8"/>' +
+    '<path d="M48 33Q62 22 96 21" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="2.2" stroke-linecap="round"/>' +
+    '<path d="M139 24.5Q153 27.5 158 34" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="1.3" stroke-linecap="round"/>' +
+    '<ellipse cx="100" cy="42" rx="64" ry="14" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="2"/>' +
+    '<path d="M44 49Q100 62 156 49" fill="none" stroke="#fff" stroke-width="1" stroke-linecap="round"/>' +
+    '<ellipse cx="100" cy="43.4" rx="64" ry="14" fill="none" stroke="#0A3A33" stroke-opacity=".25" stroke-width=".5"/></svg>';
+}
+
 function prodArt(p){
   const u = 'pi' + (++_pi);
-  const tint = FLAVOUR_TINT[p.id] || '#9CA3AF';
-  const flav = esc(flavourOf(p)).toUpperCase();
-  const g = String(p.protein);
-
-  if (!p.ours) {
-    return SVG_OPEN +
-      '<ellipse cx="100" cy="108" rx="30" ry="4" fill="#000" opacity=".10"/>' +
-      '<rect x="86" y="12" width="28" height="10" rx="3" fill="#C9CED6"/>' +
-      '<path d="M82 22h36l6 12v64a8 8 0 0 1-8 8H84a8 8 0 0 1-8-8V34z" fill="#E5E7EB" stroke="#B8BEC7" stroke-width="1.4"/>' +
-      '<rect x="76" y="52" width="48" height="30" fill="#D1D5DB"/>' +
-      T(100, 65, 6.5, 700, '#6B7280', 'OTHER BRAND', MID + ' letter-spacing=".8"') +
-      T(100, 76, 9, 700, '#6B7280', g + 'g protein', MID) + '</svg>';
-  }
-
-  if (p.cat === 'Protein Bars') {
-    const crimp = (x, dir) => {
-      let d = 'M' + x + ' 34';
-      for (let i = 0; i < 8; i++) d += ' l' + (dir * 5) + ' 3 l' + (-dir * 5) + ' 3';
-      return d + ' Z';
-    };
-    return SVG_OPEN +
-      '<defs><linearGradient id="' + u + 'w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14897A"/><stop offset=".55" stop-color="#0C6B5F"/><stop offset="1" stop-color="#084C43"/></linearGradient>' +
-      '<linearGradient id="' + u + 's" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>' +
-      '<ellipse cx="100" cy="92" rx="78" ry="6" fill="#000" opacity=".10"/>' +
-      '<path d="' + crimp(24, -1) + '" fill="#0A5A50"/><path d="' + crimp(176, 1) + '" fill="#0A5A50"/>' +
-      '<rect x="24" y="34" width="152" height="48" rx="3" fill="url(#' + u + 'w)"/>' +
-      '<rect x="24" y="37" width="152" height="9" fill="url(#' + u + 's)"/>' +
-      '<rect x="24" y="74" width="152" height="8" fill="' + tint + '" opacity=".9"/>' +
-      '<rect x="30" y="39" width="46" height="32" rx="5" fill="#C6F04A"/>' +
-      T(53, 58, 17, 900, '#0A3A33', g + 'g', MID) +
-      T(53, 67, 6.2, 800, '#0A3A33', 'PROTEIN', MID + ' letter-spacing=".8"') +
-      protivaMark(84, 41, 13, '#C6F04A') +
-      T(100, 51, 10.5, 800, '#fff', 'PROTIVA', ' letter-spacing=".6"') +
-      T(84, 66, 7, 700, '#D8F3EC', flav.slice(0, 22), ' letter-spacing=".5"') +
-      T(170, 51, 6.5, 600, '#9FD9CC', esc(p.pack), ' text-anchor="end"') + '</svg>';
-  }
-
-  if (p.cat === 'RTD Protein Shakes') {
-    const top = p.pack === '330ml' ? 6 : 14;
-    return SVG_OPEN +
-      '<defs><linearGradient id="' + u + 'b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F4FAF8"/><stop offset=".45" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DDEDE9"/></linearGradient>' +
-      '<linearGradient id="' + u + 'l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E7F70"/><stop offset="1" stop-color="#0A3A33"/></linearGradient></defs>' +
-      '<circle cx="100" cy="60" r="44" fill="' + tint + '" opacity=".14"/>' +
-      '<ellipse cx="100" cy="108" rx="34" ry="4" fill="#000" opacity=".12"/>' +
-      '<rect x="88" y="' + top + '" width="24" height="11" rx="3" fill="#C6F04A"/>' +
-      '<path d="M90 ' + (top + 11) + 'h20v6c0 4 10 8 10 18V98a8 8 0 0 1-8 8H88a8 8 0 0 1-8-8V' + (top + 35) + 'c0-10 10-14 10-18z" fill="url(#' + u + 'b)" stroke="#BFD9D3" stroke-width="1.2"/>' +
-      '<path d="M80 52h40v36H80z" fill="url(#' + u + 'l)"/>' +
-      '<rect x="80" y="88" width="40" height="5" fill="' + tint + '"/>' +
-      protivaMark(93, 55, 14, '#C6F04A') +
-      T(100, 80, 13, 900, '#fff', g + 'g', MID) +
-      T(100, 86.5, 5, 800, '#C6F04A', 'PROTEIN', MID + ' letter-spacing=".6"') +
-      '<rect x="84" y="' + (top + 30) + '" width="3" height="' + (52 - top) + '" rx="1.5" fill="#fff" opacity=".7"/>' +
-      T(100, 101, 5.5, 700, '#0A3A33', flav.slice(0, 12), MID + ' letter-spacing=".4"') + '</svg>';
-  }
-
-  return SVG_OPEN +
-    '<defs><radialGradient id="' + u + 'g" cx=".5" cy=".4" r=".6"><stop offset="0" stop-color="#7BC96F"/><stop offset="1" stop-color="#3E8E41"/></radialGradient></defs>' +
-    '<ellipse cx="100" cy="104" rx="64" ry="6" fill="#000" opacity=".12"/>' +
-    '<path d="M42 50h116l-10 46a8 8 0 0 1-8 6H60a8 8 0 0 1-8-6z" fill="#F7FBF9" stroke="#BFD9D3" stroke-width="1.2"/>' +
-    '<ellipse cx="100" cy="50" rx="58" ry="16" fill="url(#' + u + 'g)"/>' +
-    '<circle cx="78" cy="46" r="6" fill="' + tint + '"/><circle cx="90" cy="54" r="5" fill="#F2D27A"/>' +
-    '<circle cx="118" cy="44" r="6.5" fill="#E8553E"/><circle cx="128" cy="54" r="4.5" fill="' + tint + '"/>' +
-    '<circle cx="104" cy="50" r="5" fill="#F2D27A"/>' +
-    '<path d="M60 50q8-10 18-4M138 46q-6-8-16-4" stroke="#2F6E33" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-    '<ellipse cx="100" cy="50" rx="58" ry="16" fill="none" stroke="#fff" stroke-width="2" opacity=".75"/>' +
-    '<rect x="66" y="70" width="68" height="24" rx="4" fill="#0C6B5F"/>' +
-    protivaMark(70, 74, 15, '#C6F04A') +
-    T(110, 85, 12, 900, '#fff', g + 'g', MID) +
-    T(110, 91.5, 5, 800, '#C6F04A', 'PROTEIN', MID + ' letter-spacing=".6"') + '</svg>';
+  const kind = packKind(p);
+  return kind === 'bar' ? pkBar(p, u) : kind === 'salad' ? pkSalad(p, u) : pkShake(p, u);
 }
 
 function prodBg(p) {
   return !p.ours ? 'linear-gradient(160deg,#F7F8FA,#ECEEF1)'
     : p.cat === 'Protein Bars' ? 'radial-gradient(120% 90% at 30% 20%,#FFF6E8,#FBE3C2)'
-    : p.cat === 'RTD Protein Shakes' ? 'radial-gradient(120% 90% at 30% 20%,#EEF8F5,#D2EBE4)'
+    : p.cat === 'Ready-to-Drink Protein Shakes' ? 'radial-gradient(120% 90% at 30% 20%,#EEF8F5,#D2EBE4)'
     : 'radial-gradient(120% 90% at 30% 20%,#F3FAEC,#DDEFCB)';
 }
 // Thumbnails paint the pack art as a CSS image, so its label text never joins
@@ -2083,14 +2437,14 @@ function toggleBasket(id){
 
 function greet(){
   const n = activeProfile.name === 'Guest Shopper' ? 'there' : activeProfile.name;
-  addMsg(`Hi ${n}! I can help you find what you need at ${D.store.name}. Tell me what you're after, or ask about deals running today.`, 'bot');
+  addMsg(`Hi ${n}! I can help you find what you need at ${D.store.name}. Tell me what you are looking for, or ask about deals running today.`, 'bot');
 }
 
 const SHOP_SUGGEST = [
   "High protein breakfast under ₹100",
   "Which shake gives me the most protein per rupee?",
   "A bar with the least added sugar",
-  "What's on offer this week?",
+  "What is on offer this week?",
 ];
 function renderSuggest(){
   document.getElementById('suggest').innerHTML = SHOP_SUGGEST
@@ -2109,13 +2463,13 @@ function renderKPIs(){
   const pct = ((today.revenue - k.revenueTarget) / k.revenueTarget * 100).toFixed(1);
   const cards = [
     { c: today.revenue >= k.revenueTarget ? 'g' : 'r', lbl:'Revenue Today',
-      val:'₹'+(today.revenue/1000).toFixed(1)+'K',
-      sub:`<b class="${today.revenue >= k.revenueTarget ? 'up' : 'dn'}">${today.revenue >= k.revenueTarget ? '▲' : '▼'} ${Math.abs(pct)}%</b> vs target` },
-    { c:'',  lbl:'Average Basket', val:'₹'+basket, sub:`across ${today.transactions} transactions` },
+      val:inr(today.revenue),
+      sub:`<b class="${today.revenue >= k.revenueTarget ? 'up' : 'dn'}">${today.revenue >= k.revenueTarget ? '▲' : '▼'} ${Math.abs(pct)}%</b> against target` },
+    { c:'',  lbl:'Average Basket', val:inr(basket), sub:`across ${today.transactions} transactions` },
     { c:'',  lbl:'Conversion Rate', val:(k.conversionRate*100).toFixed(0)+'%', sub:'footfall to purchase' },
-    { c:'g', lbl:'Return Customers', val:(k.returnCustomerPct*100).toFixed(0)+'%', sub:`NPS ${k.nps}` },
+    { c:'g', lbl:'Return Customers', val:(k.returnCustomerPct*100).toFixed(0)+'%', sub:`Net Promoter Score ${k.nps}` },
     { c:'r', lbl:'Below Reorder Point', val:D.products.filter(p=>p.stock<=p.reorderAt).length,
-      sub:`of ${D.products.length} tracked SKUs` },
+      sub:`of ${D.products.length} tracked products` },
   ];
   const KPI_IC = [
     '<path d="M3 17l6-6 4 4 8-8M14 7h7v7"/>',
@@ -2138,7 +2492,7 @@ function renderBars(){
   const max = Math.max(...all);
   const actual = D.revenueWeek.map(r=>`
     <div class="bar-col">
-      <div class="vl">${(r.revenue/1000).toFixed(0)}K</div>
+      <div class="vl" title="${inr(r.revenue)}">₹${(r.revenue/100000).toFixed(2)}</div>
       <div class="bar" style="height:${r.revenue/max*100}%"></div>
       <div class="lb">${r.day}</div>
     </div>`).join('');
@@ -2147,10 +2501,10 @@ function renderBars(){
     const lo = f.lower/max*100, hi = f.upper/max*100, pt = f.predicted/max*100;
     return `
     <div class="bar-col">
-      <div class="vl" style="color:var(--primary)">${(f.predicted/1000).toFixed(0)}K</div>
+      <div class="vl" style="color:var(--primary)" title="${inr(f.predicted)}">₹${(f.predicted/100000).toFixed(2)}</div>
       <div class="bar fc" style="height:${pt}%">
         <div class="band" style="bottom:${(lo-pt)}%;height:${(hi-lo)}%"
-             title="90% interval: Rs ${f.lower.toLocaleString('en-IN')} to Rs ${f.upper.toLocaleString('en-IN')}"></div>
+             title="90 percent range: ${inr(f.lower)} to ${inr(f.upper)}"></div>
       </div>
       <div class="lb">${f.day}</div>
     </div>`;}).join('');
@@ -2182,7 +2536,7 @@ function renderSegments(){
         <div class="nm">${s.name}</div>
         <div class="ds">${s.desc}</div>
       </div>
-      <div class="mt"><b>₹${s.avgBasket}</b><span>avg basket</span></div>
+      <div class="mt"><b>${inr(s.avgBasket)}</b><span>average basket</span></div>
     </div>`).join('');
 }
 
@@ -2226,9 +2580,9 @@ function renderTeam(){
         <div><div class="n">${t.name}</div>
         <div class="s">${t.territory}</div></div>
       </div>
-      <div><b style="color:${qc}">${(q*100).toFixed(0)}%</b><span>₹${(t.achieved/100000).toFixed(1)}L / ₹${(t.quota/100000).toFixed(1)}L</span></div>
+      <div><b style="color:${qc}">${(q*100).toFixed(0)}%</b><span>${inr(t.achieved)} of ${inr(t.quota)}</span></div>
       <div><b style="color:${cc}">${(cov*100).toFixed(0)}%</b><span>${t.outletsCovered} of ${t.outletsTotal} outlets</span></div>
-      <div><b>₹${Math.round(t.achieved/t.visitsDone/1000)}K</b><span>${t.visitsDone}/${t.visitsPlanned} visits</span></div>
+      <div><b>${inr(t.achieved/t.visitsDone)}</b><span>${t.visitsDone} of ${t.visitsPlanned} visits</span></div>
       <div><b style="color:${pc}">${t.avgPitchScore}</b><span>${t.rehearsalsDone} rehearsals</span></div>
       <div><b>${(t.complianceRate*100).toFixed(0)}%</b><span>planogram</span></div>
       <div><b>${(t.strikeRate*100).toFixed(0)}%</b><span>ask to close</span></div>
@@ -2301,7 +2655,7 @@ async function askCoaching(){
 }
 
 const BIZ_SUGGEST = [
-  "Which SKUs will stock out before the weekend?",
+  "Which products will run out of stock before the weekend?",
   "Why is Saturday revenue so much higher?",
   "Which segment should I target next week?",
   "Is Salad Fresh Hour paying for itself on shrink?",
@@ -2348,7 +2702,7 @@ function renderRepSide(){
   document.getElementById('quota-pct').textContent = (pct*100).toFixed(0)+'%';
   document.getElementById('quota-fill').style.width = (pct*100)+'%';
   document.getElementById('quota-txt').textContent =
-    `₹${(r.achievedMonth/100000).toFixed(1)}L of ₹${(r.quotaMonth/100000).toFixed(1)}L · ${r.visitsDone}/${r.visitsPlanned} visits`;
+    `${inr(r.achievedMonth)} of ${inr(r.quotaMonth)} · ${r.visitsDone} of ${r.visitsPlanned} visits`;
 
   document.getElementById('visit-list').innerHTML = D.visits.map((v,i)=>`
     <div class="visit-card ${v.id===activeVisit.id?'on':''}" onclick="setVisit(${i})">
@@ -2388,9 +2742,9 @@ function renderBrief(){
     <div class="brief-grid">
       <div class="b"><div class="l">Last Visit</div><div class="v">${v.daysSince} days ago</div></div>
       <div class="b"><div class="l">Cadence</div><div class="v" style="font-size:12.5px">${v.visitFrequency}</div></div>
-      <div class="b"><div class="l">Avg Order</div><div class="v">₹${(v.history.avgOrderValue/1000).toFixed(0)}K</div></div>
-      <div class="b"><div class="l">Orders / 6m</div><div class="v">${v.history.ordersLast6m}</div></div>
-      <div class="b"><div class="l">Account YoY</div><div class="v" style="color:${a.growthYoY>=0?'var(--success)':'var(--danger)'}">${a.growthYoY>=0?'▲':'▼'} ${Math.abs(a.growthYoY*100).toFixed(0)}%</div></div>
+      <div class="b"><div class="l">Average order</div><div class="v">${inr(v.history.avgOrderValue)}</div></div>
+      <div class="b"><div class="l">Orders, last 6 months</div><div class="v">${v.history.ordersLast6m}</div></div>
+      <div class="b"><div class="l">Account, year on year</div><div class="v" style="color:${a.growthYoY>=0?'var(--success)':'var(--danger)'}">${a.growthYoY>=0?'▲':'▼'} ${Math.abs(a.growthYoY*100).toFixed(0)}%</div></div>
     </div>
     <div class="obj-box">
       <div class="l">Visit objective</div>
@@ -2412,9 +2766,9 @@ function renderPlanoRules(){
      Frames are sampled from your clip, ranked by sharpness, and the clearest are judged together, one verdict per rule.
      Anything the camera does not actually show comes back as NOT VISIBLE rather than a guess.`;
   document.getElementById('plano-rules').innerHTML =
-    `<div class="rule-meta">${pg.shelfLevels}. Share of shelf target ${pg.sosTargetPct}%, minimum ${pg.minFacingsPerSKU} facings per must-stock SKU.</div>` +
+    `<div class="rule-meta">${pg.shelfLevels}. Share of shelf target ${pg.sosTargetPct}%, minimum ${pg.minFacingsPerSKU} facings per must-stock product.</div>` +
     pg.rules.map(r=>
-      `<div class="rule-li"><code>${r.code}</code><b>${r.rule}</b><span>${r.spec}</span></div>`).join('');
+      `<div class="rule-li"><b>${r.rule}</b><span>${r.spec}</span></div>`).join('');
 }
 
 /* ── Visit planner ──────────────────────────────────────── */
@@ -2445,13 +2799,13 @@ function renderPlan(){
       <div class="pscore" style="color:${band};border-color:${band}">${r.score}</div>
       <div class="pmain">
         <div class="nm">${v.store}</div>
-        <div class="mt">${v.daysSince}d since visit vs ${v.cadenceDays}d cadence
-          (${r.overdue.toFixed(1)}x) · ${v.openTasks} open task${v.openTasks===1?'':'s'}
-          · ₹${(v.revenueAtRisk/1000).toFixed(0)}K at risk</div>
+        <div class="mt">${v.daysSince} days since last visit, due every ${v.cadenceDays} days
+          (${r.overdue.toFixed(1)} times the cycle) · ${v.openTasks} open task${v.openTasks===1?'':'s'}
+          · ${inr(v.revenueAtRisk)} at risk</div>
         <div class="drv">Top drivers: ${top}</div>
       </div>
       <div class="psch">${v.scheduled
-        ? `<b style="color:var(--success)">Scheduled</b><span>${v.scheduled.slice(5).replace('-','/')}</span>`
+        ? `<b style="color:var(--success)">Scheduled</b><span>${fmtWhen(v.scheduled)}</span>`
         : `<b style="color:var(--warning)">Unscheduled</b><span>no slot booked</span>`}</div>
     </div>`;
   }).join('');
@@ -2524,7 +2878,7 @@ function bar(label, achieved, target, unit, focus){
   const pace = D.rep.monthDaysElapsed / D.rep.monthDaysTotal * 100;
   const onTrack = pct >= pace;
   const col = onTrack ? 'var(--success)' : (pct >= pace-12 ? 'var(--warning)' : 'var(--danger)');
-  const fmt = v => unit==='units' ? v.toLocaleString('en-IN') : '₹'+(v/1000).toFixed(0)+'K';
+  const fmt = v => unit==='units' ? v.toLocaleString('en-IN') : inr(v);
   return `<div class="tgt">
     <div class="tgt-head">
       <span class="nm">${label}${focus?' <span class="focus">FOCUS</span>':''}</span>
@@ -2550,11 +2904,11 @@ function renderTargets(){
   const need = r.quotaMonth - r.achievedMonth;
   const daysLeft = r.monthDaysTotal - r.monthDaysElapsed;
   document.getElementById('pace-box').innerHTML = `
-    <div><div class="l">QUOTA</div><div class="v">₹${(r.quotaMonth/100000).toFixed(1)}L</div></div>
-    <div><div class="l">ACHIEVED</div><div class="v" style="color:${q>=pace?'var(--success)':'var(--warning)'}">₹${(r.achievedMonth/100000).toFixed(1)}L · ${(q*100).toFixed(0)}%</div></div>
-    <div><div class="l">GAP</div><div class="v">₹${(need/100000).toFixed(1)}L</div></div>
+    <div><div class="l">QUOTA</div><div class="v">${inr(r.quotaMonth)}</div></div>
+    <div><div class="l">ACHIEVED</div><div class="v" style="color:${q>=pace?'var(--success)':'var(--warning)'}">${inr(r.achievedMonth)} · ${(q*100).toFixed(0)}%</div></div>
+    <div><div class="l">GAP</div><div class="v">${inr(need)}</div></div>
     <div><div class="l">DAYS LEFT</div><div class="v">${daysLeft}</div></div>
-    <div><div class="l">RUN RATE NEEDED</div><div class="v">₹${(need/daysLeft/1000).toFixed(0)}K/day</div></div>`;
+    <div><div class="l">NEEDED EACH DAY</div><div class="v">${inr(need/daysLeft)}</div></div>`;
 
   document.getElementById('tgt-account').innerHTML =
     t.byAccount.map(a=>bar(a.account, a.achieved, a.target, 'inr', false)).join('');
@@ -3141,7 +3495,7 @@ function planoPrompt(n){
     multi ? '- Prefer the frame where a detail is clearest. Later frames are not more current than earlier ones.' : '',
     multi ? '' : '',
     '# WHAT THIS AUDIT IS FOR',
-    `The Q4 reset assigns ${ours} ${assigned} of the ${total} facings in this bay. That is an instruction issued to the store, not a description of the shelf.`,
+    `The fourth-quarter reset assigns ${ours} ${assigned} of the ${total} facings in this bay. That is an instruction issued to the store, not a description of the shelf.`,
     `Execution status on record: ${pg.executionNote}`,
     'Your job is to report what is ACTUALLY on the shelf in these frames. The reset tells you what to look for, it does not tell you what you will find.',
     `Finding no ${ours} product at all is an expected and entirely valid outcome of this audit. If that is what the frames show, say so plainly and report it as a failure of on-shelf availability.`,
@@ -3267,7 +3621,7 @@ function renderPlanoResult(reply){
       r.rule.toLowerCase() === bare.toLowerCase() || r.code.toLowerCase() === bare.toLowerCase());
     const entry = {
       key: known ? known.code : (bare || raw).toLowerCase(),
-      rule: known ? `${known.rule} (${known.code})` : bare || raw,
+      rule: known ? known.rule : bare || raw,
       verdict: m[2].toUpperCase(),
       note: (m[3] || '').trim(),
     };
@@ -3390,7 +3744,7 @@ function flag(id){
   if(c.oos){
     el.innerHTML = p.stock > 0
       ? `<span class="bad">Phantom stock. Nothing on shelf, system still shows ${p.stock}.</span>
-         <span class="ev">This is the exact condition where an audit produced the whole of an 11 percent sales lift in a study of 24,000 SKUs [KB-201], and the effect was strongest on perishables [KB-202].</span>`
+         <span class="ev">This is the exact condition where an audit produced the whole of an 11 percent sales lift in a study of 24,000 products [KB-201], and the effect was strongest on perishables [KB-202].</span>`
       : `<span class="bad">Out of stock, and the system agrees. Reorder.</span>`;
     return;
   }
@@ -3446,12 +3800,12 @@ function orderLines(){
 
     const reasons = [];
     let priority = 0;
-    if(cover < LEAD_DAYS){ reasons.push(`${cover.toFixed(1)}d cover, under ${LEAD_DAYS}d lead time`); priority += 40; }
+    if(cover < LEAD_DAYS){ reasons.push(`${cover.toFixed(1)} days of cover, under the ${LEAD_DAYS}-day lead time`); priority += 40; }
     if(cap && cap.oos){ reasons.push('found out of stock on shelf'); priority += 35; }
     else if(cap && cap.onShelf != null && cap.onShelf < minFacings()){ reasons.push('below planogram minimum'); priority += 20; }
     if(mustWin){
       const gap = mustWin.target - mustWin.achieved;
-      if(gap > 0){ reasons.push(`must-win SKU, ${gap} units behind target`); priority += 30; }
+      if(gap > 0){ reasons.push(`must-win product, ${gap} units behind target`); priority += 30; }
     }
     if(p.trending){ reasons.push('trending up'); priority += 10; }
     const promo = D.promotions.find(pr => (pr.skuIds||[]).includes(p.id));
@@ -3489,7 +3843,7 @@ function renderOrder(reset){
       ? edited[l.p.id]
       : l.suggested;
   });
-  const catCol = { 'Protein Bars':'#EA580C','RTD Protein Shakes':'#2563EB','Chilled Salads':'#16A34A' };
+  const catCol = { 'Protein Bars':'#EA580C','Ready-to-Drink Protein Shakes':'#2563EB','Chilled Salads':'#16A34A' };
   document.getElementById('order-list').innerHTML = lines.map(l=>{
     const cc = l.cover < 4 ? 'var(--danger)' : l.cover < 7 ? 'var(--warning)' : 'var(--success)';
     const catC = catCol[l.p.cat] || 'var(--border-3)';
@@ -3500,14 +3854,14 @@ function renderOrder(reset){
         <div class="s">₹${tradePrice(l.p)} trade · ₹${l.p.price} retail · ${(l.p.margin*100).toFixed(0)}% margin</div></div>
       </div>
       <div class="or-why">${l.reasons.map(r=>`<span>${r}</span>`).join('')}</div>
-      <div class="or-cov" style="color:${cc}">${l.cover.toFixed(1)}d</div>
+      <div class="or-cov" style="color:${cc}">${l.cover.toFixed(1)} days</div>
       <div class="or-qty">
         <input type="number" min="0" step="12" value="${orderQty[l.p.id]}"
                oninput="setQty('${l.p.id}',this.value)">
       </div>
       <div class="or-val" id="val-${l.p.id}">₹${(orderQty[l.p.id]*tradePrice(l.p)).toLocaleString('en-IN')}</div>
     </div>`;
-  }).join('') || '<div style="color:var(--text-2);font-size:13px;padding:12px 0">No lines need an order right now. Every SKU has cover beyond the lead time.</div>';
+  }).join('') || '<div style="color:var(--text-2);font-size:13px;padding:12px 0">No lines need an order right now. Every product has cover beyond the lead time.</div>';
   totalOrder();
 }
 
@@ -3531,7 +3885,7 @@ function totalOrder(){
   document.getElementById('order-total').innerHTML = `
     <div><div class="l">ORDER VALUE AT TRADE</div><div class="v">₹${t.toLocaleString('en-IN')}</div></div>
     <div><div class="l">THIS STORE'S AVERAGE</div><div class="v">₹${avg.toLocaleString('en-IN')}</div></div>
-    <div><div class="l">VS AVERAGE</div><div class="v" style="color:${delta>=0?'var(--success)':'var(--danger)'}">${delta>=0?'▲':'▼'} ${Math.abs(delta).toFixed(0)}%</div></div>`;
+    <div><div class="l">AGAINST STORE AVERAGE</div><div class="v" style="color:${delta>=0?'var(--success)':'var(--danger)'}">${delta>=0?'▲':'▼'} ${Math.abs(delta).toFixed(0)}%</div></div>`;
 }
 
 function orderContext(){
@@ -3676,20 +4030,50 @@ function fence(text, label){
 
 function requireKey(el){
   if(getKey()) return true;
-  el.textContent = 'Add your Gemini API key in settings (gear icon, top right) to use this.';
+  el.textContent = 'Add your Gemini key in settings (gear icon, top right) to use this.';
   openSettings();
   return false;
 }
 function errMsg(e){
   const m = {
-    BAD_KEY:     'That API key was rejected. Open settings and check it.',
+    BAD_KEY:     'That Gemini key was rejected. Open settings and check it.',
     BAD_REQUEST: 'Gemini rejected the request. If you loaded a file, try a different shelf clip or photo.',
-    RATE_LIMIT:  'Rate limited by the Gemini API. Wait a few seconds and try again.',
-    UPSTREAM:    'The Gemini API is returning an error right now. Try again shortly.',
-    API_403:     'Access denied by the Gemini API for this project.',
-    NO_KEY:      'Add your Gemini API key in settings (gear icon, top right).',
+    RATE_LIMIT:  'Gemini is limiting requests right now. Wait a few seconds and try again.',
+    UPSTREAM:    'Gemini is returning an error right now. Try again shortly.',
+    API_403:     'Gemini denied access for this project.',
+    NO_KEY:      'Add your Gemini key in settings (gear icon, top right).',
   }[e.message];
   return m || 'Could not reach Gemini: ' + e.message;
+}
+
+/* ── Role splash ────────────────────────────────────────── */
+const ROLE_ART = { rep:['B03','R01'], biz:['B01','R03'], shop:['S02','B04'] };
+function pickRole(s){
+  sessionStorage.setItem('retailiq_role', s);
+  switchSurface(s);
+  const sp = document.getElementById('splash');
+  sp.classList.add('out');
+  document.body.classList.remove('splash-on');
+  setTimeout(()=>{ sp.style.display = 'none'; }, 450);
+}
+function showSplash(){
+  const sp = document.getElementById('splash');
+  sp.style.display = '';
+  sp.scrollTop = 0;
+  requestAnimationFrame(()=>sp.classList.remove('out'));
+  document.body.classList.add('splash-on');
+}
+function initSplash(){
+  const art = id => '<div class="hr-item">'+prodArt(D.products.find(p=>p.id===id))+'</div>';
+  Object.entries(ROLE_ART).forEach(([r,ids])=>{
+    document.getElementById('sp-art-'+r).insertAdjacentHTML('beforeend', ids.map(art).join(''));
+  });
+  document.getElementById('sp-packs').innerHTML =
+    ['B03','R01','S02','R04'].map((id,i)=>'<div class="sp-pack p'+(i+1)+'">'+prodArt(D.products.find(p=>p.id===id))+'</div>').join('');
+  document.getElementById('sp-visits').textContent = D.visits.length + (D.visits.length===1?' visit':' visits') + ' planned';
+  const want = new URLSearchParams(location.search).get('role') || sessionStorage.getItem('retailiq_role');
+  if (SURFACE_TITLE[want]) { switchSurface(want); document.getElementById('splash').style.display = 'none'; }
+  else document.body.classList.add('splash-on');
 }
 
 /* ── Boot ───────────────────────────────────────────────── */
@@ -3712,6 +4096,7 @@ function errMsg(e){
   renderRepSide(); renderBrief(); renderPlanoRules();
   renderPlan(); renderTargets(); renderMarketing(); renderCapture(); renderOrder();
   switchSurface('rep');
+  initSplash();
   updateStatus();
   document.getElementById('modal').addEventListener('click', e=>{
     if(e.target.id==='modal') closeSettings();

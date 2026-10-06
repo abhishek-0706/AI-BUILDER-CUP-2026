@@ -3,7 +3,7 @@
    model, so anything it returns is treated as hostile input. */
 const { chromium } = require('playwright');
 
-const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html';
+const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html?role=rep';
 
 let pass = 0, fail = 0;
 const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL') + '  ' + name); };
