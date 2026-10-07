@@ -96,8 +96,9 @@ Monthly target and achievement are store-level, for FreshMart Express Koramangal
 | R04 Protiva High Protein Shake 30g 330ml | 400 | 180 | 45.0 | 220 | Furthest behind |
 | S02 Protiva Paneer Tikka Protein Salad 200g | 140 | 124 | 88.6 | 16 | Close |
 
-R04 is the problem SKU. It was listed in July 2026, it holds 2 facings on shelf 4 of the chilled bay
-rather than eye level, and it is the SKU the buyer is most likely to delist at the next range review.
+R04 is the problem SKU. It was listed in July 2026, it holds 2 facings at stoop level in the store's
+secondary dairy chiller rather than in the chilled protein bay the Q4 reset assigns it to, and it is the
+SKU the buyer is most likely to delist at the next range review.
 
 ---
 
@@ -206,8 +207,8 @@ Bay facing split, current:
 | --- | --- | --- |
 | Hershey's | 14 | 31.8 |
 | Sofit | 9 | 20.5 |
-| Protiva | 8 | 18.2 |
-| Private label and others | 13 | 29.5 |
+| Protiva | 0 | 0.0 |
+| Private label and others | 21 | 47.7 |
 | Total | 44 | 100.0 |
 
 Compliance rules applied to this bay:
@@ -222,7 +223,7 @@ Compliance rules applied to this bay:
 | PRM | Promotion execution | Protein Pledge chiller cling and shelf-edge strips are present, current, and sited with R01 and R03. |
 | CND | Product condition | All bottles front-faced with the protein claim readable, no leaking, dented or out-of-date packs on shelf. |
 
-The ask for this visit: move R04 from shelf 4 to shelf 2, take R03 from 1 facing to 3, and add 1
-the full 13 assigned facings, which takes Protiva from 0 to 13 and clears the 30% target.
+The ask for this visit: execute the full 13 assigned facings, with R01, R02 and R04 at eye level on
+shelf 2 and R03 on shelf 3, which takes Protiva from 0 to 13 and clears the 30% target.
 Supporting citations are KB-105 for the placement effect, KB-108 for the price per gram of protein
 argument, and KB-110 for the throughput benchmark.
