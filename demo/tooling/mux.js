@@ -5,8 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const SP = path.resolve(__dirname, '..');
-const FF = path.join(SP, 'node_modules', 'ffmpeg-static', 'ffmpeg.exe');
+const FF = require('ffmpeg-static');
 const REC = path.join(__dirname, 'rec');
 const OUT = process.argv[2];
 

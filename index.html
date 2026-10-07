@@ -1167,6 +1167,15 @@ body.splash-on{overflow:hidden}
 .sp-ic svg{width:21px;height:21px;fill:none;stroke:var(--rc);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sp-stat{position:absolute;z-index:2;top:22px;right:14px;box-shadow:0 4px 10px rgba(10,58,51,.15);background:var(--lime);color:var(--lime-ink);font-size:10.5px;font-weight:900;
   padding:4px 9px;border-radius:20px;letter-spacing:.3px}
+.sp-char{position:absolute;right:8px;bottom:0;height:140px;width:auto;max-width:46%;object-fit:contain;z-index:1;
+  filter:drop-shadow(0 10px 14px rgba(10,58,51,.18));transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.sp-art.has-char{justify-content:flex-start}
+.sp-art.has-char .hr-item{width:30%;margin:0 -4% 0 0}
+.sp-role:hover .sp-char,.sp-role:focus-visible .sp-char{transform:translateY(-3px)}
+.sp-journey{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:12px}
+.sp-journey span{font-size:9.5px;font-weight:850;letter-spacing:1px;text-transform:uppercase;color:var(--rc)}
+.sp-journey span+span::before{content:'\2192';margin:0 5px 0 1px;color:#9AABA6;font-weight:700}
+@media (prefers-reduced-motion:reduce){.sp-char{transition:none}.sp-role:hover .sp-char{transform:none}}
 .sp-body{padding:18px 20px 20px;display:flex;flex-direction:column;flex:1}
 .sp-who{font-size:10.5px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase;color:var(--rc)}
 .sp-title{font-size:19px;font-weight:850;color:var(--brand-900);letter-spacing:-.3px;margin-top:4px}
@@ -1212,11 +1221,13 @@ body.splash-on{overflow:hidden}
         <div class="sp-art" id="sp-art-rep">
           <div class="sp-ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></div>
           <div class="sp-stat" id="sp-visits">Visit plan</div>
+          <img class="sp-char" src="assets/illustrations/field-sales-rep.png" alt="Field sales representative using a tablet while reviewing products on a grocery store shelf" onload="this.parentNode.classList.add('has-char')" onerror="this.remove()">
         </div>
         <div class="sp-body">
           <div class="sp-who">Field sales rep</div>
           <div class="sp-title">I am visiting stores</div>
           <div class="sp-desc">Plan the day, pitch the buyer, audit the shelf and place the order.</div>
+          <div class="sp-journey" aria-label="Journey"><span>Plan</span><span>Visit</span><span>Audit</span><span>Order</span></div>
           <ul class="sp-list">
             <li>Visit brief and AI pitch for each buyer</li>
             <li>Shelf photo audit against the planogram</li>
@@ -1229,11 +1240,13 @@ body.splash-on{overflow:hidden}
         <div class="sp-art" id="sp-art-biz">
           <div class="sp-ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M14 7h7v7"/></svg></div>
           <div class="sp-stat">Team view</div>
+          <img class="sp-char" src="assets/illustrations/sales-manager.png" alt="Sales manager reviewing territory performance with members of a field sales team" onload="this.parentNode.classList.add('has-char')" onerror="this.remove()">
         </div>
         <div class="sp-body">
           <div class="sp-who">Sales manager</div>
           <div class="sp-title">I lead a sales team</div>
           <div class="sp-desc">See coverage, sell-through and stock risk across the territory, and coach your reps.</div>
+          <div class="sp-journey" aria-label="Journey"><span>Monitor</span><span>Risk</span><span>Coach</span><span>Improve</span></div>
           <ul class="sp-list">
             <li>Territory sales numbers and category performance</li>
             <li>Stock-out and expiry alerts</li>
@@ -1246,11 +1259,13 @@ body.splash-on{overflow:hidden}
         <div class="sp-art" id="sp-art-shop">
           <div class="sp-ic"><svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></div>
           <div class="sp-stat">Demand signal</div>
+          <img class="sp-char" src="assets/illustrations/shopper.png" alt="Shopper comparing high-protein products while using a shopping basket" onload="this.parentNode.classList.add('has-char')" onerror="this.remove()">
         </div>
         <div class="sp-body">
           <div class="sp-who">Brand and category</div>
           <div class="sp-title">I want to know the shopper</div>
           <div class="sp-desc">Understand what shoppers ask for and what goes in their basket, in their own words.</div>
+          <div class="sp-journey" aria-label="Journey"><span>Ask</span><span>Discover</span><span>Compare</span><span>Buy</span></div>
           <ul class="sp-list">
             <li>Shopper segments and missions</li>
             <li>Conversational shopping assistant</li>

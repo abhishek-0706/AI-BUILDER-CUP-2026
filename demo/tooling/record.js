@@ -1,4 +1,4 @@
-/* Cold-open recorder.
+﻿/* Cold-open recorder.
    The audit is run and the AI content pre-generated in a warm-up pass BEFORE
    recording starts, so the video opens on the strongest frame instead of on a
    loading state. Every scene is then held for exactly the length of its
@@ -33,7 +33,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
 (async () => {
   const browser = await chromium.launch();
 
-  /* ── warm-up: generate everything once, off camera ──────────────────── */
+  /* â”€â”€ warm-up: generate everything once, off camera â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   console.log('warm-up pass, generating AI content off camera');
   const warm = await browser.newContext({ viewport: { width: 1600, height: 900 } });
   const w = await warm.newPage();
@@ -50,7 +50,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await grab('pitch', async () => { await w.click('.rep-tabs button:nth-child(2)'); await w.click('#pitch-btn'); }, '#pitch-out', 300);
   // Flyer-enriched pitch: inject flyer into flyerFrames, re-run pitch gen
   await w.evaluate(({ b64, mime }) => {
-    window.flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
+    flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
     document.getElementById('flyer-drop').style.display = 'none';
     document.getElementById('flyer-preview').style.display = 'block';
     document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
@@ -58,7 +58,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await w.waitForTimeout(300);
   await grab('pitch_flyer', async () => { await w.click('#pitch-btn'); }, '#pitch-out', 300);
   await w.evaluate(() => {
-    window.flyerFrames = [];
+    flyerFrames = [];
     document.getElementById('flyer-drop').style.display = 'block';
     document.getElementById('flyer-preview').style.display = 'none';
   });
@@ -115,7 +115,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   console.log('  cached score', cache.score.length, 'chars');
   await warm.close();
 
-  /* ── recorded pass ──────────────────────────────────────────────────── */
+  /* â”€â”€ recorded pass â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const ctx = await browser.newContext({
     viewport: { width: 1600, height: 900 },
     recordVideo: { dir: OUT, size: { width: 1600, height: 900 } },
@@ -192,21 +192,6 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await p.waitForTimeout(900);
   await beat('03_phantom', 'phantom stock');
 
-  // 03b flyer
-  await scroll(0, 500);
-  await tab(2);
-  await p.evaluate(({ b64, mime }) => {
-    window.flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
-    document.getElementById('flyer-drop').style.display = 'none';
-    document.getElementById('flyer-preview').style.display = 'block';
-    document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
-  }, { b64: FLYER_B64, mime: 'image/jpeg' });
-  await p.waitForTimeout(600);
-  await inject('#pitch-out', 'pitch_flyer');
-  await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
-  await scroll(300);
-  await beat('03b_flyer', 'flyer enriches pitch');
-
   // 04 pitch, 05 citation
   await scroll(0, 500);
   await tab(2);
@@ -225,6 +210,20 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await p.waitForTimeout(800);
   await scroll(560);
   await beat('05_cite', 'the source opens');
+
+  // 05b flyer
+  await scroll(0, 500);
+  await p.evaluate(({ b64, mime }) => {
+    flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
+    document.getElementById('flyer-drop').style.display = 'none';
+    document.getElementById('flyer-preview').style.display = 'block';
+    document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
+  }, { b64: FLYER_B64, mime: 'image/jpeg' });
+  await p.waitForTimeout(600);
+  await inject('#pitch-out', 'pitch_flyer');
+  await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
+  await scroll(220);
+  await beat('05b_flyer', 'flyer enriches pitch');
 
   // 06 rehearse, 07 score
   await scroll(0, 500);
@@ -257,9 +256,10 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     }
   });
   // 06b live coach
+  // Type before switching on, so no live coach call fires on camera.
+  await p.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
   await p.click('#coach-toggle'); // on
   await p.waitForTimeout(400);
-  await p.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
   await p.evaluate(tip => {
     const el = document.getElementById('coach-tip');
     el.style.display = 'block';

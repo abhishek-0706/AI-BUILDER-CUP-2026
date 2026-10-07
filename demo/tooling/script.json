@@ -16,16 +16,16 @@
     "text": "She also counts by hand, because a camera misses things. The shelf is empty, but the system still says sixty four in stock. That is phantom stock. One study of twenty four thousand products found an eleven percent sales lift, and all of it came from fixing exactly this."
   },
   {
-    "id": "03b_flyer",
-    "text": "Before the visit she uploads the product flyer. The model reads what is in it. The protein claims, the proof points, the promotion. Everything from the flyer is woven into the pitch alongside the cited sources. Not a separate slide. The same argument, made stronger."
-  },
-  {
     "id": "04_pitch",
     "text": "Now rewind to before the visit. AI writing a sales pitch normally invents numbers, and a buyer catches that instantly. So the rule here is cite, or stay silent. Every fact carries its source. Anything it cannot source is dropped."
   },
   {
     "id": "05_cite",
     "text": "And the sources open. Eleven are real published research. This one found out of stocks are still stuck near eight percent, despite everything bought to fix them. The sources invented for this demo say so, in the same panel."
+  },
+  {
+    "id": "05b_flyer",
+    "text": "She can also drop in the product flyer. The model reads what is on it. The protein claims, the proof points, the promotion. Those go into the pitch alongside the cited sources. Not a separate slide. The same argument, made stronger."
   },
   {
     "id": "06_rehearse",
