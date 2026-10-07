@@ -51,7 +51,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
       cache[label] = await w.textContent(sel);
       if (!API_ERR.test(cache[label])) break;
       if (attempt === 4) throw new Error(`${label}: Gemini kept failing, not recording an error on camera`);
-      console.log(`  ${label}: API error, retrying in 8s`);
+      console.log(`  ${label}: "${cache[label].trim().slice(0, 90)}", retrying in 8s`);
       await w.waitForTimeout(8000);
     }
     console.log('  cached', label, cache[label].length, 'chars');
