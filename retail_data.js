@@ -283,7 +283,7 @@ const RETAIL_DATA = {
     { id:"KB-201", publisher:"arXiv preprint", published:"June 2026",
       url:"https://arxiv.org/abs/2506.05357",
       title:"[VERIFIED] Rekik, Oliva, Glock and Syntetos, Inventory Record Inaccuracy in Grocery Retailing",
-      fact:"Across roughly 24,000 products in 11 grocery stores, performing an inventory audit led to an 11% store-wide sales lift, with the entire lift concentrated on items where system inventory exceeded actual inventory." },
+      fact:"Across roughly 24,000 SKUs in 11 grocery stores, performing an inventory audit led to an 11% store-wide sales lift, with the entire lift concentrated on items where system inventory exceeded actual inventory." },
     { id:"KB-202", publisher:"arXiv preprint", published:"June 2026",
       url:"https://arxiv.org/abs/2506.05357",
       title:"[VERIFIED] Rekik, Oliva, Glock and Syntetos, Inventory Record Inaccuracy in Grocery Retailing",
@@ -329,7 +329,7 @@ const RETAIL_DATA = {
   planogram: {
     id:"PG-Q4-2026-CP", name:"October to December 2026 Chilled Protein Reset, Modern Trade Urban",
     bay:"Aisle 2, Bay 4, Chilled Protein and Dairy Drinks",
-    standard:"Picture of Success retail execution standard, scored on on-shelf availability and share of shelf",
+    standard:"Picture of Success retail execution convention, scored on on-shelf availability and share of shelf",
     shelfLevels:"5 shelves. Shelf 1 stretch, shelf 2 eye level, shelf 3 hand level, shelf 4 stoop, shelf 5 floor",
     totalBayFacings: 44,
     assignedFacings: 13,
