@@ -323,8 +323,8 @@ const RETAIL_DATA = {
   ],
 
   // ── Planogram ─────────────────────────────────────────────────────────────
-  // Rules follow the standard CPG retail-execution model: the 5P Picture of
-  // Success measured against the two headline industry KPIs, On-Shelf
+  // Rules follow the CPG retail-execution convention known as Picture of
+  // Success, scored against the two headline industry KPIs, On-Shelf
   // Availability and Share of Shelf.
   planogram: {
     id:"PG-Q4-2026-CP", name:"October to December 2026 Chilled Protein Reset, Modern Trade Urban",
