@@ -4123,7 +4123,9 @@ async function justifyOrder(){
 }
 
 /* ── 4. Post-visit debrief ──────────────────────────────── */
-function debriefPrompt(){
+// The shelf section is only requested when capture data exists; asking the model
+// to skip it conditionally made it print the heading and the skip instruction.
+function debriefPrompt(hasCapture){
   return [
     '# ROLE',
     'You are the RetailIQ Sales Coach writing the post-visit record so the representative does not have to.',
@@ -4131,7 +4133,7 @@ function debriefPrompt(){
     '# WHAT TO PRODUCE',
     'VISIT SUMMARY - three sentences on what actually happened.',
     'COMMITMENTS - what each side agreed to, with dates where the rep gave one. Mark anything vague as NEEDS CONFIRMATION.',
-    'SHELF FINDINGS - if capture data is provided, what it shows, including any SKU out of stock on shelf while system stock says otherwise. Skip this section entirely if no capture data was provided.',
+    hasCapture ? 'SHELF FINDINGS - what the capture data shows, including any SKU out of stock on shelf while system stock says otherwise.' : '',
     'NEXT ACTIONS - a numbered list for the rep, each with an owner and a due date relative to the visit date. Include a restocking action for any SKU found out of stock or below the planogram minimum.',
     'RECORD UPDATES - the specific field updates a system of record should receive from this visit, as "record: field = value" lines, so nothing has to be typed in twice.',
     'ACCOUNT NOTE - two sentences to append to the account record for whoever visits next.',
@@ -4162,7 +4164,7 @@ async function genDebrief(){
   btn.disabled = true;
   out.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
   try{
-    const reply = await callGemini(debriefPrompt(),
+    const reply = await callGemini(debriefPrompt(!!cap),
       [
         `The rep's note from visit ${activeVisit.id}:`,
         fence(note || '(no written note)', 'NOTE'),

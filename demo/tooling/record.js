@@ -71,12 +71,6 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     document.getElementById('flyer-drop').style.display = 'block';
     document.getElementById('flyer-preview').style.display = 'none';
   });
-  await grab('order', async () => { await w.click('.rep-tabs button:nth-child(5)'); await w.click('#order-btn'); }, '#order-out', 200);
-  await grab('debrief', async () => {
-    await w.click('.rep-tabs button:nth-child(6)');
-    await w.fill('#debrief-in', 'Vikram agreed to trial 6 facings from 3 November if we fund the chiller cling. Would not move on the 330ml. Salad shrink still unresolved.');
-    await w.click('#debrief-btn');
-  }, '#debrief-out', 300);
   await grab('coach', async () => { await w.click('#tab-biz'); await w.click('#coach-btn'); }, '#coach-out', 250);
   await w.click('#tab-rep');
   await w.click('.rep-tabs button:nth-child(4)');
@@ -92,6 +86,15 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     verdict: document.getElementById('plano-out').innerHTML,
   }));
   console.log('  cached audit verdict', cache.plano.verdict.length, 'chars');
+  // Order and debrief come after the audit in the story, so generate them from
+  // the same findings shown on camera: the audit plus R01 counted out of stock.
+  await w.locator('#cap-R01 .cap-oos input').check();
+  await grab('order', async () => { await w.click('.rep-tabs button:nth-child(5)'); await w.click('#order-btn'); }, '#order-out', 200);
+  await grab('debrief', async () => {
+    await w.click('.rep-tabs button:nth-child(6)');
+    await w.fill('#debrief-in', 'Vikram agreed to trial 6 facings from 3 November if we fund the chiller cling. Would not move on the 330ml. Salad shrink still unresolved.');
+    await w.click('#debrief-btn');
+  }, '#debrief-out', 300);
   // The rehearsal needs a real exchange before it can be scored, so run the
   // whole thing here and keep both the transcript and the score.
   await w.click('#tab-rep');
