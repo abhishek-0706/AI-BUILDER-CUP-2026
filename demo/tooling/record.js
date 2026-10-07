@@ -1,4 +1,4 @@
-﻿/* Cold-open recorder.
+/* Cold-open recorder.
    The audit is run and the AI content pre-generated in a warm-up pass BEFORE
    recording starts, so the video opens on the strongest frame instead of on a
    loading state. Every scene is then held for exactly the length of its
@@ -12,8 +12,11 @@ const OUT = process.argv[2];
 const DUR = JSON.parse(fs.readFileSync(path.join(__dirname, 'durations.json'), 'utf8'));
 const d = id => (DUR.find(x => x.id === id) || { dur: 6 }).dur * 1000;
 const CLIP = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/shelf_videos/shelf_walk_05.mp4';
-const FLYER_IMG = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/shelf_compliant.jpg';
+const FLYER_IMG = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/protiva_flyer_shakes.png';
 const FLYER_B64 = fs.readFileSync(FLYER_IMG).toString('base64');
+const FLYER_MIME = 'image/png';
+// errMsg() text from the app; a warm-up result containing one of these is retried, never cached.
+const API_ERR = /Gemini is returning|Gemini is limiting|Gemini rejected|Gemini denied|Could not reach Gemini|key was rejected/;
 const REP_LINES = [
   'Protiva is 20g of protein at Rs 70. That is Rs 3.50 a gram against Rs 9 for the Hershey milkshake beside it.',
   'Ready to drink protein grew 31 percent year on year while packaged dairy beverages grew under 5. Give me 6 facings at eye level from 3 November and I will fund the chiller cling.',
@@ -33,7 +36,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
 (async () => {
   const browser = await chromium.launch();
 
-  /* â”€â”€ warm-up: generate everything once, off camera â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── warm-up: generate everything once, off camera ──────────────────── */
   console.log('warm-up pass, generating AI content off camera');
   const warm = await browser.newContext({ viewport: { width: 1600, height: 900 } });
   const w = await warm.newPage();
@@ -42,9 +45,15 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await w.waitForTimeout(800);
   const cache = {};
   const grab = async (label, run, sel, min) => {
-    await run();
-    await settle(w, sel, min);
-    cache[label] = await w.textContent(sel);
+    for (let attempt = 1; ; attempt++) {
+      await run();
+      await settle(w, sel, min);
+      cache[label] = await w.textContent(sel);
+      if (!API_ERR.test(cache[label])) break;
+      if (attempt === 4) throw new Error(`${label}: Gemini kept failing, not recording an error on camera`);
+      console.log(`  ${label}: API error, retrying in 8s`);
+      await w.waitForTimeout(8000);
+    }
     console.log('  cached', label, cache[label].length, 'chars');
   };
   await grab('pitch', async () => { await w.click('.rep-tabs button:nth-child(2)'); await w.click('#pitch-btn'); }, '#pitch-out', 300);
@@ -54,7 +63,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     document.getElementById('flyer-drop').style.display = 'none';
     document.getElementById('flyer-preview').style.display = 'block';
     document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
-  }, { b64: FLYER_B64, mime: 'image/jpeg' });
+  }, { b64: FLYER_B64, mime: FLYER_MIME });
   await w.waitForTimeout(300);
   await grab('pitch_flyer', async () => { await w.click('#pitch-btn'); }, '#pitch-out', 300);
   await w.evaluate(() => {
@@ -87,8 +96,14 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   // whole thing here and keep both the transcript and the score.
   await w.click('#tab-rep');
   await w.click('.rep-tabs button:nth-child(3)');
-  await w.click('text=Start session');
-  await settle(w, '#reh-body', 60);
+  for (let attempt = 1; ; attempt++) {
+    await w.click('text=Start session');
+    await settle(w, '#reh-body', 60);
+    if (!API_ERR.test(await w.textContent('#reh-body'))) break;
+    if (attempt === 4) throw new Error('rehearsal: Gemini kept failing on the buyer opening');
+    console.log('  rehearsal opening: API error, retrying in 8s');
+    await w.waitForTimeout(8000);
+  }
   // Coach tip warm-up: enable coach, type partial reply, wait for debounce + API
   await w.click('#coach-toggle');
   await w.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
@@ -108,14 +123,14 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     const m = [...document.querySelectorAll('#reh-body .msg')];
     return m.map(x => ({ who: x.classList.contains('user') ? 'rep' : 'buyer', text: x.textContent }));
   });
+  if (cache.buyer.some(t => API_ERR.test(t.text))) throw new Error('rehearsal: a buyer turn came back as an API error, rerun');
+  if (API_ERR.test(cache.coachTip)) cache.coachTip = 'Cite the cost per gram of protein from the competitive price tracker to prove that point.';
   console.log('  cached rehearsal turns', cache.buyer.length);
-  await w.click('text=End and score');
-  await settle(w, '#reh-score', 250);
-  cache.score = await w.textContent('#reh-score');
+  await grab('score', async () => { await w.click('text=End and score'); }, '#reh-score', 250);
   console.log('  cached score', cache.score.length, 'chars');
   await warm.close();
 
-  /* â”€â”€ recorded pass â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── recorded pass ──────────────────────────────────────────────────── */
   const ctx = await browser.newContext({
     viewport: { width: 1600, height: 900 },
     recordVideo: { dir: OUT, size: { width: 1600, height: 900 } },
@@ -218,7 +233,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     document.getElementById('flyer-drop').style.display = 'none';
     document.getElementById('flyer-preview').style.display = 'block';
     document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
-  }, { b64: FLYER_B64, mime: 'image/jpeg' });
+  }, { b64: FLYER_B64, mime: FLYER_MIME });
   await p.waitForTimeout(600);
   await inject('#pitch-out', 'pitch_flyer');
   await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
