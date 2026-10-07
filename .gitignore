@@ -39,3 +39,5 @@ demo/RetailIQ_AI_Builder_Cup_2026.pdf
 demo/tooling/audio/
 demo/tooling/rec/
 demo/tooling/durations.json
+demo/tooling/rec_take_*/
+demo/RetailIQ_demo.mp4
