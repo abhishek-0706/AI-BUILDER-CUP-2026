@@ -11,14 +11,14 @@ Regenerates the narrated walkthrough end to end. Four files, run in order.
 
 ```bash
 pip install edge-tts
-npm install playwright ffmpeg-static && npx playwright install chromium
+cd demo/tooling
+npm install && npx playwright install chromium   # deps stay here, never at the repo root
 
-# serve the app from the repo root
+# serve the app from the repo root, in another terminal
 python -m http.server 5190
 
-cd demo/tooling
 python gen.py                       # writes audio/*.mp3
-node record.js ./rec                # writes rec/*.webm and rec/scenes.json
+GK=your-gemini-key node record.js ./rec   # writes rec/*.webm and rec/scenes.json
 node mux.js ../RetailIQ_demo.mp4    # combines them
 
 # normalise speech to a comfortable level

@@ -130,37 +130,18 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   console.log('  cached score', cache.score.length, 'chars');
   await warm.close();
 
-  /* ── recorded pass ──────────────────────────────────────────────────── */
+  /* ── recorded pass: pre-visit, during, post-visit, in that order ────── */
+  // Every transition runs inside its beat, while the line is being spoken, so
+  // narration clips sit back to back with no silent hand-offs between them.
   const ctx = await browser.newContext({
     viewport: { width: 1600, height: 900 },
     recordVideo: { dir: OUT, size: { width: 1600, height: 900 } },
   });
-  const recStart = Date.now();   // capture begins here, not at the first beat
+  const recStart = Date.now();   // capture begins here; mux.js trims up to the first beat
   const p = await ctx.newPage();
   await p.addInitScript(k => localStorage.setItem('retailiq_gemini_key', k), KEY);
-  await p.goto('http://localhost:5190/index.html?role=rep', { waitUntil: 'networkidle' });
-  await p.waitForTimeout(700);
-
-  // Put the warmed audit on screen instantly, so the capture opens on the result.
-  await p.click('.rep-tabs button:nth-child(4)');
+  await p.goto('http://localhost:5190/index.html', { waitUntil: 'networkidle' });
   await p.waitForTimeout(400);
-  await p.evaluate(c => {
-    document.getElementById('sample-status').style.display = 'block';
-    document.getElementById('sample-status').innerHTML = c.status;
-    document.getElementById('frame-strip').innerHTML = c.strip;
-    const o = document.getElementById('plano-out');
-    o.style.display = 'block';
-    o.innerHTML = c.verdict;
-    document.getElementById('plano-btn').style.display = 'inline-block';
-    document.getElementById('plano-reset').style.display = 'inline-block';
-    document.getElementById('drop').style.display = 'none';
-  }, cache.plano);
-  await p.waitForTimeout(500);
-  await p.evaluate(() => {
-    const el = document.querySelector('#plano-out .plano-hd');
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 86 });
-  });
-  await p.waitForTimeout(700);
 
   const t0 = Date.now();
   const scenes = [];
@@ -174,9 +155,16 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     if (left > 0) await p.waitForTimeout(left);
     else console.log(`    warning: ${id} overran its narration by ${Math.round(-left)}ms`);
   };
-  const tab = async n => { await p.click(`.rep-tabs button:nth-child(${n})`); await p.waitForTimeout(450); };
-  const scroll = async (y, ms = 850) => {
+  const tab = async n => { await p.click(`.rep-tabs button:nth-child(${n})`); await p.waitForTimeout(350); };
+  const scroll = async (y, ms = 700) => {
     await p.evaluate(v => window.scrollTo({ top: v, behavior: 'smooth' }), y);
+    await p.waitForTimeout(ms);
+  };
+  const scrollTo = async (sel, offset, ms = 700) => {
+    await p.evaluate(([s, o]) => {
+      const el = document.querySelector(s);
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - o, behavior: 'smooth' });
+    }, [sel, offset]);
     await p.waitForTimeout(ms);
   };
   // Replace a pane's text with the warmed result so nothing waits on the model.
@@ -186,140 +174,165 @@ const settle = async (p, sel, min = 200, to = 110000) => {
       el.style.display = 'block';
       el.textContent = t;
     }, [sel, cache[label]]);
-    await p.waitForTimeout(300);
+    await p.waitForTimeout(150);
   };
-
-  // 00 hook, 01 problem, 02 honesty: all on the audit verdict
-  await beat('00_hook', 'cold open on the verdict');
-  await beat('01_problem', 'reset drift');
-  await p.evaluate(() => {
-    const el = document.querySelector('#plano-out .plano-rules-out');
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' });
-  });
-  await p.waitForTimeout(850);
-  await beat('02_honest', 'computed score, honest refusal');
-
-  // 03 phantom stock
-  await p.locator('#cap-R01').scrollIntoViewIfNeeded();
-  await p.evaluate(() => window.scrollBy({ top: -150 }));
-  await p.waitForTimeout(700);
-  await p.locator('#cap-R01 .cap-oos input').check();
-  await p.waitForTimeout(900);
-  await beat('03_phantom', 'phantom stock');
-
-  // 04 pitch, 05 citation
-  await scroll(0, 500);
-  await tab(2);
-  await inject('#pitch-out', 'pitch');
-  await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch);
-  await p.waitForTimeout(500);
-  await scroll(300);
-  await beat('04_pitch', 'cite or stay silent');
-  const verified = await p.evaluate(() => {
-    const chips = [...document.querySelectorAll('#pitch-cites .cite')];
-    const v = chips.find(c => c.querySelector('.vfy')) || chips[0];
-    if (v) { v.click(); return !!v.querySelector('.vfy'); }
-    return false;
-  });
-  console.log('    opened a verified source:', verified);
-  await p.waitForTimeout(800);
-  await scroll(560);
-  await beat('05_cite', 'the source opens');
-
-  // 05b flyer
-  await scroll(0, 500);
-  await p.evaluate(({ b64, mime }) => {
-    flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
-    document.getElementById('flyer-drop').style.display = 'none';
-    document.getElementById('flyer-preview').style.display = 'block';
-    document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
-  }, { b64: FLYER_B64, mime: FLYER_MIME });
-  await p.waitForTimeout(600);
-  await inject('#pitch-out', 'pitch_flyer');
-  await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
-  await scroll(220);
-  await beat('05b_flyer', 'flyer enriches pitch');
-
-  // 06 rehearse, 07 score
-  await scroll(0, 500);
-  await tab(3);
-  // Replay the warmed exchange turn by turn so it reads as a conversation
-  // without waiting on the model on camera.
-  await p.evaluate(() => {
+  // Phase label that fades in over the app and out again, without blocking.
+  const chapter = (kicker, title) => p.evaluate(([k, t]) => {
+    const o = document.createElement('div');
+    // Lime on the content area: dark green would vanish into the dark app header.
+    o.innerHTML = `<b style="color:#0C6B5F;letter-spacing:2px;font-size:14px;font-weight:900">${k}</b>` +
+      `<span style="width:1px;height:22px;background:rgba(10,58,51,.25)"></span><span>${t}</span>`;
+    o.style.cssText = 'position:fixed;top:150px;left:66%;transform:translateX(-50%);z-index:2147483647;' +
+      'display:flex;gap:16px;align-items:center;background:#C6F04A;color:#0A3A33;padding:18px 30px;' +
+      'border-radius:16px;box-shadow:0 18px 44px rgba(10,58,51,.35);font:800 21px Inter,"Segoe UI",sans-serif;' +
+      'white-space:nowrap;opacity:0;transition:opacity .45s';
+    document.body.appendChild(o);
+    requestAnimationFrame(() => { o.style.opacity = '1'; });
+    setTimeout(() => { o.style.opacity = '0'; setTimeout(() => o.remove(), 500); }, 3400);
+  }, [kicker, title]);
+  const showTurn = turn => p.evaluate(t => {
     const b = document.getElementById('reh-body');
-    b.innerHTML = ''; b.dataset.clean = '1';
+    const el = document.createElement('div');
+    el.className = 'msg ' + (t.who === 'rep' ? 'user' : 'bot');
+    el.style.maxWidth = '90%';
+    el.textContent = t.text;
+    b.appendChild(el); b.scrollTop = b.scrollHeight;
+  }, turn);
+
+  // Intro on the role picker
+  await beat('00_intro', 'three roles', async () => {
+    await p.waitForTimeout(Math.max(0, d('00_intro') - 2600));
+    await p.hover('.sp-role:nth-child(1)');
   });
-  const showTurn = async turn => {
-    await p.evaluate(t => {
-      const b = document.getElementById('reh-body');
-      const d = document.createElement('div');
-      d.className = 'msg ' + (t.who === 'rep' ? 'user' : 'bot');
-      d.style.maxWidth = '90%';
-      d.textContent = t.text;
-      b.appendChild(d); b.scrollTop = b.scrollHeight;
-    }, turn);
-  };
-  // First turn before the beat so the panel is not empty on the cut.
-  await showTurn(cache.buyer[0]);
-  await p.waitForTimeout(600);
-  await beat('06_rehearse', 'the buyer pushes back', async () => {
+
+  // PRE-VISIT
+  await beat('01_plan', 'pre-visit: ranked day', async () => {
+    await p.click('.sp-role:nth-child(1)');
+    await p.waitForTimeout(500);
+    await chapter('PRE-VISIT', 'Know the store before you knock');
+    await p.waitForTimeout(Math.max(0, d('01_plan') / 2 - 900));
+    await scroll(420);
+  });
+  await beat('02_pitch', 'cite or stay silent', async () => {
+    await scroll(0, 300);
+    await tab(2);
+    await inject('#pitch-out', 'pitch');
+    await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch);
+    await scroll(300);
+  });
+  await beat('03_cite', 'the source opens', async () => {
+    const verified = await p.evaluate(() => {
+      const chips = [...document.querySelectorAll('#pitch-cites .cite')];
+      const v = chips.find(c => c.querySelector('.vfy')) || chips[0];
+      if (v) { v.click(); return !!v.querySelector('.vfy'); }
+      return false;
+    });
+    console.log('    opened a verified source:', verified);
+    await p.waitForTimeout(300);
+    await scroll(560);
+  });
+  await beat('04_flyer', 'flyer enriches pitch', async () => {
+    await scroll(0, 400);
+    await p.evaluate(({ b64, mime }) => {
+      flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
+      document.getElementById('flyer-drop').style.display = 'none';
+      document.getElementById('flyer-preview').style.display = 'block';
+      document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
+    }, { b64: FLYER_B64, mime: FLYER_MIME });
+    await p.waitForTimeout(500);
+    await inject('#pitch-out', 'pitch_flyer');
+    await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
+    await scroll(220);
+  });
+  await beat('05_rehearse', 'the buyer pushes back', async () => {
+    await scroll(0, 300);
+    await tab(3);
+    await p.evaluate(() => { const b = document.getElementById('reh-body'); b.innerHTML = ''; b.dataset.clean = '1'; });
+    await showTurn(cache.buyer[0]);
     const rest = cache.buyer.slice(1);
-    const gap = Math.max(900, (d('06_rehearse') - 1500) / Math.max(rest.length, 1));
+    const gap = Math.max(900, (d('05_rehearse') - 2500) / Math.max(rest.length, 1));
     for (const turn of rest) {
-      await showTurn(turn);
       await p.waitForTimeout(gap);
+      await showTurn(turn);
     }
   });
-  // 06b live coach
-  // Type before switching on, so no live coach call fires on camera.
-  await p.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
-  await p.click('#coach-toggle'); // on
-  await p.waitForTimeout(400);
-  await p.evaluate(tip => {
-    const el = document.getElementById('coach-tip');
-    el.style.display = 'block';
-    el.textContent = tip;
-  }, cache.coachTip);
-  await p.waitForTimeout(500);
-  await beat('06b_coach', 'live coach micro-tip');
-  await p.fill('#reh-in', '');
-  await p.evaluate(() => { document.getElementById('coach-tip').style.display = 'none'; });
-  await p.click('#coach-toggle'); // off
+  await beat('06_coach', 'live coach micro-tip', async () => {
+    // Type before switching on, so no live coach call fires on camera.
+    await p.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
+    await p.click('#coach-toggle');
+    await p.waitForTimeout(500);
+    await p.evaluate(tip => {
+      const el = document.getElementById('coach-tip');
+      el.style.display = 'block';
+      el.textContent = tip;
+    }, cache.coachTip);
+  });
+  await beat('07_score', 'separate scorer', async () => {
+    await p.fill('#reh-in', '');
+    await p.evaluate(() => { document.getElementById('coach-tip').style.display = 'none'; });
+    await p.click('#coach-toggle');
+    await inject('#reh-score', 'score');
+    await scroll(430);
+  });
 
-  await inject('#reh-score', 'score');
-  await scroll(430);
-  await beat('07_score', 'separate scorer');
+  // DURING VISIT
+  await beat('08_audit', 'during: shelf verdict', async () => {
+    await scroll(0, 300);
+    await tab(4);
+    await p.evaluate(c => {
+      document.getElementById('sample-status').style.display = 'block';
+      document.getElementById('sample-status').innerHTML = c.status;
+      document.getElementById('frame-strip').innerHTML = c.strip;
+      const o = document.getElementById('plano-out');
+      o.style.display = 'block';
+      o.innerHTML = c.verdict;
+      document.getElementById('plano-btn').style.display = 'inline-block';
+      document.getElementById('plano-reset').style.display = 'inline-block';
+      document.getElementById('drop').style.display = 'none';
+    }, cache.plano);
+    await chapter('DURING VISIT', 'Act on what is actually on the shelf');
+    await p.waitForTimeout(Math.max(0, d('08_audit') / 2 - 1500));
+    await scrollTo('#plano-out .plano-hd', 86);
+  });
+  await beat('09_honest', 'computed score, honest refusal', async () => {
+    await scrollTo('#plano-out .plano-rules-out', 110);
+  });
+  await beat('10_phantom', 'phantom stock', async () => {
+    await p.locator('#cap-R01').scrollIntoViewIfNeeded();
+    await p.evaluate(() => window.scrollBy({ top: -150, behavior: 'smooth' }));
+    await p.waitForTimeout(600);
+    await p.locator('#cap-R01 .cap-oos input').check();
+  });
+  await beat('11_order', 'order from findings', async () => {
+    await scroll(0, 300);
+    await tab(5);
+    await inject('#order-out', 'order');
+    await scroll(330);
+  });
 
-  // 08 order
-  await scroll(0, 500);
-  await tab(5);
-  await inject('#order-out', 'order');
-  await scroll(330);
-  await beat('08_order', 'order from findings');
-
-  // 09 debrief
-  await scroll(0, 500);
-  await tab(6);
-  await p.fill('#debrief-in', 'Vikram agreed to trial 6 facings from 3 November if we fund the chiller cling. Would not move on the 330ml. Salad shrink still unresolved.');
-  await inject('#debrief-out', 'debrief');
-  await scroll(340);
-  await beat('09_debrief', 'post-visit record');
-
-  // 10 manager
-  await scroll(0, 500);
-  await p.click('#tab-biz');
-  await p.waitForTimeout(700);
-  await inject('#coach-out', 'coach');
-  await scroll(540);
-  await beat('10_manager', 'team, coverage, coaching');
-
-  // 11 close
-  await scroll(0, 600);
-  await p.click('#tab-rep');
-  await p.waitForTimeout(500);
-  await tab(2);
-  await beat('11_close', 'closing');
-  await p.waitForTimeout(500);
+  // POST-VISIT
+  await beat('12_debrief', 'post-visit record', async () => {
+    await scroll(0, 300);
+    await tab(6);
+    await chapter('POST-VISIT', 'Close the loop automatically');
+    await p.fill('#debrief-in', 'Vikram agreed to trial 6 facings from 3 November if we fund the chiller cling. Would not move on the 330ml. Salad shrink still unresolved.');
+    await inject('#debrief-out', 'debrief');
+    await scroll(340);
+  });
+  await beat('13_manager', 'team, coverage, coaching', async () => {
+    await scroll(0, 300);
+    await p.click('#tab-biz');
+    await p.waitForTimeout(500);
+    await inject('#coach-out', 'coach');
+    await scroll(540);
+  });
+  await beat('14_close', 'closing', async () => {
+    await scroll(0, 300);
+    await p.click('#tab-rep');
+    await p.waitForTimeout(400);
+    await tab(2);
+  });
+  await p.waitForTimeout(600);
 
   await ctx.close();
   await browser.close();

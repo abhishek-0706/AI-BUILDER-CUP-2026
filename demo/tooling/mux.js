@@ -10,14 +10,12 @@ const REC = path.join(__dirname, 'rec');
 const OUT = process.argv[2];
 
 const meta = JSON.parse(fs.readFileSync(path.join(REC, 'scenes.json'), 'utf8'));
-// The capture starts before the first beat, so every clip shifts by that amount.
+// The capture starts before the first beat (page load), which would open the
+// video on silence. It is cut with a trim filter on decoded frames, which is
+// exact even on Playwright's variable frame rate webm, unlike an input seek.
 const preRoll = meta.preRollMs || 0;
 const scenes = meta.scenes || meta;
-// The audit is warmed and injected now, so pre-roll is a couple of seconds of
-// setup rather than minutes. Offset the narration by it instead of trimming the
-// video, because the Playwright capture is variable frame rate and seeking into
-// it is not frame accurate.
-console.log(`pre-roll ${(preRoll / 1000).toFixed(1)}s, offsetting narration by it`);
+console.log(`pre-roll ${(preRoll / 1000).toFixed(1)}s, trimming it from the video`);
 const webm = fs.readdirSync(REC).find(f => f.endsWith('.webm'));
 if (!webm) { console.error('no screen recording found in ' + REC); process.exit(1); }
 
@@ -28,16 +26,21 @@ scenes.forEach(s => args.push('-i', path.join(__dirname, 'audio', s.id + '.mp3')
 const parts = [], labels = [];
 scenes.forEach((s, i) => {
   const idx = i + 1;                         // input 0 is the video
-  const delay = Math.max(preRoll + s.startMs, 300);
+  const delay = Math.max(s.startMs, 1);
   parts.push(`[${idx}]adelay=${delay}:all=1[a${idx}]`);
   labels.push(`[a${idx}]`);
 });
-const filter = parts.join(';') + ';' + labels.join('') +
+const DUR = JSON.parse(fs.readFileSync(path.join(__dirname, 'durations.json'), 'utf8'));
+const last = scenes.at(-1);
+const end = last.startMs / 1000 + (DUR.find(x => x.id === last.id) || { dur: 6 }).dur + 0.6;
+const filter = `[0:v]trim=start=${(preRoll / 1000).toFixed(3)}:duration=${end.toFixed(3)},setpts=PTS-STARTPTS,` +
+  `fade=t=in:st=0:d=0.6,fade=t=out:st=${(end - 0.7).toFixed(3)}:d=0.7[v];` +
+  parts.join(';') + ';' + labels.join('') +
   `amix=inputs=${scenes.length}:normalize=0:dropout_transition=0[aout]`;
 
 args.push(
   '-filter_complex', filter,
-  '-map', '0:v', '-map', '[aout]',
+  '-map', '[v]', '-map', '[aout]',
   '-c:v', 'libx264', '-preset', 'medium', '-crf', '22',
   '-pix_fmt', 'yuv420p', '-r', '25',
   '-c:a', 'aac', '-b:a', '160k', '-ar', '44100', '-ac', '2',
