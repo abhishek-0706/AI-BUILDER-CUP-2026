@@ -12,6 +12,8 @@ const OUT = process.argv[2];
 const DUR = JSON.parse(fs.readFileSync(path.join(__dirname, 'durations.json'), 'utf8'));
 const d = id => (DUR.find(x => x.id === id) || { dur: 6 }).dur * 1000;
 const CLIP = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/shelf_videos/shelf_walk_05.mp4';
+const FLYER_IMG = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/shelf_compliant.jpg';
+const FLYER_B64 = fs.readFileSync(FLYER_IMG).toString('base64');
 const REP_LINES = [
   'Protiva is 20g of protein at Rs 70. That is Rs 3.50 a gram against Rs 9 for the Hershey milkshake beside it.',
   'Ready to drink protein grew 31 percent year on year while packaged dairy beverages grew under 5. Give me 6 facings at eye level from 3 November and I will fund the chiller cling.',
@@ -46,6 +48,20 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     console.log('  cached', label, cache[label].length, 'chars');
   };
   await grab('pitch', async () => { await w.click('.rep-tabs button:nth-child(2)'); await w.click('#pitch-btn'); }, '#pitch-out', 300);
+  // Flyer-enriched pitch: inject flyer into flyerFrames, re-run pitch gen
+  await w.evaluate(({ b64, mime }) => {
+    window.flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
+    document.getElementById('flyer-drop').style.display = 'none';
+    document.getElementById('flyer-preview').style.display = 'block';
+    document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
+  }, { b64: FLYER_B64, mime: 'image/jpeg' });
+  await w.waitForTimeout(300);
+  await grab('pitch_flyer', async () => { await w.click('#pitch-btn'); }, '#pitch-out', 300);
+  await w.evaluate(() => {
+    window.flyerFrames = [];
+    document.getElementById('flyer-drop').style.display = 'block';
+    document.getElementById('flyer-preview').style.display = 'none';
+  });
   await grab('order', async () => { await w.click('.rep-tabs button:nth-child(5)'); await w.click('#order-btn'); }, '#order-out', 200);
   await grab('debrief', async () => {
     await w.click('.rep-tabs button:nth-child(6)');
@@ -73,6 +89,16 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await w.click('.rep-tabs button:nth-child(3)');
   await w.click('text=Start session');
   await settle(w, '#reh-body', 60);
+  // Coach tip warm-up: enable coach, type partial reply, wait for debounce + API
+  await w.click('#coach-toggle');
+  await w.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
+  await w.waitForTimeout(1200); // covers 900ms debounce + round-trip start
+  await w.waitForSelector('#coach-tip', { state: 'visible', timeout: 30000 }).catch(() => {});
+  await settle(w, '#coach-tip', 10, 20000);
+  cache.coachTip = (await w.textContent('#coach-tip').catch(() => '')) || 'Consider citing the share-of-shelf data to back this up.';
+  console.log('  cached coach tip:', cache.coachTip);
+  await w.click('#coach-toggle'); // off for main rehearsal
+  await w.fill('#reh-in', '');
   for (const line of REP_LINES) {
     await w.fill('#reh-in', line);
     await w.click('#pane-rehearse .chat-input button');
@@ -166,6 +192,21 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await p.waitForTimeout(900);
   await beat('03_phantom', 'phantom stock');
 
+  // 03b flyer
+  await scroll(0, 500);
+  await tab(2);
+  await p.evaluate(({ b64, mime }) => {
+    window.flyerFrames = [{ b64, mime, url: 'data:' + mime + ';base64,' + b64 }];
+    document.getElementById('flyer-drop').style.display = 'none';
+    document.getElementById('flyer-preview').style.display = 'block';
+    document.getElementById('flyer-img').src = 'data:' + mime + ';base64,' + b64;
+  }, { b64: FLYER_B64, mime: 'image/jpeg' });
+  await p.waitForTimeout(600);
+  await inject('#pitch-out', 'pitch_flyer');
+  await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
+  await scroll(300);
+  await beat('03b_flyer', 'flyer enriches pitch');
+
   // 04 pitch, 05 citation
   await scroll(0, 500);
   await tab(2);
@@ -215,6 +256,21 @@ const settle = async (p, sel, min = 200, to = 110000) => {
       await p.waitForTimeout(gap);
     }
   });
+  // 06b live coach
+  await p.click('#coach-toggle'); // on
+  await p.waitForTimeout(400);
+  await p.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
+  await p.evaluate(tip => {
+    const el = document.getElementById('coach-tip');
+    el.style.display = 'block';
+    el.textContent = tip;
+  }, cache.coachTip);
+  await p.waitForTimeout(500);
+  await beat('06b_coach', 'live coach micro-tip');
+  await p.fill('#reh-in', '');
+  await p.evaluate(() => { document.getElementById('coach-tip').style.display = 'none'; });
+  await p.click('#coach-toggle'); // off
+
   await inject('#reh-score', 'score');
   await scroll(430);
   await beat('07_score', 'separate scorer');

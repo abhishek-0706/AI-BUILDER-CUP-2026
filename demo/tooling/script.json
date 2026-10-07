@@ -16,6 +16,10 @@
     "text": "She also counts by hand, because a camera misses things. The shelf is empty, but the system still says sixty four in stock. That is phantom stock. One study of twenty four thousand products found an eleven percent sales lift, and all of it came from fixing exactly this."
   },
   {
+    "id": "03b_flyer",
+    "text": "Before the visit she uploads the product flyer. The model reads what is in it. The protein claims, the proof points, the promotion. Everything from the flyer is woven into the pitch alongside the cited sources. Not a separate slide. The same argument, made stronger."
+  },
+  {
     "id": "04_pitch",
     "text": "Now rewind to before the visit. AI writing a sales pitch normally invents numbers, and a buyer catches that instantly. So the rule here is cite, or stay silent. Every fact carries its source. Anything it cannot source is dropped."
   },
@@ -26,6 +30,10 @@
   {
     "id": "06_rehearse",
     "text": "She can also rehearse. The AI buyer uses this store's real recorded objections, and they are hard. You want thirty percent of my shelf, for a brand that has never had one facing here. Tell me what I remove to pay for it."
+  },
+  {
+    "id": "06b_coach",
+    "text": "She can also turn on the live coach. While she is typing, before she sends anything, it reads the conversation and gives her one line. Not a script. A prompt about what evidence she has not used yet."
   },
   {
     "id": "07_score",
