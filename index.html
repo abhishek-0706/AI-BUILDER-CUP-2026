@@ -941,6 +941,12 @@ body::before{
 .cap-row{background:#fff;border-radius:12px}
 .strip .frame{border-radius:9px}
 
+/* flyer upload + live coach */
+.flyer-thumb{max-width:100%;max-height:180px;border-radius:10px;border:1px solid var(--border);display:block}
+.coach-tip{font-size:13px;padding:9px 13px;border-radius:10px;background:var(--mint);border-left:3px solid var(--lime);color:var(--text);margin:8px 0 0;line-height:1.5}
+.coach-tip::before{content:'Coach \25b8  ';font-weight:700;color:var(--primary)}
+.run-btn.active{background:var(--primary)!important;color:#fff!important;border-color:var(--primary)!important}
+
 /* order */
 .order-row{background:#fff;border-radius:12px;transition:border-color .16s,box-shadow .16s}
 .order-row:hover{border-color:var(--primary-100);box-shadow:0 4px 14px rgba(10,58,51,.06)}
@@ -1468,9 +1474,32 @@ body.splash-on{overflow:hidden}
         <div class="card">
           <h3>Grounded pitch generator</h3>
           <div class="cap">Every proof point is drawn from a source document and cited. Claims that cannot be
-            sourced are omitted, never invented. Tap a citation to read the underlying document.</div>
+            sourced are omitted, never invented. Upload a product flyer to enrich the pitch with its claims.</div>
+
+          <div class="sec-title" style="margin:18px 0 8px">Product flyer <span style="font-size:11px;font-weight:500;color:var(--text-3)">(optional)</span></div>
+          <div id="flyer-drop" class="drop" style="text-align:center;cursor:pointer"
+               onclick="document.getElementById('flyer-file').click()"
+               ondragover="event.preventDefault();this.classList.add('over')"
+               ondragleave="this.classList.remove('over')"
+               ondrop="event.preventDefault();this.classList.remove('over');onFlyer({target:{files:event.dataTransfer.files}})">
+            <div class="drop-ic" style="margin:0 auto 10px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="11" x2="12" y2="17"/><polyline points="9 14 12 11 15 14"/></svg>
+            </div>
+            <div style="font-size:13.5px;color:var(--text-2)">Drop product flyer here or click to browse</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:3px">JPG, PNG or WebP</div>
+            <input type="file" id="flyer-file" accept="image/*" style="display:none" onchange="onFlyer(event)">
+          </div>
+          <div id="flyer-preview" style="display:none;margin:10px 0">
+            <img id="flyer-img" class="flyer-thumb">
+            <div style="margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span id="flyer-label" style="font-size:12.5px;color:var(--primary);font-weight:600">Flyer loaded — pitch will be enriched with its claims</span>
+              <button class="run-btn ghost" onclick="clearFlyer()" style="font-size:12px;padding:4px 11px">Remove flyer</button>
+            </div>
+          </div>
+
+          <div class="sec-title" style="margin:20px 0 8px">Generate pitch</div>
           <button class="run-btn" id="pitch-btn" onclick="genPitch()">Generate pitch for this visit</button>
-          <div class="out-box" id="pitch-out">No pitch generated yet.</div>
+          <div class="out-box" id="pitch-out" style="margin-top:14px">No pitch generated yet.</div>
           <div id="pitch-cites"></div>
         </div>
       </div>
@@ -1485,13 +1514,15 @@ body.splash-on{overflow:hidden}
             <button class="run-btn" onclick="startReh()">Start session</button>
             <button class="run-btn ghost" id="mic-btn" onclick="toggleMic()">Voice input</button>
             <button class="run-btn ghost" onclick="scoreReh()">End and score</button>
+            <button class="run-btn ghost" id="coach-toggle" onclick="toggleLiveCoach()" title="Coach watches what you type and gives micro-tips before you send">Live coach: OFF</button>
             <label class="tts-tog"><input type="checkbox" id="tts-on"> Speak replies</label>
           </div>
           <div class="reh-body" id="reh-body">
             <div style="color:var(--text-2);font-size:13px">Press <b>Start session</b> to meet the buyer.</div>
           </div>
+          <div id="coach-tip" class="coach-tip" style="display:none"></div>
           <div class="chat-input" style="border:none;padding:12px 0 0">
-            <input id="reh-in" placeholder="Your response to the buyer…" onkeydown="if(event.key==='Enter')sendReh()">
+            <input id="reh-in" placeholder="Your response to the buyer…" onkeydown="if(event.key==='Enter')sendReh()" oninput="onRehType()">
             <button onclick="sendReh()">➤</button>
           </div>
           <div class="out-box" id="reh-score" style="display:none"></div>
@@ -2675,12 +2706,14 @@ function askBiz(el){
 let activeVisit = D.visits[0];
 let rehHistory = [];
 let shelfFrames = [];   // [{b64, mime, url}]
+let flyerFrames = [];   // [{b64, mime, url}] — product flyer for pitch enrichment
 // An audit that ends in a score is a report. The published evidence is that
 // availability performance comes from sensing, execution and empowerment acting
 // together, not from any one detection technology, so the verdict is retained
 // and fed into the pitch and the debrief rather than just displayed.
 let lastAudit = null;
 let recog = null, micLive = false;
+let liveCoachOn = false, coachDebounce = null;
 
 function repTab(n, el){
   document.querySelectorAll('.rep-pane').forEach(p=>p.classList.remove('on'));
@@ -3108,13 +3141,66 @@ async function genPitch(){
   btn.disabled = true; cites.innerHTML = '';
   out.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
   try{
-    const reply = await callGemini(pitchPrompt(),
+    let sys = pitchPrompt();
+    if(flyerFrames.length){
+      out.textContent = 'Reading flyer…';
+      const flyerInfo = await callGeminiVision(flyerExtractPrompt(), 'Extract the product information from this flyer.', flyerFrames, ()=>{});
+      sys += '\n\n=== PRODUCT FLYER CONTEXT ===\n' + flyerInfo
+        + '\n\nUse these claims to strengthen proof points where relevant. Weave flyer claims into the pitch as product context. Do not cite the flyer as a KB source — it supplements, not replaces, the cited documents.';
+      out.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+    }
+    const reply = await callGemini(sys,
       `Write the pitch for visit ${activeVisit.id} to ${activeVisit.store}. Objective: ${activeVisit.objective}`,
       [], t => { out.textContent = t; });
     out.textContent = reply;
     renderCitations(reply, cites);
   }catch(e){ out.textContent = errMsg(e); }
   btn.disabled = false;
+}
+
+/* ── Flyer upload (pitch enrichment) ────────────────────── */
+function flyerExtractPrompt(){
+  return [
+    '# ROLE',
+    'You are reading a product marketing flyer for a field sales representative.',
+    '',
+    '# WHAT TO EXTRACT',
+    'Read the flyer and extract exactly what appears in it. Output in plain text:',
+    'PRODUCT NAME: the exact product name as shown',
+    'KEY CLAIMS: every marketing or product claim visible (max 6), each on one line prefixed with -',
+    'PROOF POINTS: any data, statistics or evidence visible in the flyer (max 4)',
+    'PROMOTION: any active offer, bundle or pricing call-out (write "none" if absent)',
+    'VISUAL THEME: the main visual or emotional theme a rep could reference when introducing the product (one line)',
+    '',
+    '# RULES',
+    '- Only report what is physically in the flyer image. Never invent or extrapolate.',
+    '- If a section has nothing visible, write "none".',
+    '- Plain text only. No Markdown.',
+  ].join('\n');
+}
+
+function onFlyer(ev){
+  const f = ev.target && ev.target.files && ev.target.files[0];
+  if(!f) return;
+  if(!f.type.startsWith('image/')){
+    alert('Please upload an image file (JPG, PNG, or WebP).');
+    return;
+  }
+  const rd = new FileReader();
+  rd.onload = () => {
+    flyerFrames = [{ b64: rd.result.split(',')[1], mime: f.type || 'image/jpeg', url: rd.result }];
+    document.getElementById('flyer-img').src = rd.result;
+    document.getElementById('flyer-drop').style.display = 'none';
+    document.getElementById('flyer-preview').style.display = 'block';
+  };
+  rd.readAsDataURL(f);
+}
+
+function clearFlyer(){
+  flyerFrames = [];
+  document.getElementById('flyer-drop').style.display = 'block';
+  document.getElementById('flyer-preview').style.display = 'none';
+  document.getElementById('flyer-file').value = '';
 }
 
 function renderCitations(text, el){
@@ -3270,6 +3356,61 @@ async function scoreReh(){
       [], t=>{ out.textContent = t; });
     out.textContent = reply;
   }catch(e){ out.textContent = errMsg(e); }
+}
+
+/* ── Live pitch coaching ─────────────────────────────────── */
+function coachPrompt(){
+  return [
+    '# ROLE',
+    'You are a real-time sales coach monitoring a buyer rehearsal. The rep is mid-sentence — they have not sent their reply yet.',
+    '',
+    '# WHAT TO DO',
+    'Read what the rep is typing and the conversation so far. Give ONE micro-coaching tip — maximum 20 words.',
+    'Good tips look like:',
+    '- "Cite the share-of-shelf data to back this up."',
+    '- "Name a specific SKU — buyers respond to precision."',
+    '- "You have not asked for the commitment yet."',
+    '- "Strong — hold the ground and ask what number would satisfy them."',
+    '',
+    '# RULES',
+    '- One sentence only. Under 20 words. No preamble, no label.',
+    '- If the draft is already strong, say so briefly: "Good angle — send it." or "Solid, keep going."',
+    '- Plain text only.',
+    '',
+    '=== VISIT DATA ===',
+    repContext(),
+  ].join('\n');
+}
+
+function toggleLiveCoach(){
+  liveCoachOn = !liveCoachOn;
+  const btn = document.getElementById('coach-toggle');
+  const tip = document.getElementById('coach-tip');
+  btn.textContent = liveCoachOn ? 'Live coach: ON' : 'Live coach: OFF';
+  btn.classList.toggle('active', liveCoachOn);
+  if(!liveCoachOn){ clearTimeout(coachDebounce); tip.style.display='none'; tip.textContent=''; }
+}
+
+function onRehType(){
+  if(!liveCoachOn) return;
+  clearTimeout(coachDebounce);
+  const draft = document.getElementById('reh-in').value.trim();
+  if(!draft || draft.length < 8) return;
+  coachDebounce = setTimeout(()=> runLiveCoach(draft), 900);
+}
+
+async function runLiveCoach(draft){
+  const tip = document.getElementById('coach-tip');
+  const transcript = rehHistory.map(h=>`${h.role==='user'?'REP':'BUYER'}: ${h.text}`).join('\n');
+  const userMsg = `CONVERSATION SO FAR:\n${transcript||'(session not started yet)'}\n\nREP IS TYPING:\n${draft}`;
+  tip.style.display = 'block';
+  tip.style.opacity = '0.55';
+  tip.textContent = '…';
+  try{
+    const reply = await callGemini(coachPrompt(), userMsg, [], t=>{ tip.textContent = t; });
+    tip.textContent = reply;
+    tip.style.opacity = '1';
+  }catch(e){ tip.style.display = 'none'; }
 }
 
 /* ── Voice: speech in, speech out ───────────────────────── */
