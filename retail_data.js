@@ -369,6 +369,36 @@ const RETAIL_DATA = {
     promoNames: ["Protein Pledge Bundle"],
   },
 
+  // ── Competitor benchmark ──────────────────────────────────────────────────
+  // Protiva is fictional, so on real footage its audit can only ever find
+  // nothing. The benchmark points the same audit at the brand that is actually
+  // on this shelf. Hershey's is a real company: every criterion is something the
+  // camera can see, and nothing here claims to know its plan or trade terms.
+  benchmark: {
+    id:"BM-CHILLED-01",
+    name:"Competitor benchmark, observed execution of the bay leader",
+    bay:"Aisle 2, Bay 4, Chilled Protein and Dairy Drinks",
+    brand:"Hershey's",
+    standard:"observed execution only; this is not compliance with Hershey's own planogram, which is not known",
+    shelfLevels:"5 shelves. Shelf 1 stretch, shelf 2 eye level, shelf 3 hand level, shelf 4 stoop, shelf 5 floor",
+    rules: [
+      { code:"PRS", rule:"Presence",
+        spec:"Hershey's products are physically on this shelf. Name each flavour or variant you can identify." },
+      { code:"DEP", rule:"Facing depth",
+        spec:"Each Hershey's variant you can identify holds at least 2 facings side by side." },
+      { code:"SOS", rule:"Share of shelf",
+        spec:"Hershey's holds the largest share of visible facings of any single brand in the bay. State your estimated percentage for Hershey's and for each other brand." },
+      { code:"EYE", rule:"Eye-level presence",
+        spec:"Hershey's occupies shelf 2 (eye level) or shelf 3 (hand level), not only the stoop or floor shelves." },
+      { code:"BLK", rule:"Brand block integrity",
+        spec:"Hershey's sits as one contiguous block, with no other brand interleaved inside it." },
+      { code:"PRC", rule:"Price tags",
+        spec:"Hershey's products carry legible shelf-edge price tags aligned beneath the correct product. Quote what a tag reads." },
+      { code:"CND", rule:"Product condition",
+        spec:"Hershey's packs are front-faced and undamaged, with no crushed, tilted or rear-faced packs." },
+    ],
+  },
+
   kpis: {
     revenueTarget: 420000,
     conversionRate: 0.68,

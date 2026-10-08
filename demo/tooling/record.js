@@ -11,7 +11,7 @@ const KEY = process.env.GK;
 const OUT = process.argv[2];
 const DUR = JSON.parse(fs.readFileSync(path.join(__dirname, 'durations.json'), 'utf8'));
 const d = id => (DUR.find(x => x.id === id) || { dur: 6 }).dur * 1000;
-const CLIP = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/shelf_videos/shelf_walk_05.mp4';
+const CLIPS = [1, 2, 3, 4, 5, 6].map(i => `C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/shelf_videos/shelf_walk_0${i}.mp4`);
 const FLYER_IMG = 'C:/Users/abhishek.q.agarwal/Downloads/retail-iq/demo/samples/protiva_flyer_shakes.png';
 const FLYER_B64 = fs.readFileSync(FLYER_IMG).toString('base64');
 const FLYER_MIME = 'image/png';
@@ -75,17 +75,43 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await w.click('#tab-rep');
   await w.click('.rep-tabs button:nth-child(4)');
   await w.waitForTimeout(400);
-  await w.setInputFiles('#shelf-file', CLIP);
+  // Audit every real clip off camera, then show the best and the worst result,
+  // so the video proves the audit separates a compliant shelf from a poor one.
+  const audits = [];
+  for (const clip of CLIPS) {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      await w.setInputFiles('#shelf-file', clip);
+      await w.waitForSelector('#plano-btn', { state: 'visible', timeout: 60000 });
+      await w.click('#plano-btn');
+      await w.waitForSelector('#plano-out .plano-hd', { timeout: 120000 }).catch(() => {});
+      await w.waitForTimeout(900);
+      const r = await w.evaluate(() => ({
+        status: document.getElementById('sample-status').innerHTML,
+        strip: document.getElementById('frame-strip').innerHTML,
+        verdict: document.getElementById('plano-out').innerHTML,
+        score: lastAudit ? lastAudit.score : null,
+        label: lastAudit ? lastAudit.status : '',
+      }));
+      if (/plano-hd/.test(r.verdict) && !API_ERR.test(r.verdict) && r.score !== null) {
+        audits.push({ clip, ...r });
+        console.log(`  audited ${path.basename(clip)}: ${r.score}% ${r.label}`);
+        break;
+      }
+      console.log(`  ${path.basename(clip)}: no scored verdict (attempt ${attempt})`);
+      await w.waitForTimeout(8000);
+    }
+  }
+  if (audits.length < 2) throw new Error('fewer than two clips produced a scored audit');
+  audits.sort((x, y) => y.score - x.score);
+  cache.planoGood = audits[0];
+  cache.planoPoor = audits.at(-1);
+  console.log(`  showing ${path.basename(cache.planoGood.clip)} (${cache.planoGood.score}%) then ${path.basename(cache.planoPoor.clip)} (${cache.planoPoor.score}%)`);
+  if (cache.planoGood.score - cache.planoPoor.score < 30) console.log('  warning: the two results are close; check the narration still fits');
+  // The debrief should reflect the last audit shown on camera, so rerun it last.
+  await w.setInputFiles('#shelf-file', cache.planoPoor.clip);
   await w.waitForSelector('#plano-btn', { state: 'visible', timeout: 60000 });
   await w.click('#plano-btn');
   await w.waitForSelector('#plano-out .plano-hd', { timeout: 120000 }).catch(() => {});
-  await w.waitForTimeout(900);
-  cache.plano = await w.evaluate(() => ({
-    status: document.getElementById('sample-status').innerHTML,
-    strip: document.getElementById('frame-strip').innerHTML,
-    verdict: document.getElementById('plano-out').innerHTML,
-  }));
-  console.log('  cached audit verdict', cache.plano.verdict.length, 'chars');
   // Order and debrief come after the audit in the story, so generate them from
   // the same findings shown on camera: the audit plus R01 counted out of stock.
   await w.locator('#cap-R01 .cap-oos input').check();
@@ -279,25 +305,31 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   });
 
   // DURING VISIT
-  await beat('08_audit', 'during: shelf verdict', async () => {
+  const showAudit = c => p.evaluate(a => {
+    document.getElementById('sample-status').style.display = 'block';
+    document.getElementById('sample-status').innerHTML = a.status;
+    document.getElementById('frame-strip').innerHTML = a.strip;
+    const o = document.getElementById('plano-out');
+    o.style.display = 'block';
+    o.innerHTML = a.verdict;
+    document.getElementById('plano-btn').style.display = 'inline-block';
+    document.getElementById('plano-reset').style.display = 'inline-block';
+    document.getElementById('drop').style.display = 'none';
+  }, c);
+  await beat('08_audit', 'during: compliant shelf', async () => {
     await scroll(0, 300);
     await tab(4);
-    await p.evaluate(c => {
-      document.getElementById('sample-status').style.display = 'block';
-      document.getElementById('sample-status').innerHTML = c.status;
-      document.getElementById('frame-strip').innerHTML = c.strip;
-      const o = document.getElementById('plano-out');
-      o.style.display = 'block';
-      o.innerHTML = c.verdict;
-      document.getElementById('plano-btn').style.display = 'inline-block';
-      document.getElementById('plano-reset').style.display = 'inline-block';
-      document.getElementById('drop').style.display = 'none';
-    }, cache.plano);
+    await showAudit(cache.planoGood);
     await chapter('DURING VISIT', 'Act on what is actually on the shelf');
     await p.waitForTimeout(Math.max(0, d('08_audit') / 2 - 1500));
     await scrollTo('#plano-out .plano-hd', 86);
   });
-  await beat('09_honest', 'computed score, honest refusal', async () => {
+  await beat('09_honest', 'non-compliant shelf, computed score', async () => {
+    await scrollTo('#plano-cap', 140, 500);
+    await showAudit(cache.planoPoor);
+    await p.waitForTimeout(1200);
+    await scrollTo('#plano-out .plano-hd', 86);
+    await p.waitForTimeout(Math.max(0, d('09_honest') / 2 - 2500));
     await scrollTo('#plano-out .plano-rules-out', 110);
   });
   await beat('10_phantom', 'phantom stock', async () => {

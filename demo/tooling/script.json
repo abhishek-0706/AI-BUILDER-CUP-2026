@@ -33,11 +33,11 @@
   },
   {
     "id": "08_audit",
-    "text": "During the visit. This is real footage from a real supermarket, shot on a phone while walking past the chiller. Seconds later, the verdict. The shelf plan was signed off and never put in place. That is reset drift, and a paper checklist rarely catches it."
+    "text": "During the visit. This is real footage from a real supermarket, shot on a phone walking past the chiller. Protiva is a demo brand, so it will not be on a real shelf. The audit judges the brand that is, Hershey's, and on this shelf the brand earns its passes."
   },
   {
     "id": "09_honest",
-    "text": "Two things about that result. The score is calculated from the model's own verdicts, so anyone can recount it. And where the footage does not show something, the rule comes back as not visible. It refuses to guess."
+    "text": "Another shelf, same brand, same rules, and this one does not pass clean. A competitor pack is wedged inside the brand's block, and packs are tilted. The score comes from the verdicts, so anyone can recount it."
   },
   {
     "id": "10_phantom",
