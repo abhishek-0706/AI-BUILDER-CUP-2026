@@ -2094,7 +2094,7 @@ function renderProfiles(){
   const el = document.getElementById('profile-row');
   el.innerHTML = D.shopperProfiles.map((p,i)=>`
     <div class="profile-chip ${p.id===activeProfile.id?'on':''}" onclick="setProfile(${i})">
-      <div class="avatar">${p.name[0]}${face(p.name)}</div>
+      <div class="avatar">${p.name[0]}${p.role ? face(p.name) : ''}</div>
       <div>
         <div class="nm">${p.name}</div>
         <div class="rl">${p.role || 'Not signed in'}</div>
