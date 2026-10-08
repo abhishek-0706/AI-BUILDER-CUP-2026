@@ -4,6 +4,8 @@
    loading state. Every scene is then held for exactly the length of its
    narration clip, and scenes.json records the real start time of each. */
 const { chromium } = require('playwright');
+const { spawnSync } = require('child_process');
+const FF = require('ffmpeg-static');
 const fs = require('fs');
 const path = require('path');
 
@@ -17,10 +19,14 @@ const FLYER_B64 = fs.readFileSync(FLYER_IMG).toString('base64');
 const FLYER_MIME = 'image/png';
 // errMsg() text from the app; a warm-up result containing one of these is retried, never cached.
 const API_ERR = /Gemini is returning|Gemini is limiting|Gemini rejected|Gemini denied|Could not reach Gemini|key was rejected/;
+// Spoken rehearsal: the rep first quotes the bar's 12g for the shake, the coach
+// catches it, and she restates it correctly before sending.
+const FUMBLE = 'So, Protiva has twelve grams of protein at seventy rupees, which makes it cheaper per gram than the Hershey milkshake beside it.';
 const REP_LINES = [
-  'Protiva is 20g of protein at Rs 70. That is Rs 3.50 a gram against Rs 9 for the Hershey milkshake beside it.',
+  'Protiva is twenty grams of protein at seventy rupees. That is three rupees fifty a gram, against nine rupees for the Hershey milkshake beside it.',
   'Ready to drink protein grew 31 percent year on year while packaged dairy beverages grew under 5. Give me 6 facings at eye level from 3 November and I will fund the chiller cling.',
 ];
+const VOICE = { buyer: ['en-IN-PrabhatNeural', '+6%', '+0Hz'], rep: ['en-IN-NeerjaExpressiveNeural', '+8%', '+12Hz'], coach: ['en-US-AndrewNeural', '+0%', '+0Hz'] };
 
 const settle = async (p, sel, min = 200, to = 110000) => {
   const end = Date.now() + to;
@@ -133,13 +139,21 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     console.log('  rehearsal opening: API error, retrying in 8s');
     await w.waitForTimeout(8000);
   }
-  // Coach tip warm-up: enable coach, type partial reply, wait for debounce + API
+  // Coach warm-up on the wrong figure. The video shows the coach catching it,
+  // so a tip that does not correct 12 to 20 is retried, never faked.
   await w.click('#coach-toggle');
-  await w.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
-  await w.waitForTimeout(1200); // covers 900ms debounce + round-trip start
-  await w.waitForSelector('#coach-tip', { state: 'visible', timeout: 30000 }).catch(() => {});
-  await settle(w, '#coach-tip', 10, 20000);
-  cache.coachTip = (await w.textContent('#coach-tip').catch(() => '')) || 'Consider citing the share-of-shelf data to back this up.';
+  for (let attempt = 1; ; attempt++) {
+    await w.fill('#reh-in', '');
+    await w.fill('#reh-in', FUMBLE);
+    await w.waitForTimeout(1200);
+    await w.waitForSelector('#coach-tip', { state: 'visible', timeout: 30000 }).catch(() => {});
+    await settle(w, '#coach-tip', 10, 20000);
+    cache.coachTip = ((await w.textContent('#coach-tip').catch(() => '')) || '').trim();
+    if (/\b20\b|twenty/i.test(cache.coachTip) && !API_ERR.test(cache.coachTip)) break;
+    console.log(`  coach tip did not correct the figure: "${cache.coachTip}"`);
+    if (attempt === 4) throw new Error('coach never corrected the wrong protein figure');
+    await w.waitForTimeout(3000);
+  }
   console.log('  cached coach tip:', cache.coachTip);
   await w.click('#coach-toggle'); // off for main rehearsal
   await w.fill('#reh-in', '');
@@ -153,8 +167,28 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     return m.map(x => ({ who: x.classList.contains('user') ? 'rep' : 'buyer', text: x.textContent }));
   });
   if (cache.buyer.some(t => API_ERR.test(t.text))) throw new Error('rehearsal: a buyer turn came back as an API error, rerun');
-  if (API_ERR.test(cache.coachTip)) cache.coachTip = 'Cite the cost per gram of protein from the competitive price tracker to prove that point.';
   console.log('  cached rehearsal turns', cache.buyer.length);
+  const VDIR = path.join(__dirname, 'voices');
+  fs.rmSync(VDIR, { recursive: true, force: true });
+  fs.mkdirSync(VDIR);
+  const say = (id, text, who) => {
+    const file = path.join(VDIR, id + '.mp3');
+    const [voice, rate, pitch] = VOICE[who];
+    const r = spawnSync('python', ['-c',
+      'import sys,asyncio,edge_tts;asyncio.run(edge_tts.Communicate(sys.argv[1],sys.argv[2],rate=sys.argv[3],pitch=sys.argv[4]).save(sys.argv[5]))',
+      text.replace(/₹/g, 'rupees '), voice, rate, pitch, file], { encoding: 'utf8' });
+    if (r.status !== 0) throw new Error(`voice ${id} failed: ${(r.stderr || '').slice(0, 200)}`);
+    const m = spawnSync(FF, ['-i', file], { encoding: 'utf8' }).stderr.match(/Duration: (\d+):(\d+):([\d.]+)/);
+    return { file, ms: Math.round((+m[1] * 3600 + +m[2] * 60 + +m[3]) * 1000) };
+  };
+  cache.voice = {
+    buyerOpen: say('buyer_open', cache.buyer[0].text, 'buyer'),
+    fumble: say('rep_fumble', FUMBLE, 'rep'),
+    coach: say('coach_tip', cache.coachTip, 'coach'),
+    fix: say('rep_fix', 'Right, twenty grams. ' + REP_LINES[0], 'rep'),
+    buyerReply: say('buyer_reply', cache.buyer[2].text, 'buyer'),
+  };
+  console.log('  voiced the exchange:', Object.entries(cache.voice).map(([k, v]) => `${k} ${(v.ms / 1000).toFixed(1)}s`).join(', '));
   await grab('score', async () => { await w.click('text=End and score'); }, '#reh-score', 250);
   console.log('  cached score', cache.score.length, 'chars');
   await warm.close();
@@ -280,29 +314,62 @@ const settle = async (p, sel, min = 200, to = 110000) => {
     await p.evaluate(t => renderCitations(t, document.getElementById('pitch-cites')), cache.pitch_flyer);
     await scroll(220);
   });
-  await beat('05_rehearse', 'the buyer pushes back', async () => {
+  await beat('05_rehearse', 'practise the pitch out loud', async () => {
     await scroll(0, 300);
     await tab(3);
     await p.evaluate(() => { const b = document.getElementById('reh-body'); b.innerHTML = ''; b.dataset.clean = '1'; });
-    await showTurn(cache.buyer[0]);
-    const rest = cache.buyer.slice(1);
-    const gap = Math.max(900, (d('05_rehearse') - 2500) / Math.max(rest.length, 1));
-    for (const turn of rest) {
-      await p.waitForTimeout(gap);
-      await showTurn(turn);
-    }
-  });
-  await beat('06_coach', 'live coach micro-tip', async () => {
-    // Type before switching on, so no live coach call fires on camera.
-    await p.fill('#reh-in', 'Protiva is the highest protein per rupee in this bay');
+    await p.waitForTimeout(Math.max(0, d('05_rehearse') - 2500));
     await p.click('#coach-toggle');
-    await p.waitForTimeout(500);
-    await p.evaluate(tip => {
-      const el = document.getElementById('coach-tip');
-      el.style.display = 'block';
-      el.textContent = tip;
-    }, cache.coachTip);
   });
+
+  // Live spoken exchange, no narration over it. Each clip is logged so mux.js
+  // lays it at the moment it plays. The transcript is written without firing
+  // input events, so no real coach call is made on camera.
+  const voices = [];
+  const play = async v => { voices.push({ file: v.file, startMs: Date.now() - t0 }); await p.waitForTimeout(v.ms); };
+  const mic = on => p.evaluate(on => {
+    document.getElementById('mic-dot').classList.toggle('live', on);
+    document.getElementById('mic-btn').textContent = on ? 'Stop' : 'Voice input';
+  }, on);
+  const transcribe = async (text, v) => {
+    voices.push({ file: v.file, startMs: Date.now() - t0 });
+    const words = text.split(' ');
+    const step = v.ms / words.length;
+    for (let i = 1; i <= words.length; i++) {
+      await p.evaluate(t => { document.getElementById('reh-in').value = t; }, words.slice(0, i).join(' '));
+      await p.waitForTimeout(step);
+    }
+  };
+  console.log(`${((Date.now() - t0) / 1000).toFixed(1)}s  (live)  spoken rehearsal`);
+  await showTurn(cache.buyer[0]);
+  await play(cache.voice.buyerOpen);
+  await p.waitForTimeout(350);
+  await mic(true);
+  await transcribe(FUMBLE, cache.voice.fumble);
+  await mic(false);
+  await p.waitForTimeout(450);
+  await p.evaluate(tip => {
+    const el = document.getElementById('coach-tip');
+    el.style.display = 'block'; el.style.opacity = '1';
+    el.textContent = tip;
+  }, cache.coachTip);
+  await play(cache.voice.coach);
+  await p.waitForTimeout(500);
+  await mic(true);
+  await transcribe('Right, twenty grams. ' + REP_LINES[0], cache.voice.fix);
+  await mic(false);
+  await p.waitForTimeout(250);
+  await showTurn({ who: 'rep', text: REP_LINES[0] });
+  await p.evaluate(() => {
+    document.getElementById('reh-in').value = '';
+    document.getElementById('coach-tip').style.display = 'none';
+  });
+  await p.waitForTimeout(400);
+  await showTurn(cache.buyer[2]);
+  await play(cache.voice.buyerReply);
+  await p.waitForTimeout(400);
+
+  await beat('06_coach', 'the coach caught it', async () => {});
   await beat('07_score', 'separate scorer', async () => {
     await p.fill('#reh-in', '');
     await p.evaluate(() => { document.getElementById('coach-tip').style.display = 'none'; });
@@ -380,7 +447,7 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   await browser.close();
   const preRollMs = t0 - recStart;
   fs.writeFileSync(path.join(OUT, 'scenes.json'),
-    JSON.stringify({ preRollMs, scenes }, null, 1));
+    JSON.stringify({ preRollMs, scenes, voices }, null, 1));
   console.log(`pre-roll before the first beat: ${(preRollMs / 1000).toFixed(1)}s`);
   const total = (preRollMs + scenes.at(-1).startMs) / 1000 + DUR.at(-1).dur;
   console.log(`\n${scenes.length} beats, runtime about ${Math.floor(total / 60)}:${String(Math.round(total % 60)).padStart(2, '0')}`);

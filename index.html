@@ -130,6 +130,9 @@ button,input,textarea{font-family:inherit}
   background:var(--primary);
   display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;
 }
+.avatar,.tr-av{position:relative;overflow:hidden}
+.face{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.buyer-av{display:inline-grid;vertical-align:middle;width:26px;height:26px;font-size:11px;margin-right:6px}
 
 /* ── Primitives ─────────────────────────────────────────────── */
 .card{
@@ -1733,7 +1736,7 @@ let basket = [];
 let chatHistory = [];
 const MODEL = 'gemini-3.5-flash-lite';
 // The site spells everything out, so model output is held to the same rule.
-const PLAIN_WORDS = '\n\nWRITING STYLE FOR EVERYTHING YOU OUTPUT: write every word in full, with no abbreviations or shorthand. Write "product" not "SKU", "ready-to-drink" not "RTD", "versus" not "vs", "for example" not "e.g.", "average" not "avg", "year on year" not "YoY", "₹4.6 lakh" or "₹52,000" not "₹4.6L" or "₹52K", "October to December" not "Q4", and full rule names such as "on-shelf availability" rather than codes such as OSA. Never use the long dash characters — or –; use a comma, a full stop or the word "to" instead.';
+const PLAIN_WORDS = '\n\nWRITING STYLE FOR EVERYTHING YOU OUTPUT: write every word in full, with no abbreviations or shorthand. Write "product" not "SKU", "ready-to-drink" not "RTD", "versus" not "vs", "for example" not "e.g.", "average" not "avg", "year on year" not "YoY", "₹4.6 lakh" or "₹52,000" not "₹4.6L" or "₹52K", "October to December" not "Q4", and full rule names such as "on-shelf availability" rather than codes such as OSA. Write every number as digits exactly as it appears in the data, such as "330ml", "₹125" or "20 grams"; never spell a number out in words, because a spelled-out figure is easy to get wrong. Never use the long dash characters — or –; use a comma, a full stop or the word "to" instead.';
 function inr(v){
   v = Math.round(v);
   if (Math.abs(v) >= 100000) return '₹' + (v/100000).toFixed(2).replace(/\.?0+$/, '') + ' lakh';
@@ -2091,7 +2094,7 @@ function renderProfiles(){
   const el = document.getElementById('profile-row');
   el.innerHTML = D.shopperProfiles.map((p,i)=>`
     <div class="profile-chip ${p.id===activeProfile.id?'on':''}" onclick="setProfile(${i})">
-      <div class="avatar">${p.name[0]}</div>
+      <div class="avatar">${p.name[0]}${face(p.name)}</div>
       <div>
         <div class="nm">${p.name}</div>
         <div class="rl">${p.role || 'Not signed in'}</div>
@@ -2622,7 +2625,7 @@ function renderTeam(){
     const pc = t.avgPitchScore >= 75 ? 'var(--success)' : t.avgPitchScore >= 60 ? 'var(--warning)' : 'var(--danger)';
     return `<div class="team-row">
       <div class="tr-nm">
-        <span class="tr-av" aria-hidden="true">${esc(t.name.split(' ').map(w=>w[0]).join('').slice(0,2))}</span>
+        <span class="tr-av" aria-hidden="true">${esc(t.name.split(' ').map(w=>w[0]).join('').slice(0,2))}${face(t.name)}</span>
         <div><div class="n">${t.name}</div>
         <div class="s">${t.territory}</div></div>
       </div>
@@ -2740,10 +2743,17 @@ function repTab(n, el){
 
 function account(){ return D.accounts.find(a=>a.id===activeVisit.accountId); }
 
+// A portrait laid over the initials when assets/illustrations/people/<name>.png
+// exists; if it does not, the image removes itself and the initials show.
+function face(name){
+  const slug = String(name).toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, '');
+  return `<img class="face" src="assets/illustrations/people/${slug}.png" alt="" onerror="this.remove()">`;
+}
+
 /* ── Visit context / brief ──────────────────────────────── */
 function renderRepSide(){
   const r = D.rep;
-  document.getElementById('rep-init').textContent = r.name[0];
+  document.getElementById('rep-init').innerHTML = esc(r.name[0]) + face(r.name);
   document.getElementById('rep-name').textContent = r.name;
   document.getElementById('rep-role').textContent = r.role + ' · ' + r.territory;
   const pct = r.achievedMonth / r.quotaMonth;
@@ -2802,6 +2812,7 @@ function renderBrief(){
         ${v.openTasks.map(t=>`<div class="task-li">${t}</div>`).join('')}
       </div>
       <div class="buyer">
+        <span class="avatar buyer-av" aria-hidden="true">${esc(a.contact.name[0])}${face(a.contact.name)}</span>
         Buyer: <b style="color:var(--text)">${a.contact.name}</b>, ${a.contact.role} · ${a.contact.style}
       </div>
     </div>`;
@@ -3390,7 +3401,8 @@ function coachPrompt(){
     '- "Strong — hold the ground and ask what number would satisfy them."',
     '',
     '# RULES',
-    '- One sentence only. Under 20 words. No preamble, no label.',
+    '- FIRST check every number, price and product claim in the draft against the visit data. If one is wrong, your tip corrects it with the right figure from the data, like a colleague leaning in: "Careful, the 200ml shake is 20 grams, not 12." A wrong fact always outranks style advice.',
+    '- One sentence only. Under 20 words. No preamble, no label. It may be read aloud, so write it as natural speech.',
     '- If the draft is already strong, say so briefly: "Good angle — send it." or "Solid, keep going."',
     '- Plain text only.',
     '',
@@ -3427,6 +3439,7 @@ async function runLiveCoach(draft){
     const reply = await callGemini(coachPrompt(), userMsg, [], t=>{ tip.textContent = t; });
     tip.textContent = reply;
     tip.style.opacity = '1';
+    speak(reply, 'coach');
   }catch(e){ tip.style.display = 'none'; }
 }
 
@@ -3447,11 +3460,14 @@ function toggleMic(){
   recog.onresult = e=>{
     const t = [...e.results].map(r=>r[0].transcript).join('');
     document.getElementById('reh-in').value = t;
+    onRehType();   // a programmatic value change fires no input event
   };
   recog.onend = ()=>{ micLive = false;
     document.getElementById('mic-dot').classList.remove('live');
     document.getElementById('mic-btn').textContent = 'Voice input';
-    if(document.getElementById('reh-in').value.trim()) sendReh();
+    // With the coach listening, hold the spoken draft so a wrong fact can be
+    // caught before the buyer hears it; the rep sends when ready.
+    if(!liveCoachOn && document.getElementById('reh-in').value.trim()) sendReh();
   };
   recog.onerror = ()=>{ micLive = false;
     document.getElementById('mic-dot').classList.remove('live');
@@ -3460,11 +3476,15 @@ function toggleMic(){
   recog.start();
 }
 
-function speak(text){
+// The coach speaks in a lower, slower voice than the buyer so the two are
+// never confused in a spoken rehearsal.
+function speak(text, who){
   if(!document.getElementById('tts-on').checked || !window.speechSynthesis) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-IN'; u.rate = 1.05;
+  u.lang = 'en-IN';
+  u.rate = who === 'coach' ? 0.98 : 1.05;
+  u.pitch = who === 'coach' ? 0.8 : 1;
   speechSynthesis.speak(u);
 }
 
@@ -4182,7 +4202,7 @@ function initSplash(){
 /* ── Boot ───────────────────────────────────────────────── */
 (function init(){
   document.getElementById('store-lbl').textContent = D.store.name.split(', ')[1] || D.store.name;
-  document.getElementById('nav-init').textContent = D.rep.name[0];
+  document.getElementById('nav-init').innerHTML = esc(D.rep.name[0]) + face(D.rep.name);
   document.getElementById('nav-name').textContent = D.rep.name;
   document.getElementById('nav-role').textContent = D.rep.role;
   renderProfiles();

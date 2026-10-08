@@ -30,13 +30,21 @@ scenes.forEach((s, i) => {
   parts.push(`[${idx}]adelay=${delay}:all=1[a${idx}]`);
   labels.push(`[a${idx}]`);
 });
+// Character voices in the spoken rehearsal, logged by record.js as they played.
+const voices = meta.voices || [];
+voices.forEach((v, i) => {
+  const idx = scenes.length + i + 1;
+  args.push('-i', v.file);
+  parts.push(`[${idx}]adelay=${Math.max(v.startMs, 1)}:all=1[v${i}]`);
+  labels.push(`[v${i}]`);
+});
 const DUR = JSON.parse(fs.readFileSync(path.join(__dirname, 'durations.json'), 'utf8'));
 const last = scenes.at(-1);
 const end = last.startMs / 1000 + (DUR.find(x => x.id === last.id) || { dur: 6 }).dur + 0.6;
 const filter = `[0:v]trim=start=${(preRoll / 1000).toFixed(3)}:duration=${end.toFixed(3)},setpts=PTS-STARTPTS,` +
   `fade=t=in:st=0:d=0.6,fade=t=out:st=${(end - 0.7).toFixed(3)}:d=0.7[v];` +
   parts.join(';') + ';' + labels.join('') +
-  `amix=inputs=${scenes.length}:normalize=0:dropout_transition=0[aout]`;
+  `amix=inputs=${labels.length}:normalize=0:dropout_transition=0[aout]`;
 
 args.push(
   '-filter_complex', filter,
