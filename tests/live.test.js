@@ -126,13 +126,13 @@ if (!KEY) { console.error('Set GEMINI_API_KEY to run the live suite.'); process.
   R('citation chips render (' + cites + ')', cites >= 3);
   R('score has tone+clarity+completeness',
     /TONE/i.test(out.score) && /CLARITY/i.test(out.score) && /COMPLETENESS/i.test(out.score));
-  R('planogram computed score rendered', /judged rules passed/.test(out.plano));
-  R('planogram names the industry rules', /availability|facings|share of shelf/i.test(out.plano));
+  R('shelf audit computed score rendered', /judged criteria passed/.test(out.plano));
+  R('shelf audit names the observable criteria', /presence|facing|share of shelf/i.test(out.plano));
   R('our own brand never called a competitor',
     !/competitor\s+(brand\s+)?protiva|protiva\s+is\s+a\s+competitor/i.test(out.plano));
-  R('competitor brands named with facing counts', /hershey|sofit/i.test(out.plano));
-  R('absence of our brand reported, not invented presence',
-    /protiva/i.test(out.plano));
+  R('brands on the shelf named', /hershey|sofit/i.test(out.plano));
+  R('audit labelled as observed execution, not the brand\'s own plan',
+    /Observed execution only/.test(out.plano));
   R('order justification cites sources', /KB-\d+/.test(out.order));
   R('debrief has record updates', /RECORD UPDATES/i.test(out.debrief));
   R('debrief used capture data', /out of stock|facing/i.test(out.debrief));

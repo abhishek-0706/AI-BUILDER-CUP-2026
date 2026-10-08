@@ -22,7 +22,7 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
   // A full reply covers every rule the planogram defines, which is what the
   // scoring path requires.
   const fullReply = (verdicts, note) => page.evaluate(([v, n]) => {
-    const lines = RETAIL_DATA.planogram.rules
+    const lines = RETAIL_DATA.benchmark.rules
       .map((r, i) => `RULE: ${r.rule} | ${v[i % v.length]} | ${n}`);
     return lines.join('\n') + '\nGAPS - ' + n;
   }, [verdicts, note]);
@@ -44,14 +44,14 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
     await page.locator('#plano-out img, #plano-out svg, #plano-out script').count() === 0);
   const shown = await page.textContent('#plano-out');
   T('markup shown as literal text', /<img src=x/.test(shown));
-  T('score computed from a complete set of verdicts', /judged rules passed/.test(shown));
+  T('score computed from a complete set of verdicts', /judged criteria passed/.test(shown));
 
   console.log('\n-- a partial parse must not produce a confident score --');
   await page.evaluate(() => renderPlanoResult(
     'RULE: On-shelf availability | PASS | looks fine\nEverything else was prose, not verdicts.'));
   await page.waitForTimeout(300);
   const partial = await page.textContent('#plano-out');
-  T('partial parse refuses to score', !/judged rules passed/.test(partial));
+  T('partial parse refuses to score', !/judged criteria passed/.test(partial));
   T('partial parse explains why', /Could not read a verdict for every rule/.test(partial));
   T('partial parse shows no percentage badge',
     await page.locator('#plano-out .ps').count() === 0);
@@ -72,7 +72,7 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
     T(name + ' handled cleanly', errs.length === before && !/NaN|undefined/.test(out));
   }
   await page.evaluate(() => renderPlanoResult(
-    RETAIL_DATA.planogram.rules.map(r => `RULE: ${r.rule} | NOT VISIBLE | nothing readable`).join('\n')));
+    RETAIL_DATA.benchmark.rules.map(r => `RULE: ${r.rule} | NOT VISIBLE | nothing readable`).join('\n')));
   await page.waitForTimeout(250);
   const none = await page.textContent('#plano-out');
   T('nothing judged shows a question mark, not a divide by zero', /\?/.test(none) && !/NaN/.test(none));
@@ -80,16 +80,16 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
 
   console.log('\n-- a repeated rule is counted once --');
   await page.evaluate(() => {
-    const rules = RETAIL_DATA.planogram.rules;
+    const rules = RETAIL_DATA.benchmark.rules;
     const lines = rules.map(r => `RULE: ${r.rule} | PASS | fine`);
     lines.push(`RULE: ${rules[0].rule} | FAIL | contradicts the earlier line`);
     renderPlanoResult(lines.join('\n'));
   });
   await page.waitForTimeout(250);
   const dedup = await page.textContent('#plano-out');
-  const n = await page.evaluate(() => RETAIL_DATA.planogram.rules.length);
+  const n = await page.evaluate(() => RETAIL_DATA.benchmark.rules.length);
   T(`duplicate rule not double counted (${n} judged)`,
-    new RegExp(`of ${n} judged rules passed`).test(dedup));
+    new RegExp(`of ${n} judged criteria passed`).test(dedup));
 
   console.log('\n-- untrusted text cannot close its own fence --');
   await page.click('#tab-rep');
