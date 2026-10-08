@@ -1,7 +1,7 @@
 [
   {
     "id": "00_intro",
-    "text": "Getting a protein shake onto a supermarket shelf takes three people. The rep who visits the store, the manager who runs the team, and the brand team who studies the shopper. RetailIQ gives each one a workspace. Let us follow one rep, Anita, through a single store visit."
+    "text": "Consumer packaged goods is fast, competitive and complex, and the field rep feels it first: empty shelves, products in the wrong place, restocking that comes too late. Most reps work from static schedules with almost no store-level data, so they react instead of plan. RetailIQ gives the rep, the manager and the brand team one workspace. Let us follow one rep, Anita, through a single store visit."
   },
   {
     "id": "01_plan",
@@ -37,7 +37,7 @@
   },
   {
     "id": "09_honest",
-    "text": "Another shelf, same brand, same rules, and this one does not pass clean. A competitor pack is wedged inside the brand's block, and packs are tilted. The score comes from the verdicts, so anyone can recount it."
+    "text": "Another shelf, same brand, same rules, and this one does not pass clean. A competitor pack sits inside the brand's block, and one pack is crushed. The score comes from the verdicts, so anyone can recount it."
   },
   {
     "id": "10_phantom",

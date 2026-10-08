@@ -229,9 +229,16 @@ const settle = async (p, sel, min = 200, to = 110000) => {
   }, turn);
 
   // Intro on the role picker
-  await beat('00_intro', 'three roles', async () => {
-    await p.waitForTimeout(Math.max(0, d('00_intro') - 2600));
-    await p.hover('.sp-role:nth-child(1)');
+  // The problem is spoken first; each card lifts as "the rep, the manager and
+  // the brand team" are named, then the rep card again for "follow one rep".
+  await beat('00_intro', 'the problem, then three roles', async () => {
+    const at = f => d('00_intro') * f;
+    let t = 0;
+    for (const [frac, n] of [[0.6, 1], [0.66, 2], [0.72, 3], [0.82, 1]]) {
+      await p.waitForTimeout(Math.max(0, at(frac) - t));
+      t = at(frac);
+      await p.hover(`.sp-role:nth-child(${n})`);
+    }
   });
 
   // PRE-VISIT
