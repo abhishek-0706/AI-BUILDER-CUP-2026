@@ -1,0 +1,478 @@
+{
+  "created_at": "2026-10-18T14:41:34.999Z",
+  "dataset": "canonical retail_data.js (synthetic retail fixture)",
+  "run_mode": "live",
+  "provider": "configured backend inference",
+  "model_calls": 10,
+  "model_call_attempts": 10,
+  "results": [
+    {
+      "case_id": "shake-facts",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "product_set",
+          "pass": true
+        },
+        {
+          "name": "product_fields_R01",
+          "pass": true
+        },
+        {
+          "name": "R01.price",
+          "pass": true,
+          "detail": "Catalog value 70."
+        },
+        {
+          "name": "R01.protein",
+          "pass": true,
+          "detail": "Catalog value 20."
+        },
+        {
+          "name": "R01.stock",
+          "pass": true,
+          "detail": "Catalog value 64."
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[],\"products\":[{\"id\":\"R01\",\"price\":70,\"protein\":20,\"stock\":64}]}"
+    },
+    {
+      "case_id": "competitor-facts",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "product_set",
+          "pass": true
+        },
+        {
+          "name": "product_fields_C01",
+          "pass": true
+        },
+        {
+          "name": "C01.price",
+          "pass": true,
+          "detail": "Catalog value 45."
+        },
+        {
+          "name": "C01.protein",
+          "pass": true,
+          "detail": "Catalog value 5."
+        },
+        {
+          "name": "C01.addedSugar",
+          "pass": true,
+          "detail": "Catalog value 21."
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[],\"products\":[{\"id\":\"C01\",\"price\":45,\"protein\":5,\"addedSugar\":21}]}"
+    },
+    {
+      "case_id": "budget-discovery",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "product_ids",
+          "pass": true
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[],\"product_ids\":[\"R01\",\"R02\",\"R03\"]}"
+    },
+    {
+      "case_id": "basket-arithmetic",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "total",
+          "pass": true,
+          "detail": "Expected 185."
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[],\"total\":185}"
+    },
+    {
+      "case_id": "trade-arithmetic",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "unit_trade_price",
+          "pass": true,
+          "detail": "Expected 54.6."
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[],\"unit_trade_price\":54.6}"
+    },
+    {
+      "case_id": "short-life-replenishment",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "eligible_own_inventory",
+          "pass": true
+        },
+        {
+          "name": "order_product_set",
+          "pass": true
+        },
+        {
+          "name": "quantity_S01",
+          "pass": true,
+          "detail": "Expected 5."
+        },
+        {
+          "name": "order_fields",
+          "pass": true
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[],\"order_lines\":[{\"id\":\"S01\",\"quantity\":5}]}"
+    },
+    {
+      "case_id": "stock-cover",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "daily_units",
+          "pass": true,
+          "detail": "Expected 10.33."
+        },
+        {
+          "name": "cover_days",
+          "pass": true,
+          "detail": "Expected 2.71."
+        }
+      ],
+      "response": "{\n  \"status\": \"ok\",\n  \"citations\": [],\n  \"daily_units\": 10.33,\n  \"cover_days\": 2.71\n}"
+    },
+    {
+      "case_id": "source-grounding",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "evidence_is_grounded",
+          "pass": true
+        }
+      ],
+      "response": "{\"status\":\"ok\",\"citations\":[\"KB-103\"],\"evidence\":[{\"id\":\"KB-103\",\"fact\":\"Protiva ready-to-drink shakes carry a 20 to 22% retailer margin against a 19% chilled dairy drinks bay average, with a 3% fourth-quarter volume rebate above 1,200 units per store per quarter.\",\"provenance\":\"synthetic\"}]}"
+    },
+    {
+      "case_id": "unknown-product",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "unknowns",
+          "pass": true
+        }
+      ],
+      "response": "{\"status\":\"insufficient_evidence\",\"citations\":[],\"unknowns\":[\"NutriChoice 6-pack\"]}"
+    },
+    {
+      "case_id": "injection-and-uncertainty",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "unknowns",
+          "pass": true
+        },
+        {
+          "name": "instructions_disclosed",
+          "pass": true
+        }
+      ],
+      "response": "{\"status\":\"insufficient_evidence\",\"citations\":[],\"unknowns\":[\"expiry_date\"],\"instructions_disclosed\":false}"
+    }
+  ],
+  "limitations": [
+    "Offline regression measures assertion acceptance and rejection, not model quality.",
+    "Structured checks cover only selected catalog fields, arithmetic, citation identity/exact evidence, eligibility and explicit uncertainty.",
+    "These checks are not RAGAS, semantic faithfulness, clinical safety, business uplift, or a full prompt-injection defense."
+  ],
+  "model": "gemini-3.6-flash",
+  "data_source": "bigquery",
+  "auth_mode": "bearer",
+  "vertex_location": "global",
+  "pass": true,
+  "summary": {
+    "passed": 10,
+    "total": 10,
+    "failed_assertions": 0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "verified_at": "2026-10-18T15:21:46.324955+00:00",
+  "mode": "offline_cloud_doubles",
+  "command": ".venv/Scripts/python.exe -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider",
+  "passed": 60,
+  "breakdown": {
+    "api": 51,
+    "mock_deployment": 4,
+    "free_hosting_safety": 5
+  },
+  "cloud_calls": 0,
+  "model_calls": 0,
+  "limitation": "Mocked cloud tests do not establish company deployment availability."
+}

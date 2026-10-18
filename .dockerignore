@@ -1,0 +1,22 @@
+# Exclude local credentials, dependencies and work products from cloud builds.
+.git
+.claude
+.venv
+venv
+node_modules
+**/node_modules
+tmp
+**/seed_out
+.env
+.env.*
+*.key
+*.pem
+service-account*.json
+credentials*.json
+.vercel
+*.log
+pitch-slides.pdf
+# Large recordings are submission artifacts, not application dependencies.
+demo/*.mp4
+demo/tooling
+demo/samples/shelf_videos

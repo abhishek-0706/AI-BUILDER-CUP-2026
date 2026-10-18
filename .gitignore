@@ -28,8 +28,7 @@ desktop.ini
 *.log
 tmp/
 
-# Deck is being rewritten for the CPG field sales framing; the version on disk
-# still describes an earlier, broader framing, so it is held back from the repo.
+# Legacy deck exports; the current pitch-slides.html/pdf live at the root.
 demo/RetailIQ_AI_Builder_Cup_2026.pptx
 demo/RetailIQ_AI_Builder_Cup_2026.pdf
 

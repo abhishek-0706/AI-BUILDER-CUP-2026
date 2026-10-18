@@ -1,0 +1,14 @@
+{
+  "mode": "deployed_public_recorded",
+  "pass": true,
+  "checks": [
+    "public recorded scenario opens without token or AI",
+    "recorded audit persists only in this browser",
+    "zero protected API or model requests",
+    "phone layout fits shop",
+    "phone layout fits biz",
+    "phone layout fits rep"
+  ],
+  "model_calls": 0,
+  "token_required": false
+}

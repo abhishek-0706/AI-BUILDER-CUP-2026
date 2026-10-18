@@ -1,0 +1,83 @@
+{
+  "verified_at": "2026-10-18T15:59:37.275Z",
+  "url": "https://retailiq-free-20261018-7ce297.web.app/?demo=recorded",
+  "profile": "Firebase Spark static recorded mode",
+  "passed": 18,
+  "model_requests": 0,
+  "backend_requests": 0,
+  "checks": [
+    {
+      "name": "Published index.html matches local release",
+      "passed": true
+    },
+    {
+      "name": "Published retail_data.js matches local release",
+      "passed": true
+    },
+    {
+      "name": "Published runtime-config.js matches local release",
+      "passed": true
+    },
+    {
+      "name": "Published commerce-api.js matches local release",
+      "passed": true
+    },
+    {
+      "name": "Private path excluded: gcp/main.py",
+      "passed": true
+    },
+    {
+      "name": "Private path excluded: tests/eval.js",
+      "passed": true
+    },
+    {
+      "name": "Private path excluded: README.md",
+      "passed": true
+    },
+    {
+      "name": "Private path excluded: submission/evidence/python-regressions.json",
+      "passed": true
+    },
+    {
+      "name": "Private path excluded: tmp/free-project.json",
+      "passed": true
+    },
+    {
+      "name": "Hosted release is free-only without backend inference",
+      "passed": true
+    },
+    {
+      "name": "Recorded audit shows insufficient evidence",
+      "passed": true
+    },
+    {
+      "name": "Human shelf confirmation is explicit",
+      "passed": true
+    },
+    {
+      "name": "Manager sees the locally saved audit",
+      "passed": true
+    },
+    {
+      "name": "390px rep role fits",
+      "passed": true
+    },
+    {
+      "name": "390px biz role fits",
+      "passed": true
+    },
+    {
+      "name": "390px shop role fits",
+      "passed": true
+    },
+    {
+      "name": "Recorded workflow attempts zero backend or model requests",
+      "passed": true
+    },
+    {
+      "name": "No browser JavaScript errors",
+      "passed": true
+    }
+  ],
+  "limitation": "Verifies hosted static behavior; does not measure live AI quality or cloud backend availability."
+}

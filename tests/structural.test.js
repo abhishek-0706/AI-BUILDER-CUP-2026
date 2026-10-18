@@ -12,6 +12,7 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1600, height: 1100 } });
+  await require('./browser-utils').offlineNetwork(page,URL);
   const errs = [];
   page.on('pageerror', e => errs.push('PAGEERROR: ' + e.message));
   page.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE: ' + m.text()); });

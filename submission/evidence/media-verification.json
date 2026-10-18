@@ -1,0 +1,93 @@
+{
+  "artifact": "demo/RetailIQ_Abhishek_voice_demo.mp4",
+  "verified_at_utc": "2026-10-18T16:12:38.580250+00:00",
+  "artifact_bytes": 8781377,
+  "artifact_sha256": "12221e84843638d206c86c8f40953956645f167b1a3a9d5d5bc79c1bc852fdf9",
+  "duration_seconds": 222.44,
+  "required_duration_seconds": [
+    180,
+    240
+  ],
+  "duration_requirement_passed": true,
+  "scene_count": 9,
+  "narration_word_count": 525,
+  "full_audio_and_video_decode_passed": true,
+  "all_scene_speech_inside_video": true,
+  "closing_speech_end_seconds": 219.985,
+  "video_tail_after_speech_seconds": 2.454999999999984,
+  "caption_audio_alignment": {
+    "method": "measured_caption_frame_transitions",
+    "fps": 25,
+    "mean_wall_clock_offset_ms": 2496,
+    "scene_count": 9,
+    "max_fit_error_ms": 74
+  },
+  "scene_timing": [
+    {
+      "id": "intro",
+      "start_seconds": 1.28,
+      "speech_end_seconds": 21.899,
+      "inside_video": true
+    },
+    {
+      "id": "observe",
+      "start_seconds": 23.12,
+      "speech_end_seconds": 46.769999999999996,
+      "inside_video": true
+    },
+    {
+      "id": "confirm",
+      "start_seconds": 47.4,
+      "speech_end_seconds": 69.621,
+      "inside_video": true
+    },
+    {
+      "id": "save",
+      "start_seconds": 70.16,
+      "speech_end_seconds": 92.289,
+      "inside_video": true
+    },
+    {
+      "id": "manager",
+      "start_seconds": 93.52,
+      "speech_end_seconds": 125.17999999999999,
+      "inside_video": true
+    },
+    {
+      "id": "order",
+      "start_seconds": 126.52,
+      "speech_end_seconds": 146.90699999999998,
+      "inside_video": true
+    },
+    {
+      "id": "draft",
+      "start_seconds": 147.96,
+      "speech_end_seconds": 166.66400000000002,
+      "inside_video": true
+    },
+    {
+      "id": "shopper",
+      "start_seconds": 167.32,
+      "speech_end_seconds": 191.225,
+      "inside_video": true
+    },
+    {
+      "id": "close",
+      "start_seconds": 191.68,
+      "speech_end_seconds": 219.985,
+      "inside_video": true
+    }
+  ],
+  "recorded_example": true,
+  "synthetic_commercial_data": true,
+  "live_model_calls_in_recording": 0,
+  "voice_generation": {
+    "method": "OpenVoice V2, local CPU conversion",
+    "paid_api_calls": 0,
+    "voice_uploads": 0,
+    "clipping_in_converted_scenes": 0.0,
+    "disclosure": "AI narration from creator-provided voice sample",
+    "perceived_likeness": "Requires creator listening review; automated audio checks do not establish likeness."
+  },
+  "business_value_figures": "Illustrative pilot assumptions, not measured savings or guaranteed cash reductions."
+}

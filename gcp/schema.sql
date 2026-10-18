@@ -48,7 +48,13 @@ CREATE TABLE IF NOT EXISTS `${GCP_PROJECT}.${BQ_DATASET}.products` (
   default_reorder_point INT64,
   pack_size             STRING,
   is_active             BOOL,
-  first_listed_date     DATE
+  first_listed_date     DATE,
+  protein_grams         FLOAT64,
+  added_sugar_grams     FLOAT64,
+  is_ours               BOOL,
+  is_tracked            BOOL,
+  shelf_life_days       INT64,
+  case_size             INT64
 )
 CLUSTER BY category, product_id;
 
@@ -162,7 +168,10 @@ CREATE TABLE IF NOT EXISTS `${GCP_PROJECT}.${BQ_DATASET}.promotions` (
   -- e.g. 'Fri,Sat,Sun'. Empty means every day in the window.
   active_weekdays       STRING,
   -- Measured post-hoc against a matched control set of stores.
-  observed_uplift_pct   NUMERIC
+  observed_uplift_pct   NUMERIC,
+  sku_ids               ARRAY<STRING>,
+  uplift_label          STRING,
+  validity_label        STRING
 )
 PARTITION BY start_date
 CLUSTER BY store_id, category;
@@ -222,7 +231,10 @@ CREATE TABLE IF NOT EXISTS `${GCP_PROJECT}.${BQ_DATASET}.kb_documents` (
   -- text-embedding-005 output, populated by ML.GENERATE_EMBEDDING.
   -- Left empty when the service falls back to keyword retrieval.
   embedding             ARRAY<FLOAT64>,
-  is_synthetic          BOOL
+  is_synthetic          BOOL,
+  url                   STRING,
+  publisher             STRING,
+  published_label       STRING
 )
 CLUSTER BY doc_id;
 
@@ -292,3 +304,37 @@ CLUSTER BY store_id, planogram_id;
 --   )
 -- ) e
 -- WHERE d.doc_id = e.doc_id;
+
+
+-- One metadata update per table keeps legacy migrations within BigQuery rate limits.
+-- Fresh tables already contain these fields; these additions upgrade older deployments.
+ALTER TABLE `${GCP_PROJECT}.${BQ_DATASET}.products`
+  ADD COLUMN IF NOT EXISTS protein_grams FLOAT64,
+  ADD COLUMN IF NOT EXISTS added_sugar_grams FLOAT64,
+  ADD COLUMN IF NOT EXISTS is_ours BOOL,
+  ADD COLUMN IF NOT EXISTS is_tracked BOOL,
+  ADD COLUMN IF NOT EXISTS shelf_life_days INT64,
+  ADD COLUMN IF NOT EXISTS case_size INT64;
+ALTER TABLE `${GCP_PROJECT}.${BQ_DATASET}.kb_documents`
+  ADD COLUMN IF NOT EXISTS url STRING,
+  ADD COLUMN IF NOT EXISTS publisher STRING,
+  ADD COLUMN IF NOT EXISTS published_label STRING;
+ALTER TABLE `${GCP_PROJECT}.${BQ_DATASET}.promotions`
+  ADD COLUMN IF NOT EXISTS sku_ids ARRAY<STRING>,
+  ADD COLUMN IF NOT EXISTS uplift_label STRING,
+  ADD COLUMN IF NOT EXISTS validity_label STRING;
+
+CREATE TABLE IF NOT EXISTS `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily` (
+ store_id STRING, forecast_date DATE, predicted_revenue FLOAT64,
+ lower_bound FLOAT64, upper_bound FLOAT64, confidence_level FLOAT64, model_run_at TIMESTAMP,
+ day_label STRING, model_name STRING
+) PARTITION BY forecast_date CLUSTER BY store_id;
+CREATE TABLE IF NOT EXISTS `${GCP_PROJECT}.${BQ_DATASET}.product_forecast_daily` (
+ store_id STRING, product_id STRING, forecast_date DATE, predicted_units FLOAT64,
+ lower_bound FLOAT64, upper_bound FLOAT64, confidence_level FLOAT64, model_run_at TIMESTAMP
+) PARTITION BY forecast_date CLUSTER BY store_id, product_id;
+
+-- Upgrade existing seven-column forecast tables without discarding history.
+ALTER TABLE `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily`
+  ADD COLUMN IF NOT EXISTS day_label STRING,
+  ADD COLUMN IF NOT EXISTS model_name STRING;

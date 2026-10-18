@@ -1,0 +1,12 @@
+{
+  "verified_at": "2026-10-18T16:01:11.977750+00:00",
+  "project_id": "retailiq-free-20261018-7ce297",
+  "url": "https://retailiq-free-20261018-7ce297.web.app/?demo=recorded",
+  "hosting_plan": "Spark",
+  "billing_enabled": false,
+  "billing_account_attached": false,
+  "deployment_unbilled_checkpoints": 4,
+  "model_calls_during_deployment": 0,
+  "historical_account_charges": "not_verified",
+  "scope": "Current static hosting project only; no assertion about previously accrued charges."
+}

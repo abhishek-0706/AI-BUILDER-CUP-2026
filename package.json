@@ -1,0 +1,12 @@
+{
+  "name": "retailiq",
+  "private": true,
+  "scripts": {
+    "test": "node tests/run.js",
+    "test:eval": "node tests/eval.js",
+    "test:live": "node tests/eval.js --live"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}

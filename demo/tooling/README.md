@@ -1,62 +1,39 @@
-# Demo video pipeline
+# Submission video tooling
 
-Regenerates the narrated walkthrough end to end. Four files, run in order.
+The current baseline video, `demo/RetailIQ_submission_walkthrough.mp4`, is a 117-second narrated recording of the labelled no-key scenario. It uses the app's real controls and synthetic commercial context. No live AI request is made while recording. The baseline narration uses the Windows system voice.
 
-| File | Does |
-|---|---|
-| `script.json` | The narration, 12 beats, each written as issue then solution |
-| `gen.py` | Renders each beat to mp3 with Edge TTS, `en-IN-NeerjaNeural` at +16% |
-| `record.js` | Drives the app with Playwright and captures the screen |
-| `mux.js` | Lays each clip onto the capture at the timestamp the recorder logged |
+The submission story is the rep's complete visit: capture shelf evidence, verify the stock discrepancy, save the action, inspect the manager record, review a proposed order and explore shopper discovery. A proposed order remains a draft for a human buyer.
 
-```bash
-pip install edge-tts
-cd demo/tooling
-npm install && npx playwright install chromium   # deps stay here, never at the repo root
+## Regenerate the walkthrough locally
 
-# serve the app from the repo root, in another terminal
-python -m http.server 5190
+From the repository root:
 
-python gen.py                       # writes audio/*.mp3
-GK=your-gemini-key node record.js ./rec   # writes rec/*.webm and rec/scenes.json
-node mux.js ../RetailIQ_demo.mp4    # combines them
-
-# normalise speech to a comfortable level
-ffmpeg -i ../RetailIQ_demo.mp4 -af "loudnorm=I=-16:TP=-1.5:LRA=11" \
-  -c:v copy -c:a aac -b:a 160k -movflags +faststart ../RetailIQ_demo_final.mp4
+```powershell
+npm ci
+npm --prefix demo/tooling ci
+npx playwright install chromium
+.\demo\tooling\narrate_submission.ps1
+node demo/tooling/record_submission.js
 ```
 
-`gen.py` expects a `durations.json` to be written after it runs; `record.js` reads that
-file to hold each scene for exactly the length of its narration clip, so nothing is
-stretched or cut off. Measure the clips with ffmpeg and write `[{id, dur}]`.
+The recorder uses the root Playwright installation, starts and stops its own local test server and blocks external application requests. FFmpeg is supplied by the tooling dependency. `submission_script.json` contains the scene narration. WAVs, timings and raw recordings stay under ignored `tmp/`. It writes the resulting video under `demo/`. Duration follows the current narration script; the retained 117-second baseline is a historical artifact.
 
-## Three problems this pipeline exists to avoid
+## Optional creator-voice version
 
-Each of these produced a broken cut before it was fixed, so they are worth knowing
-before changing anything here.
+The creator supplied their own voice sample for an AI-assisted narration version. The conversion is performed locally on the CPU with OpenVoice; the sample is not uploaded to a voice API. Model/dependency downloads are separate from voice processing. Private reference audio, embeddings and generated intermediate WAVs remain under ignored `tmp/`.
 
-**Live model calls on camera.** Generating the pitch, the order, the debrief, the
-coaching, the rehearsal and the shelf audit during the recording left minutes of dead
-screen time, once a single 126 second gap waiting for a rehearsal score. Everything is
-now produced in a warm-up pass against a separate browser context, then replayed. The
-`cache` object holds the results and `inject()` writes them in.
+`clone_narration.py` creates a short preview by default. After listening review, `--all-scenes` converts the scene WAVs and writes `converted-scenes.json`. It requires the locally prepared model manifest, model files and compatible Python environment; see the script's `--help` for arguments.
 
-**The capture starts before the first beat.** Playwright begins recording when the
-context is created, not when you start your timeline. The recorder measures that
-pre-roll and writes it into `scenes.json`, and `mux.js` offsets every clip by it.
-Ignoring this shifts all narration out of sync with the visuals.
+The recorder supports alternate narration and a separate output so the baseline is preserved:
 
-**Do not trim the capture with a seek.** The webm Playwright produces is variable frame
-rate, so `ffmpeg -ss` is not frame accurate on it and a trim lands somewhere other than
-where you asked. That is why the shelf audit is warmed and injected rather than run on
-camera and cut out afterwards. Keep pre-roll small instead of trying to remove it.
+```powershell
+node demo/tooling/record_submission.js --narration tmp/voice-output-abhishek-final/converted-scenes.json --output demo/RetailIQ_Abhishek_voice_demo.mp4 --voice-label "AI narration from creator-provided voice sample"
+```
 
-## Two smaller things
+The final creator-voice artifact is demo/RetailIQ_Abhishek_voice_demo.mp4: 222.44 seconds (3:42.44), nine synchronized scenes, 8,781,377 bytes, with full audio/video decoding passed. Its public player is https://retailiq-free-20261018-7ce297.web.app/demo.html. It is disclosed as AI-assisted narration, not an unedited personal recording. Voice similarity and pronunciation still require listening judgment.
 
-Waiting for a streamed reply needs several consecutive unchanged polls, not two. A
-response can pause mid-sentence for over a second, and a short stability window caches
-half an answer.
+## Historical pipeline
 
-Rehearsal scoring refuses to score fewer than two rep turns, by design. The warm-up
-sends two lines, the second one making the actual commercial ask, otherwise the score
-panel shows a refusal rather than a score.
+`script.json`, `gen.py`, `record.js` and `mux.js` produced the earlier `RetailIQ_demo_final.mp4`. That historical workflow warms live model results and replays cached responses. It is distinct from the current recorded no-key scenario. Do not run its model warm-up under a free-only or no-personal-spend requirement.
+
+Re-record from the current application rather than labelling historical cached responses as a new live session. The newer submission recorder measures scene lengths and keeps pre-roll timing; variable-rate browser video should not be trimmed using an assumed frame-accurate seek.

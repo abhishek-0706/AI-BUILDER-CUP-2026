@@ -99,10 +99,10 @@ CREATE TABLE IF NOT EXISTS `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily` 
   store_id          STRING  NOT NULL,
   forecast_date     DATE    NOT NULL,
   day_label         STRING,
-  predicted_revenue NUMERIC,
-  lower_bound       NUMERIC,
-  upper_bound       NUMERIC,
-  confidence_level  NUMERIC,
+  predicted_revenue FLOAT64,
+  lower_bound       FLOAT64,
+  upper_bound       FLOAT64,
+  confidence_level  FLOAT64,
   -- Kept so a stale forecast is visible as stale rather than silently served.
   model_run_at      TIMESTAMP,
   model_name        STRING
@@ -111,12 +111,18 @@ PARTITION BY forecast_date
 CLUSTER BY store_id;
 
 
+-- Existing deployments may have the original seven-column table.
+ALTER TABLE `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily` ADD COLUMN IF NOT EXISTS day_label STRING;
+ALTER TABLE `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily` ADD COLUMN IF NOT EXISTS model_name STRING;
+
 -- Replace only this run's horizon; history of past runs is retained.
 DELETE FROM `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily`
 WHERE forecast_date >= CURRENT_DATE()
   AND DATE(model_run_at) = CURRENT_DATE();
 
 INSERT INTO `${GCP_PROJECT}.${BQ_DATASET}.demand_forecast_daily`
+  (store_id, forecast_date, day_label, predicted_revenue, lower_bound, upper_bound,
+   confidence_level, model_run_at, model_name)
 SELECT
   store_id,
   DATE(forecast_timestamp)                          AS forecast_date,

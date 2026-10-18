@@ -1,287 +1,93 @@
 # RetailIQ on Google Cloud
 
-This folder is the production path for RetailIQ. It is not running today.
+## Current release and hosting status
 
-The submitted demo is a static single page app, `index.html` plus
-`retail_data.js`, that works with no cloud account. Every number it shows comes
-from synthetic fixtures held in the browser, and the Gemini calls go straight
-from the browser to the Gemini API using a key the judge pastes in, stored in
-`localStorage`. That was a deliberate choice, so the demo opens and works for
-anyone with a key and nothing else.
+The current browser release uses the **free static profile**: `backend:false`, `free_only:true`, and optional direct Gemini requests with an explicitly confirmed unbilled Google AI Studio key. The [public recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) and [free static workspace](https://retailiq-free-20261018-7ce297.web.app/) are deployed on Firebase Spark in an unbilled personal project. The no-key recorded walkthrough also works locally. The selected free-profile model has **not** received a live quality evaluation; offline transport and quota-stop tests use intercepted responses.
 
-What lives here is the same product with real infrastructure underneath. The
-schema, the queries, the forecasting model, the API service and the deployment
-script are complete and runnable, but they activate only when you point them at
-a Google Cloud project. Until you run `deploy.sh`, nothing in this folder is
-live and the app continues to read its fixtures.
+Company credits are approved for use, but the available credit balance has not been verified. An optional future company backend needs an organization-approved sandbox project ID and the required project permissions. An authenticated company Google account alone does not establish those permissions or a credit balance. The current public release is the free Firebase static site, not a company backend.
 
-## Which service does what
+The previous personal cloud deployment is a **historical reference**, not the current hosting destination. Billing on the earlier Cloud Run reference project has been disabled; the new Firebase Spark project is unbilled. Disabling billing does not verify or settle any previously accrued charges; the historical balance remains unverified. Retired personal URLs must not be presented as live submission links.
 
-| Service | Role in RetailIQ |
-| --- | --- |
-| BigQuery | The warehouse. Sales at line item grain, inventory snapshots, customer segments, promotions, accounts, visits, the sales knowledge base and planogram audits. Every dashboard number is a query against it. |
-| BigQuery ML | Demand forecasting with `ARIMA_PLUS`. One model for daily store revenue, one for per SKU unit demand. No separate training infrastructure, the model lives next to the data. |
-| Vertex AI | Gemini inference for all three surfaces, the shopper assistant, the pitch and rehearsal flows, the shelf photo vision check and the business analyst. Called from Cloud Run with the service account, so there is no key in the browser. |
-| Cloud Run | The API. A single FastAPI container that serves the dashboard widgets, the retrieval endpoint and the streaming Gemini proxy. Scales to zero between demos. |
-| Secret Manager | Holds the Gemini API key if you use the keyed fallback. Mounted into the service as an environment variable, never baked into the image and never sent to the client. |
-| Cloud Storage | Shelf photos from the planogram compliance check. The photo is uploaded to a bucket, and the `gs://` URI is passed to Gemini and recorded on the audit row, so a compliance verdict can be re-checked against the exact image it came from. |
-| AlloyDB for PostgreSQL | Not used by this folder, noted as the operational option. BigQuery is the right place for analytics and forecasting, but basket writes, order placement and visit check ins are transactional and want row level reads and writes with low latency. The natural split is AlloyDB for operational state, streamed into BigQuery for analysis. |
+## Run the free static profile
 
-## Architecture
+From the repository root:
 
-```
-                         Browser (index.html)
-                                  |
-              static fixtures     |     cloud path
-              retail_data.js  <---+--->  HTTPS, CORS
-              (shipped demo)            |
-                                        v
-                          +-----------------------------+
-                          |  Cloud Run: retailiq-api    |
-                          |  FastAPI, non-root, 1 vCPU  |
-                          +-----------------------------+
-                            |            |            |
-              widget reads  |            | Gemini     | photo write
-              and retrieval |            | streaming  |
-                            v            v            v
-                  +-----------------+  +-----------+  +-----------------+
-                  |    BigQuery     |  | Vertex AI |  | Cloud Storage   |
-                  |  dataset:       |  |  Gemini   |  |  shelf photos   |
-                  |  retailiq       |  +-----------+  +-----------------+
-                  |                 |        ^
-                  |  sales_transac. |        |
-                  |  inventory_snap.|   +---------------+
-                  |  customer_segm. |   | Secret Manager|
-                  |  kb_documents   |   | gemini key,   |
-                  |  planogram_*    |   | optional      |
-                  |  visits, accts  |   +---------------+
-                  +-----------------+
-                          |
-                          | BigQuery ML, scheduled daily
-                          v
-                  +-----------------------------+
-                  |  ARIMA_PLUS models          |
-                  |  store_revenue_forecast     |
-                  |  product_demand_forecast    |
-                  |         |                   |
-                  |         v                   |
-                  |  demand_forecast_daily      |
-                  |  product_forecast_daily     |
-                  +-----------------------------+
+```powershell
+python -m http.server 5190 --bind 127.0.0.1
 ```
 
-The forecast is trained on a schedule and materialised into
-`demand_forecast_daily`. The API only reads that table. A dashboard load never
-triggers model training, so the page is fast and yesterday's forecast stays on
-the record instead of being silently recomputed.
+Open `http://localhost:5190/index.html?role=rep` and choose **Try guided demo**. Static visit events stay in this browser. Cloud evidence retention and server analytics are unavailable in this profile.
 
-## Files
+Live AI is optional. Settings requires confirmation that the supplied key belongs to an unbilled AI Studio project; the browser cannot independently verify billing. HTTP 429 stops further requests in the page. There is no automatic retry, alternate model or paid backend fallback. An unbilled project is necessary for the provider's free-quota limit to prevent paid usage.
 
-| File | What it is |
-| --- | --- |
-| `schema.sql` | Dataset and table DDL. Partitioned on date columns, clustered on the columns the widget queries filter by. |
-| `queries.sql` | One labelled query per dashboard widget, plus retrieval and the sales rep reads. This file is loaded at runtime by `main.py`, so the query you read is the query that runs. |
-| `forecast.sql` | `CREATE MODEL` for both `ARIMA_PLUS` models, then `ML.FORECAST` at 90 percent confidence materialised into the forecast tables. |
-| `main.py` | The Cloud Run service. Widget endpoints, `/api/rag/search`, and the streaming `/api/chat` Gemini proxy. |
-| `seed_data.py` | Generates newline delimited JSON seed files from the demo fixture. |
-| `deploy.sh` | The gcloud and bq commands, in order, re-runnable. |
-| `Dockerfile` | Slim Python base, non-root user, single uvicorn worker. |
-| `requirements.txt`, `.gcloudignore` | Runtime dependencies and build context filter. |
+The separate Firebase Hosting helper accepts only an explicitly verified unbilled project and uploads allowlisted public files. It does not link billing or use Cloud Build, Cloud Run or Vertex AI. The current release used this path: 18 public files were deployed to `retailiq-free-20261018-7ce297`, with billing-disabled checks at four deployment checkpoints.
 
-## Endpoints
+```powershell
+# Entirely local validation; no Google or model calls:
+.\.venv\Scripts\python.exe gcp/deploy_free.py --project YOUR_UNBILLED_PROJECT --check-only
 
-| Method | Path | Returns |
-| --- | --- | --- |
-| GET | `/healthz` | Config echo and the list of query blocks loaded from `queries.sql`. |
-| GET | `/api/config` | Non secret settings the front end needs, including the pinned demo date. |
-| GET | `/api/kpis` | KPI strip: revenue today against target, average basket, conversion, returning customer share, NPS, out of stock count. |
-| GET | `/api/revenue/week` | Daily revenue and basket count for the last 7 days. |
-| GET | `/api/forecast` | The materialised 7 day forecast with lower and upper bounds. |
-| GET | `/api/alerts` | Reorder alerts with days of cover, urgency level and a recommended order quantity. |
-| GET | `/api/segments` | Segment share and profile, with a live 90 day revenue cross-check. |
-| GET | `/api/promotions` | Promotions active on the report date. |
-| GET | `/api/top-movers` | Units, revenue and margin value over 30 days, with a real week on week trend. |
-| GET | `/api/products` | Live catalogue with price and stock, used to ground the shopper assistant. |
-| GET | `/api/visits/{visit_id}` | Pre visit brief: plan, account, buyer profile, past objections. |
-| GET | `/api/planogram/{planogram_id}` | The rules a shelf photo is scored against. |
-| POST | `/api/rag/search` | Citable knowledge base passages for grounded pitch generation. |
-| POST | `/api/chat` | Streaming Gemini proxy via Vertex AI. |
-
-All read endpoints accept `store_id` and `date` query parameters. `date` pins
-the report date so a demo is reproducible.
-
-### The Gemini proxy
-
-`/api/chat` emits server sent events in the same envelope as the Gemini REST
-streaming API, `candidates[0].content.parts[].text`, followed by `[DONE]`. The
-existing parser in `index.html` works against it by changing only the URL, so
-moving off the browser key is a one line change on the front end rather than a
-rewrite. The request body carries the system prompt, up to eight turns of
-history, and optionally an image, either inline base64 or a `gs://` URI for a
-shelf photo already in Cloud Storage.
-
-When `GCP_PROJECT` is set and no key is mounted, the service authenticates to
-Vertex AI with the Cloud Run service account. That is the path to prefer. There
-is no credential to leak because there is no credential. The keyed path exists
-for local development and for teams that would rather keep an AI Studio key in
-Secret Manager.
-
-### Failure behaviour
-
-If BigQuery is unreachable, not seeded, or the service account lacks a role,
-the endpoint returns HTTP 503 with the query name, the dataset it tried to
-read, the underlying error and a hint. If the forecast table has no rows for
-the requested horizon, `/api/forecast` returns 404 and says to run
-`forecast.sql`. No endpoint substitutes a sample value for a real one. A blank
-widget is recoverable, a plausible wrong number is not.
-
-## Standing it up
-
-Prerequisites: a Google Cloud project with billing enabled, `gcloud` and `bq`
-authenticated, Python 3.10 or newer for the seed generator.
-
-```bash
-cd gcp
-export GCP_PROJECT=your-project-id
-
-# Optional overrides, these are the defaults.
-export BQ_DATASET=retailiq
-export BQ_LOCATION=asia-south1
-export REGION=asia-south1
-export VERTEX_LOCATION=asia-south1
-
-./deploy.sh
+# Deployment example for an approved unbilled project and explicitly selected account:
+.\.venv\Scripts\python.exe gcp/deploy_free.py --project YOUR_UNBILLED_PROJECT --account YOUR_APPROVED_GOOGLE_ACCOUNT
 ```
 
-That runs, in order:
+The helper checks `billingEnabled:false` before provisioning and again before finalization and release, keeps OAuth tokens in memory, and stops on quota errors. See the [official Hosting REST flow](https://firebase.google.com/docs/hosting/api-deploy) and [Hosting usage limits](https://firebase.google.com/docs/hosting/usage-quotas-pricing).
 
-1. Enables BigQuery, Cloud Run, Cloud Build, Artifact Registry, Vertex AI,
-   Secret Manager and Cloud Storage.
-2. Creates the dataset in `BQ_LOCATION` and applies `schema.sql`.
-3. Runs `seed_data.py` and loads each table with `bq load --replace`.
-4. Runs `forecast.sql`, which trains both models and writes the horizon.
-5. Creates the shelf photo bucket and the `retailiq-api` service account, with
-   `bigquery.jobUser`, `bigquery.dataViewer`, `aiplatform.user` on the project
-   and `storage.objectAdmin` on the bucket only.
-6. Creates the `retailiq-gemini-key` secret and grants the service account
-   access to it. No key version is added unless you set `GEMINI_KEY_FILE` to a
-   file containing one.
-7. Builds from source and deploys Cloud Run, mounting the secret only if an
-   enabled version exists.
+## Connect an approved company account
 
-Individual steps can be re-run on their own:
+Authentication uses Google's browser sign-in flow. Do not place passwords, verification codes or private keys in chat or repository files. A portable CLI can be used from ignored `tmp/cloud-tools/google-cloud-sdk/bin/gcloud.cmd`; see the [official installation guide](https://docs.cloud.google.com/sdk/docs/install-sdk).
 
-```bash
-./deploy.sh schema
-./deploy.sh seed
-./deploy.sh forecast
-./deploy.sh service
+```powershell
+.\gcp\connect-account.ps1 -Account "YOUR_COMPANY_GOOGLE_ACCOUNT"
 ```
 
-Check it:
+Once the company provides an approved sandbox project, verify access with its actual ID. The helper can select that account/project in the local CLI configuration. Selection is not proof that company billing permissions or credit balance are sufficient.
 
-```bash
-URL=$(gcloud run services describe retailiq-api --region "$REGION" --format='value(status.url)')
-curl "$URL/healthz"
-curl "$URL/api/revenue/week"
-curl "$URL/api/kpis"
+## Company backend deployment path
+
+The following is a prepared implementation path, **not a completed company deployment**. It requires the approved sandbox ID, company billing authorization and service-provisioning permissions. Use the explicitly selected company account; do not deploy against the retired personal project.
+
+```powershell
+.\gcp\deploy.ps1 -ProjectId "APPROVED_COMPANY_SANDBOX_ID" -Account "YOUR_COMPANY_GOOGLE_ACCOUNT" -Mode all
 ```
 
-To point the front end at the API instead of the fixtures, set the base URL and
-`ALLOWED_ORIGINS` to the page origin rather than `*`. The front end change is
-out of scope for this folder, `index.html` and `retail_data.js` are untouched.
+The wrapper sets and restores the process account/project/Python environment. It does not link a billing account. `all` enables APIs, applies BigQuery schema migrations, loads labelled synthetic rows, trains forecasts, provisions Firestore and its index, creates private evidence storage, grants runtime/build permissions, and deploys the container. These services can generate billable usage; company credit coverage remains unverified until checked against the approved project.
 
-Keeping the forecast fresh, once you are past the demo:
+`service` updates an application after warehouse prerequisites exist. `schema`, `seed`, `forecast`, `evaluate` and `infrastructure` operate on their named components. Re-seeding replaces synthetic table contents; use a dedicated demonstration dataset.
 
-```bash
-bq mk --transfer_config \
-  --project_id="$GCP_PROJECT" \
-  --data_source=scheduled_query \
-  --display_name="RetailIQ nightly forecast" \
-  --schedule="every 24 hours" \
-  --params="{\"query\":\"$(cat forecast.sql)\",\"use_legacy_sql\":false}"
-```
-
-Use the rendered SQL, with the placeholders already substituted, when you create
-the transfer config.
-
-## About the seed data
-
-Everything loaded by `seed_data.py` is synthetic. There is no customer data of
-any kind in this repository.
-
-The fixture in `retail_data.js` holds 7 daily revenue totals, which is nowhere
-near enough history to fit a seasonal model, so the generator synthesises 180
-days. It is built to be checkable rather than convenient:
-
-- Net revenue and basket count for the last 7 days match `revenueWeek` exactly,
-  so the revenue chart in the cloud path reproduces the chart in the demo.
-- The 10 named SKUs hit their `unitsSoldLast30d` velocities to within a few
-  percent, so top movers and reorder alerts are about real products.
-- The rest of the day's revenue is carried by a generated long tail catalogue of
-  50 additional SKUs, because 10 products cannot add up to a 48,000 rupee day.
-- Inventory is a single snapshot on the report date, with the named SKUs at their
-  fixture stock levels. In production this is a daily extract, not a generated
-  history.
-
-Two places where the cloud path will not match the fixture number, on purpose:
-
-- Average basket is derived as revenue divided by baskets, which on the fixture's
-  own figures is about 150 rupees, not the 820 the fixture's KPI block states.
-  The derived number is the one the query returns.
-- Alert levels are computed from days of cover against supplier lead time, so a
-  SKU the fixture labels a warning can come back as critical when the arithmetic
-  says it will run dry before the next delivery. The rule is in `queries.sql` and
-  can be read and argued with.
-
-The default report date is 2026-09-27, a Sunday, so the 7 day window ends on the
-peak day the fixture treats as today and both planned visits are still in the
-future. Change it with `DEMO_AS_OF_DATE`.
-
-## Retrieval
-
-Pitch citations come from `kb_documents`, where each row holds one citable
-claim. The retrieval endpoint has two modes:
-
-- `keyword`, the default, scores documents by query token overlap. It needs
-  nothing beyond the loaded table, so the first run works immediately.
-- `vector` uses `ML.GENERATE_EMBEDDING` with `text-embedding-005` and
-  `VECTOR_SEARCH` over a populated `embedding` column. It needs a BigQuery
-  connection to Vertex AI, so it is opt in. The three statements are in the
-  commented section at the end of `schema.sql`. Run them, then redeploy with
-  `RAG_MODE=vector`.
-
-An empty result is a real answer. If nothing in the knowledge base supports a
-claim, there is nothing to cite, and the pitch generator should stop rather than
-improvise.
+Private Cloud Run IAM access is the default. For an explicitly selected shared-demo deployment, supply `-PublicDemo -TokenFile PATH_TO_ACCESS_TOKEN`. Keep the token outside the repository or inside ignored `tmp/`. The script mounts it through Secret Manager and never prints it. Open a private deployment with an IAM-authenticated Cloud Run proxy.
 
 ## Configuration
 
-The service reads everything from the environment. No value below has a default
-that contains a credential, and none is committed.
+| Variable | Purpose |
+| --- | --- |
+| `GCP_PROJECT` | Explicitly approved target project |
+| `CLOUDSDK_CORE_ACCOUNT` | Account pinned by the Windows wrapper |
+| `BQ_DATASET` / `BQ_LOCATION` | Warehouse dataset and location; default `retailiq` / `asia-south1` |
+| `REGION` / `FIRESTORE_LOCATION` | Commerce service locations; default Mumbai |
+| `GEMINI_MODEL` / `VERTEX_LOCATION` | Backend defaults: `gemini-3.6-flash` / `global` |
+| `DEMO_AS_OF_DATE` | Pinned report date for synthetic history |
+| `RETAILIQ_API_KEY` | Shared-demo bearer token mounted from Secret Manager |
+| `RETAILIQ_TRUST_IAM` | Trust IAM enforcement on a private deployment |
+| `RETAILIQ_OPEN_DEMO` | Unprotected local test option; never enabled by the deployment script |
+| `PHOTO_BUCKET` / `PHOTO_RETENTION_DAYS` | Private evidence bucket and lifecycle target |
+| `AI_REQUESTS_PER_MINUTE` | Per-instance inference request limit |
+| `BQ_MAX_BYTES_BILLED` | Per-query BigQuery scan ceiling |
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `GCP_PROJECT` | none, required | Project that owns the dataset and the Vertex AI calls. |
-| `BQ_DATASET` | `retailiq` | Dataset name. |
-| `BQ_LOCATION` | `asia-south1` | Dataset region. Query jobs must run in the same region. |
-| `VERTEX_LOCATION` | `asia-south1` | Vertex AI region for Gemini. |
-| `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Model id, matching the one the demo uses. |
-| `DEFAULT_STORE_ID` | `BLR-KOR-014` | Store used when a request omits `store_id`. |
-| `DEMO_AS_OF_DATE` | unset | Pins the report date. Unset means today. |
-| `RAG_MODE` | `keyword` | `keyword` or `vector`. |
-| `ALLOWED_ORIGINS` | `*` | Comma separated CORS origins. Narrow this for anything real. |
-| `GEMINI_API_KEY` | unset | Injected from Secret Manager. Absent means Vertex AI service account auth, which is the preferred path. |
+A company backend uses its Cloud Run service account for Vertex AI. `GEMINI_API_KEY` is an optional server credential; it is distinct from the browser's application bearer token. The static free profile instead uses its optional operator-provided AI Studio key and no server inference.
 
-## Cost and operational notes
+## Historical reference evidence and current verification
 
-- The service scales to zero, so an idle deployment costs storage only.
-- Widget queries are partition pruned and clustered. With the seed data each one
-  scans well under a megabyte, inside the BigQuery free tier.
-- `ARIMA_PLUS` training reads the full history range, so it is a scheduled job,
-  not a request path. Train nightly at most.
-- The per SKU model fits one series for every store and product pair. Cap the
-  catalogue or the history before running it against a real chain.
-- The Cloud Run service is deployed with `--allow-unauthenticated` so a judge can
-  curl it. For anything beyond a demo, put Identity Aware Proxy or an API
-  gateway in front of it and narrow `ALLOWED_ORIGINS`.
+The archived `submission/evidence/cloud-reference-smoke.json` records successful service checks on the earlier personal reference deployment. `vertex-reference-evaluation.json` records 10 selected structured cases passing on Gemini 3.6 Flash through that backend. These results predate the free-only profile and **do not establish current hosting availability or free-profile model quality**. They are not evidence of business uplift or general shelf-recognition accuracy.
+
+`fixtures.py` reads the canonical synthetic fixture. Forecasting uses BigQuery ML; its holdout compares MAE/WAPE with a seasonal-naive baseline. Results on generated history are diagnostic rather than production-accuracy evidence. Replenishment uses forecast demand when available, deducts inbound stock, caps short-life cover and respects case sizes. A missing facing first triggers a stockroom check rather than assuming inventory was sold.
+
+Configured backend visit events retain originating IDs and structured evidence. Optional photos remain private and are retrieved through authenticated `/api/evidence/image`. Proposed orders remain drafts. `/health` is the application health route; the earlier cloud frontend intercepted `/healthz`.
+
+Run the reproducible offline backend, deployment and free-hosting safety checks without credentials:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r gcp/requirements.txt -r tests/requirements.txt
+.\.venv\Scripts\python.exe -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider
+```
+
+The recorded run has 60 passing checks using cloud/command doubles. It does not validate a company deployment, current credit balance, historical personal charges or the optional free-profile model's live quality. See [tests/README.md](../tests/README.md) for verification limits.

@@ -1,0 +1,108 @@
+{
+  "created_at": "2026-10-18T14:40:22.977747+00:00",
+  "url": "https://retailiq-api-6dm5ezgumq-el.a.run.app",
+  "mode": "deployed_cloud",
+  "model_calls": 0,
+  "checks": [
+    {
+      "name": "cloud_health_and_vertex_configuration",
+      "pass": true,
+      "model": "gemini-3.6-flash"
+    },
+    {
+      "name": "bearer_auth_and_private_evidence_configured",
+      "pass": true
+    },
+    {
+      "name": "anonymous_warehouse_access_rejected",
+      "pass": true
+    },
+    {
+      "name": "private_path_unavailable__.env",
+      "pass": true
+    },
+    {
+      "name": "private_path_unavailable__gcp_main.py",
+      "pass": true
+    },
+    {
+      "name": "private_path_unavailable__tmp_retailiq-judge.key",
+      "pass": true
+    },
+    {
+      "name": "private_path_unavailable__tests_test_api.py",
+      "pass": true
+    },
+    {
+      "name": "public_recorded_entry_available",
+      "pass": true
+    },
+    {
+      "name": "bigquery_bootstrap",
+      "pass": true,
+      "as_of_date": "2026-10-22",
+      "products": 13
+    },
+    {
+      "name": "tracked_catalog_excludes_turnover_aggregate",
+      "pass": true
+    },
+    {
+      "name": "warehouse_forecast_horizon",
+      "pass": true
+    },
+    {
+      "name": "canonical_catalog_facts",
+      "pass": true
+    },
+    {
+      "name": "warehouse_retrieval_available",
+      "pass": true
+    },
+    {
+      "name": "warehouse_widget_replenishment",
+      "pass": true
+    },
+    {
+      "name": "warehouse_widget_alerts",
+      "pass": true
+    },
+    {
+      "name": "warehouse_widget_top-movers",
+      "pass": true
+    },
+    {
+      "name": "warehouse_widget_segments",
+      "pass": true
+    },
+    {
+      "name": "private_gcs_photo_saved",
+      "pass": true
+    },
+    {
+      "name": "authenticated_photo_round_trip",
+      "pass": true
+    },
+    {
+      "name": "unrelated_bucket_rejected",
+      "pass": true
+    },
+    {
+      "name": "firestore_event_saved",
+      "pass": true
+    },
+    {
+      "name": "manager_reads_saved_event",
+      "pass": true,
+      "event_count": 2
+    }
+  ],
+  "limitations": [
+    "Synthetic demonstration data; no model-quality or business-impact claim."
+  ],
+  "pass": true,
+  "summary": {
+    "passed": 22,
+    "total": 22
+  }
+}

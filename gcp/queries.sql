@@ -67,71 +67,49 @@ LIMIT 7;
 -- next delivery lands.
 -- ===========================================================================
 WITH latest_snapshot AS (
-  SELECT MAX(snapshot_date) AS snapshot_date
-  FROM `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots`
-  WHERE store_id = @store_id
-    AND snapshot_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 14 DAY) AND @as_of_date
-),
-velocity AS (
-  SELECT
-    product_id,
-    SUM(quantity) / 30.0 AS units_per_day
-  FROM `${GCP_PROJECT}.${BQ_DATASET}.sales_transactions`
-  WHERE store_id = @store_id
-    AND NOT is_return
-    AND txn_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 29 DAY) AND @as_of_date
-  GROUP BY product_id
-),
-stock AS (
-  SELECT
-    i.product_id,
-    p.product_name,
-    p.category,
-    i.units_on_hand,
-    i.reorder_point,
-    i.units_on_order,
-    i.lead_time_days,
-    v.units_per_day,
-    SAFE_DIVIDE(i.units_on_hand, NULLIF(v.units_per_day, 0)) AS days_of_cover
-  FROM `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots` i
-  JOIN latest_snapshot ls USING (snapshot_date)
-  JOIN `${GCP_PROJECT}.${BQ_DATASET}.products` p USING (product_id)
-  LEFT JOIN velocity v USING (product_id)
-  WHERE i.store_id = @store_id
+ SELECT MAX(snapshot_date) AS snapshot_date
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots`
+ WHERE store_id=@store_id AND snapshot_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 14 DAY) AND @as_of_date
+), velocity AS (
+ SELECT product_id,SUM(quantity)/30.0 AS daily
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.sales_transactions`
+ WHERE store_id=@store_id AND NOT is_return
+ AND txn_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 29 DAY) AND @as_of_date
+ GROUP BY product_id
+), predictions AS (
+ SELECT product_id,AVG(GREATEST(predicted_units,0)) AS daily
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.product_forecast_daily`
+ WHERE store_id=@store_id AND forecast_date>@as_of_date
+ AND forecast_date<=DATE_ADD(@as_of_date, INTERVAL 14 DAY)
+ GROUP BY product_id
+), stock AS (
+ SELECT p.product_id,p.product_name,p.category,i.units_on_hand,i.reorder_point,
+ IFNULL(i.units_on_order,0) AS units_on_order,IFNULL(i.lead_time_days,7) AS lead_time_days,
+ GREATEST(COALESCE(f.daily,v.daily,0),0) AS daily,
+ IF(f.daily IS NOT NULL,'forecast','30-day sales average') AS demand_basis,
+ LEAST(21,IF(p.shelf_life_days>0,p.shelf_life_days,21)) AS cover_target,
+ IF(p.shelf_life_days BETWEEN 1 AND 20,1,GREATEST(IFNULL(p.case_size,12),1)) AS case_size
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots` i
+ JOIN latest_snapshot USING(snapshot_date)
+ JOIN `${GCP_PROJECT}.${BQ_DATASET}.products` p USING(product_id)
+ LEFT JOIN velocity v USING(product_id)
+ LEFT JOIN predictions f USING(product_id)
+ WHERE i.store_id=@store_id AND p.is_active AND p.is_tracked AND p.is_ours
+), sized AS (
+ SELECT *,SAFE_DIVIDE(units_on_hand,NULLIF(daily,0)) AS cover,
+ GREATEST(0,CAST(CEIL(daily*cover_target) AS INT64)-units_on_hand-units_on_order) AS gap
+ FROM stock
 )
-SELECT
-  product_name AS product,
-  category,
-  units_on_hand AS stock,
-  reorder_point AS reorder_at,
-  units_on_order,
-  ROUND(units_per_day, 1) AS units_per_day,
-  ROUND(days_of_cover, 1) AS days_of_cover,
-  CASE
-    WHEN units_on_hand <= reorder_point THEN 'critical'
-    WHEN days_of_cover < lead_time_days + 2 THEN 'critical'
-    WHEN units_on_hand <= reorder_point * 1.5 THEN 'warning'
-    WHEN days_of_cover < lead_time_days + 7 THEN 'warning'
-    ELSE 'watch'
-  END AS level,
-  -- Cover lead time plus a 7 day buffer, net of stock already inbound.
-  GREATEST(
-    0,
-    CAST(CEIL(units_per_day * (lead_time_days + 7)) AS INT64)
-      - units_on_hand - IFNULL(units_on_order, 0)
-  ) AS recommended_order_units
-FROM stock
-WHERE units_on_hand <= reorder_point * 1.5
-   OR days_of_cover < lead_time_days + 7
-ORDER BY
-  CASE
-    WHEN units_on_hand <= reorder_point THEN 0
-    WHEN days_of_cover < lead_time_days + 2 THEN 1
-    ELSE 2
-  END,
-  days_of_cover
+SELECT product_id,product_name AS product,category,units_on_hand AS stock,
+ reorder_point AS reorder_at,units_on_order,ROUND(daily,1) AS units_per_day,
+ ROUND(cover,1) AS days_of_cover,demand_basis,cover_target AS cover_target_days,case_size,
+ CASE WHEN units_on_hand<=reorder_point OR cover<lead_time_days THEN 'critical'
+ WHEN units_on_hand<=reorder_point*1.5 OR cover<cover_target THEN 'warning' ELSE 'watch' END AS level,
+ CAST(CEIL(SAFE_DIVIDE(gap,case_size))*case_size AS INT64) AS recommended_order_units
+FROM sized
+WHERE units_on_hand<=reorder_point*1.5 OR cover<cover_target
+ORDER BY IF(units_on_hand<=reorder_point OR cover<lead_time_days,0,1),cover
 LIMIT @limit;
-
 
 -- ===========================================================================
 -- name: segment_stats
@@ -212,6 +190,7 @@ SELECT
   COALESCE(w.units_last_7d > w.units_prior_7d, FALSE) AS trending
 FROM window_sales w
 JOIN `${GCP_PROJECT}.${BQ_DATASET}.products` p USING (product_id)
+WHERE p.is_active AND p.is_tracked
 ORDER BY w.units_30d DESC
 LIMIT @limit;
 
@@ -308,25 +287,37 @@ ORDER BY observed_uplift_pct DESC;
 -- model can only recommend what is actually on the shelf.
 -- ===========================================================================
 WITH latest_snapshot AS (
-  SELECT MAX(snapshot_date) AS snapshot_date
-  FROM `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots`
-  WHERE store_id = @store_id
-    AND snapshot_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 14 DAY) AND @as_of_date
+ SELECT MAX(snapshot_date) AS snapshot_date
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots`
+ WHERE store_id=@store_id AND snapshot_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 14 DAY) AND @as_of_date
+), velocity AS (
+ SELECT product_id, SUM(quantity) AS units30,
+ SUM(IF(txn_date > DATE_SUB(@as_of_date, INTERVAL 7 DAY),quantity,0)) AS recent,
+ SUM(IF(txn_date <= DATE_SUB(@as_of_date, INTERVAL 7 DAY) AND txn_date > DATE_SUB(@as_of_date, INTERVAL 14 DAY),quantity,0)) AS prior
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.sales_transactions`
+ WHERE store_id=@store_id AND NOT is_return AND txn_date BETWEEN DATE_SUB(@as_of_date, INTERVAL 29 DAY) AND @as_of_date
+ GROUP BY product_id
+), predictions AS (
+ SELECT product_id, AVG(predicted_units) AS daily
+ FROM `${GCP_PROJECT}.${BQ_DATASET}.product_forecast_daily`
+ WHERE store_id=@store_id AND forecast_date > @as_of_date AND forecast_date <= DATE_ADD(@as_of_date, INTERVAL 14 DAY)
+ GROUP BY product_id
 )
-SELECT
-  p.product_id                 AS id,
-  p.product_name               AS name,
-  p.category                   AS cat,
-  CAST(p.list_price AS INT64)  AS price,
-  i.units_on_hand              AS stock,
-  i.reorder_point              AS reorder_at,
-  ROUND(p.margin_rate, 2)      AS margin
+SELECT p.product_id AS id,p.product_name AS name,p.category AS cat,p.pack_size AS pack,
+ CAST(p.list_price AS FLOAT64) AS price,i.units_on_hand AS stock,i.reorder_point AS reorderAt,
+ CAST(p.margin_rate AS FLOAT64) AS margin,p.protein_grams AS protein,p.added_sugar_grams AS addedSugar,
+ p.is_ours AS ours,p.shelf_life_days AS shelfLifeDays,IFNULL(v.units30,0) AS unitsSoldLast30d,
+ IFNULL(v.recent > v.prior,FALSE) AS trending,f.daily AS predictedUnitsPerDay,
+ i.units_on_order AS unitsOnOrder,i.lead_time_days AS leadTimeDays,
+ IF(p.shelf_life_days BETWEEN 1 AND 20,1,GREATEST(IFNULL(p.case_size,12),1)) AS caseSize
 FROM `${GCP_PROJECT}.${BQ_DATASET}.products` p
-JOIN `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots` i USING (product_id)
-JOIN latest_snapshot USING (snapshot_date)
-WHERE i.store_id = @store_id
-  AND p.is_active
-ORDER BY p.category, p.product_name;
+JOIN `${GCP_PROJECT}.${BQ_DATASET}.inventory_snapshots` i USING(product_id)
+JOIN latest_snapshot USING(snapshot_date)
+LEFT JOIN velocity v USING(product_id)
+LEFT JOIN predictions f USING(product_id)
+WHERE i.store_id=@store_id AND p.is_active AND p.is_tracked
+ORDER BY p.category,p.product_id;
+
 
 
 -- ===========================================================================
@@ -406,7 +397,7 @@ SELECT
   d.title,
   d.fact,
   d.source_type,
-  d.published_date,
+  d.published_date,d.url,d.is_synthetic,
   (SELECT COUNT(*) FROM terms t
    WHERE STRPOS(LOWER(CONCAT(d.title, ' ', d.fact)), t.term) > 0) AS match_score
 FROM `${GCP_PROJECT}.${BQ_DATASET}.kb_documents` d
@@ -427,7 +418,7 @@ SELECT
   base.title,
   base.fact,
   base.source_type,
-  base.published_date,
+  base.published_date,base.url,base.is_synthetic,
   ROUND(1 - distance, 4) AS match_score
 FROM VECTOR_SEARCH(
   TABLE `${GCP_PROJECT}.${BQ_DATASET}.kb_documents`,
@@ -443,3 +434,15 @@ FROM VECTOR_SEARCH(
   distance_type => 'COSINE'
 )
 ORDER BY distance;
+
+
+-- name: knowledge_docs
+SELECT doc_id AS id,title,fact,url,publisher,published_label AS published
+FROM `${GCP_PROJECT}.${BQ_DATASET}.kb_documents` ORDER BY doc_id;
+
+-- name: bootstrap_promotions
+SELECT promotion_name AS name,discount_label AS discount,validity_label AS validity,
+ uplift_label AS uplift,sku_ids AS skuIds,CAST(start_date AS STRING) AS startDate,CAST(end_date AS STRING) AS endDate
+FROM `${GCP_PROJECT}.${BQ_DATASET}.promotions`
+WHERE (store_id=@store_id OR store_id IS NULL)
+AND @as_of_date BETWEEN start_date AND IFNULL(end_date,@as_of_date);

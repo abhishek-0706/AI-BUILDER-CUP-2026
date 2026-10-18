@@ -1,0 +1,32 @@
+name: Verify RetailIQ
+on:
+  push:
+  pull_request:
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            gcp/requirements.txt
+            tests/requirements.txt
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: python -m pip install -r gcp/requirements.txt -r tests/requirements.txt
+      - run: npm test
+      - run: python -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: retailiq-regression-reports
+          path: tmp/*report.json
+          if-no-files-found: warn

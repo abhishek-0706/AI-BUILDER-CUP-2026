@@ -1,0 +1,122 @@
+RETAILIQ SUBMISSION READINESS
+Prepared 18 October 2026
+
+POSITIONING
+Primary user: the CPG field representative.
+Human decision owners: the rep, field manager and authorized store buyer.
+Secondary experience: inventory-grounded digital shopper discovery.
+Challenge: Retail & Commerce - Intelligent Customer and Business Experiences.
+Core loop: shelf evidence -> verify stock discrepancy -> choose action -> explain -> save -> review.
+Design rationale: sensing + execution + empowerment. Detection must lead to a useful action and a person able to carry it out.
+
+READY TO REVIEW
+1. pitch-slides.html - ten slides; keyboard arrows, print export and speaker notes.
+2. pitch-slides.pdf - printable ten-slide submission deck, below the five-megabyte form limit.
+   Hosted PDF: https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf
+3. demo/RetailIQ_Abhishek_voice_demo.mp4 - final submission video, 222.44 seconds (3:42.44).
+   8,781,377 bytes; nine synchronized scenes; full audio/video decode passed.
+   AI-assisted narration from the creator-provided voice sample, converted locally.
+   Google-hosted video page: https://retailiq-free-20261018-7ce297.web.app/demo.html
+   Earlier 117-second Windows-voice baseline is retained locally.
+4. SUBMISSION_BRIEF.txt - form-ready description below 1,024 characters.
+5. README.md - local launch, personas, workflow, architecture, evidence and limits.
+6. submission/evidence/ - retained credential-free release evidence.
+
+PUBLIC AND LOCAL ACCESS
+Public guided demo: https://retailiq-free-20261018-7ce297.web.app/?demo=recorded
+Firebase Spark, unbilled project retailiq-free-20261018-7ce297.
+18 public files deployed; billing-disabled checks at four deployment checkpoints.
+18 deployed HTTP/browser checks passed: published hashes, private-path rejection,
+audit and local manager workflow, mobile layouts and zero AI/backend requests.
+Recorded mode sends no AI requests; static saves stay in that browser.
+Run python -m http.server 5190 --bind 127.0.0.1 from the repository.
+Open http://localhost:5190/index.html?demo=recorded
+This explicitly labelled scenario needs no model key and sends no AI requests.
+It uses real shelf reference media and synthetic commercial context.
+Static saves remain in that browser, rather than implying cloud persistence.
+
+HOSTING AND COST STATUS
+The former personal-project Cloud Run endpoint is retired; its project billing is disabled.
+The free static Firebase host is deployed. A company backend remains an optional future path.
+Company backend provisioning needs an approved sandbox project and suitable permissions.
+Work-account access and an available company billing account do not establish project creation or billing-link permissions.
+Current static runtime profile: free_only, optional Google AI Studio key, Gemini 3.5 Flash-Lite.
+The user must confirm the key belongs to an unbilled project; the app cannot verify billing.
+A quota error stops requests for that page session. No paid-model fallback exists.
+No real-model quality evaluation has been run for this free profile.
+Company-credit cloud hosting is metered usage that consumes credits. It is not inherently free.
+Exact prior charges, current credit balance and invoice total are not established by this packet.
+The INR 5/visit operating budget in the deck is a planning target, not an actual cost.
+
+SOFTWARE VERIFICATION - CURRENT LOCAL RELEASE
+157 browser checks and seven policy checks passed; 38 offline evaluator assertions passed.
+60 Python checks passed: 51 API, four deployment doubles and five free-hosting safety checks.
+The six-suite Node runner passed. Browser server responses and Python cloud clients are mocked.
+These checks establish the exercised software contracts. Static hosting is separately deployed;
+historical cloud API reports do not establish a current hosted backend.
+
+EVIDENCE INDEX
+submission/evidence/media-verification.json
+  Final creator-voice MP4: 222.44 seconds, nine scene intervals synchronized,
+  full-stream audio/video decoding passed. No live AI request is shown or claimed.
+submission/evidence/free-hosting-smoke.json
+  Current unbilled Firebase host: 18 HTTP/browser checks passed.
+  Four published asset SHA256 matches, five private-path 404 responses,
+  free-only backend disabled, audit abstention, confirmation and local manager save,
+  three phone role layouts, no AI/backend attempts and no JavaScript errors.
+submission/evidence/software-regressions.json
+  Six suites passed; no model calls. Offline browser/backend doubles.
+submission/evidence/evaluator-regressions.json
+  38 deterministic assertions: facts, calculations, citations and rejection of corrupt responses.
+submission/evidence/python-regressions.json
+  Exact Python command, 60 passes and breakdown. No cloud/model calls.
+submission/evidence/vertex-reference-evaluation.json
+  Historical paid-reference Gemini 3.6 Flash run: 10/10 canonical synthetic cases passed.
+  Does not validate Gemini 3.5 Flash-Lite, free-tier access, visual counting or general model safety.
+submission/evidence/cloud-reference-smoke.json
+  Historical deployment: 22 checks, including protected APIs, warehouse results,
+  Firestore events and authenticated private evidence retrieval. That endpoint is retired.
+submission/evidence/cloud-reference-recorded.json
+  Historical hosted recorded-mode browser verification: six checks.
+submission/evidence/synthetic-forecast-holdout.json
+  Seven held-out synthetic daily observations: WAPE 1.249%, seasonal-naive WAPE 2.824%.
+  Pinned scenario dates are synthetic, not future business observations.
+  This is not evidence of real-store forecasting accuracy.
+
+BUSINESS VALUE - EXPLICIT ASSUMPTIONS
+10 reps x six visits/day x 22 days = 1,320 visits/month.
+Scoped audit preparation and debrief: assumed 12-minute baseline versus five-minute target.
+Seven minutes x 1,320 / 60 = 154 hours/month of released capacity.
+At assumed INR 300/hour: INR 46,200 capacity value.
+At target INR 5/visit: INR 6,600 operating budget.
+Difference: INR 39,600 illustrative monthly net capacity value.
+These are not measured results or guaranteed cash savings.
+Implementation, integration, training and devices are excluded.
+Measure time, cost, correctness and productive reuse of time before accepting the business case.
+
+DATA AND CLAIM BOUNDARIES
+Protiva and the buyers, accounts, prices, commercial outcomes, targets and training history are synthetic.
+Shelf media is real; the fictional brand is absent. A crop cannot establish a full 44-facing bay.
+PASS / FAIL / NOT VISIBLE are distinct; unseen evidence is not a pass.
+Shelf facings are not inventory units. Positive recorded stock requires a physical check.
+Suggested orders remain drafts for human approval. No ERP order-placement integration is claimed.
+Pitch source validation is narrower than a general guarantee against hallucination or injection.
+Published research motivates the problem; reported industry lifts are not RetailIQ outcomes.
+The 2026 OSA survey and the inventory-audit arXiv working paper are separate studies.
+A comparison with an older stockout estimate is not a same-panel longitudinal finding.
+
+PILOT AND REMAINING RELEASE CONDITIONS
+The public static no-key judge URL is supplied above.
+The three-to-four-minute creator-voice submission video is generated and Google-hosted;
+final native-browser playback checks are in progress.
+Google Drive is administrator-blocked. The Google-hosted video page supplies a direct fallback;
+a Drive mirror is optional and would need a manual upload.
+The user-selected source URL is https://github.com/abhishek-0706/AI-BUILDER-CUP-2026
+Public access verification is pending before that field can be marked ready.
+For an optional company backend: obtain an approved sandbox with deployment/billing-link
+permissions, confirm credits and cost controls, then revalidate authenticated APIs/evidence.
+Measure the current model profile before making any claim about its quality.
+Use independent shelf annotations, a documented baseline and a comparable assisted period.
+Track task time, stock discrepancy closure, audit precision/abstention, order waste risk,
+source-supported claims, inference latency and cost per completed workflow.
+Business uplift, production forecast quality and competition selection remain unproved.

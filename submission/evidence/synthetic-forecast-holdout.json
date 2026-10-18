@@ -1,0 +1,14 @@
+[
+  {
+    "evaluated_at": "2026-10-18 14:03:40", 
+    "evaluated_through": "2026-10-22", 
+    "interval_coverage": "1.0", 
+    "mae": "3612.4243937463075", 
+    "observations": "7", 
+    "seasonal_naive_mae": "8166.164285714", 
+    "seasonal_naive_wape": "0.028238268", 
+    "store_id": "BLR-KOR-014", 
+    "trained_through": "2026-10-15", 
+    "wape": "0.012491618525883647"
+  }
+]

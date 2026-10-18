@@ -1,0 +1,38 @@
+[
+  {
+    "id": "intro",
+    "text": "I am Abhishek Agarwal. Retail IQ helps a consumer goods field sales representative turn shelf evidence into action during one store visit. The manager gains a record to verify and follow up. The buyer is a brand or distributor operations team. Our problem is execution: stock may exist in the system while shoppers see an empty shelf."
+  },
+  {
+    "id": "observe",
+    "text": "Start with the shelf audit. This real reference photograph does not show our fictional brand, Protiva. Retail IQ marks missing evidence instead of inventing certainty. A cropped image cannot establish full-bay availability, shelf share or every facing. The rep sees which conclusions need another photograph or a physical check. Own-brand execution and a competitor benchmark are separate audit modes."
+  },
+  {
+    "id": "confirm",
+    "text": "The rep now confirms the full-bay observation for this synthetic scenario. Zero shelf facings and positive system stock remain two separate pieces of evidence. The next action is to locate and reconcile stock, then fill the shelf. An empty facing does not automatically justify buying more. This links sensing, a concrete execution step and a person empowered to act."
+  },
+  {
+    "id": "save",
+    "text": "Saving the audit keeps its store visit, observation method, verdicts and next actions together. A late response cannot silently attach itself to another visit. This walkthrough saves in the browser. The server implementation supports Firestore records and optional private photograph retention. The manager can review how a conclusion was reached, including when the system abstained."
+  },
+  {
+    "id": "manager",
+    "text": "For a manager, value means closing the discrepancy, not collecting another dashboard. An illustrative pilot assumes seven minutes saved across thirteen hundred and twenty monthly visits: one hundred and fifty-four hours of capacity. At three hundred rupees per hour, that is forty-six thousand two hundred rupees. Subtract a six thousand six hundred rupee operating-cost target: thirty-nine thousand six hundred rupees of potential net capacity value. These are assumptions, not measured savings or guaranteed cash reductions."
+  },
+  {
+    "id": "order",
+    "text": "The order screen uses forecast demand or a labelled sales average. Available stock and inbound quantities reduce the suggestion. Case sizes apply where appropriate. Products with a short shelf life receive tighter cover limits, and chilled salads can ship as loose units. The rep can inspect the quantities instead of trusting an unexplained answer."
+  },
+  {
+    "id": "draft",
+    "text": "Saving produces a proposed order for human review. Retail IQ does not claim buyer acceptance or automatic enterprise order placement. The rep can also prepare a pitch grounded in retrieved product and promotion passages, then rehearse the conversation. A useful assistant supports judgement while preserving the buyer's authority."
+  },
+  {
+    "id": "shopper",
+    "text": "The shopper experience uses the same catalogue, prices and nutrition to support product discovery. The interface distinguishes recorded examples, synthetic data and live services. In a pilot, we would measure capture-to-action time, audit precision including abstention, discrepancy closure, waste risk and order acceptance. Better availability and less wasted effort remain hypotheses to test."
+  },
+  {
+    "id": "close",
+    "text": "The separate Google Cloud server implementation connects Cloud Run, Gemini on Vertex AI, BigQuery analytics, BigQuery ML forecasts, Firestore and optional private Cloud Storage evidence. The current hosted submission is a free Firebase Spark demonstration with synthetic data. This recording makes no live model calls. Retail IQ connects shelf sensing, practical execution and accountable human decisions. A measured store pilot will determine the business value."
+  }
+]

@@ -11,6 +11,7 @@ const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+  await require('./browser-utils').offlineNetwork(page,URL);
   const errs = [];
   let dialog = false;
   page.on('pageerror', e => errs.push(e.message));
