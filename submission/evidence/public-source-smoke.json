@@ -1,0 +1,21 @@
+{
+  "repository_url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026",
+  "public": true,
+  "unauthenticated_api_http": 200,
+  "public_https_http": 200,
+  "default_branch": "main",
+  "history_preserved": true,
+  "published_commit": "0396b261aa8c5c8718f76aea000bb8a32ef458e3",
+  "relevant_files": 98,
+  "final_demo_bytes": 8781377,
+  "verified_at": "2026-10-18T16:28:15.352414+00:00",
+  "model_requests": 0,
+  "google_cloud_mutations": 0,
+  "history_review": {
+    "reachable_commits": 36,
+    "new_blob_versions_scanned": 72,
+    "new_blob_bytes_scanned": 9789279,
+    "credential_or_private_path_findings": 0,
+    "scope_note": "All reachable history reviewed using known credential patterns and private-file paths; binary media bytes scanned without OCR or transcription. Unknown or encoded secrets cannot be excluded by pattern scanning."
+  }
+}

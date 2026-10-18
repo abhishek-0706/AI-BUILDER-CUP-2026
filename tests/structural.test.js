@@ -4,7 +4,8 @@ const { chromium } = require('playwright');
 const path = require('path');
 
 const URL = process.env.RETAILIQ_URL || 'http://localhost:5190/index.html?role=rep';
-const VIDEO = path.resolve(__dirname, '..', 'demo', 'samples', 'shelf_videos', 'shelf_walk_03.mp4');
+// Tiny synthetic H.264 clip is checked in so clean checkouts decode real video without legacy media.
+const VIDEO = path.resolve(__dirname, 'fixtures', 'synthetic-motion.mp4');
 
 let pass = 0, fail = 0;
 const T = (name, ok) => { ok ? pass++ : fail++; console.log((ok ? 'PASS' : 'FAIL') + '  ' + name); };

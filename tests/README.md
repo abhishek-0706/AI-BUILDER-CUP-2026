@@ -11,13 +11,13 @@ npm test
 `npm test` starts a temporary localhost server on a free port, runs every offline
 JavaScript suite, and closes the server. It does not require a separately running
 Python server or API credentials. Browser model/backend responses are test doubles;
-the guided sample is deterministic. No model or Google Cloud operations are called.
+the guided sample is deterministic. Video decoding uses the checked-in three-second synthetic H.264 clip at `tests/fixtures/synthetic-motion.mp4`; legacy/user recordings and FFmpeg are not needed to run the tests. No model or Google Cloud operations are called.
 
 For backend regressions using in-memory cloud doubles:
 
 ```bash
 python -m pip install -r gcp/requirements.txt -r tests/requirements.txt
-python -m pytest tests/test_api.py tests/test_deploy.py -q -p no:cacheprovider
+python -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider
 ```
 
 CI runs both commands with Node 22 and Python 3.12. Dependencies are locked by

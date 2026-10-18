@@ -20,7 +20,7 @@ Open `http://localhost:5190/index.html?role=rep` and choose **Try guided demo**.
 
 Live AI is optional. Settings requires confirmation that the supplied key belongs to an unbilled AI Studio project; the browser cannot independently verify billing. HTTP 429 stops further requests in the page. There is no automatic retry, alternate model or paid backend fallback. An unbilled project is necessary for the provider's free-quota limit to prevent paid usage.
 
-The separate Firebase Hosting helper accepts only an explicitly verified unbilled project and uploads allowlisted public files. It does not link billing or use Cloud Build, Cloud Run or Vertex AI. The current release used this path: 18 public files were deployed to `retailiq-free-20261018-7ce297`, with billing-disabled checks at four deployment checkpoints.
+The separate Firebase Hosting helper accepts only an explicitly verified unbilled project and uploads allowlisted public files. It does not link billing or use Cloud Build, Cloud Run or Vertex AI. The current release uses this path for the allowlisted application, deck and final demo video, with billing-disabled checks at four deployment checkpoints. The [public video player](https://retailiq-free-20261018-7ce297.web.app/demo.html) and [presentation PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf) share the same free site.
 
 ```powershell
 # Entirely local validation; no Google or model calls:

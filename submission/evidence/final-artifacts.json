@@ -1,0 +1,40 @@
+{
+  "verified_at": "2026-10-18T16:35:06.971Z",
+  "template_substantive_sections": 13,
+  "pdf_below_5MB": true,
+  "video_duration_seconds": 222.44,
+  "public_repository": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026",
+  "repository_private": false,
+  "artifacts": [
+    {
+      "path": "pitch-slides.html",
+      "http": 200,
+      "bytes": 38908,
+      "sha256": "ea3af9f304b76c9c06d3e6cabc99a845960e4f48354c7846af37d311293f367e"
+    },
+    {
+      "path": "pitch-slides.pdf",
+      "http": 200,
+      "bytes": 1482018,
+      "sha256": "6adc59272a0d31954630abea66aca59c944471227d135c7f3ee36f07087290b4"
+    },
+    {
+      "path": "assets/submission/prototype-manager.png",
+      "http": 200,
+      "bytes": 361388,
+      "sha256": "7c45cacd2ae40737bf0975c15de42404f28b2fbcddafea2b0fc496fa02aabd8b"
+    },
+    {
+      "path": "assets/submission/prototype-mobile.png",
+      "http": 200,
+      "bytes": 105543,
+      "sha256": "24ba48a00b78c65914c1dd1c0ddd1b6cfe86c5e9a34dc0c49912eddaf9a55dfc"
+    },
+    {
+      "path": "assets/submission/prototype-shelf-gap.png",
+      "http": 200,
+      "bytes": 806034,
+      "sha256": "7fdbb8934d922c632034d4518f958b6b50be7540cc211d47a67faf2a21e6ddc0"
+    }
+  ]
+}

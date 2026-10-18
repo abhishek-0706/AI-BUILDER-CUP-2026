@@ -1,5 +1,6 @@
 RETAILIQ SUBMISSION READINESS
 Prepared 18 October 2026
+Team RetailIQ: Abhishek Agarwal (team leader), Vivek Sharma (team member).
 
 POSITIONING
 Primary user: the CPG field representative.
@@ -10,9 +11,9 @@ Core loop: shelf evidence -> verify stock discrepancy -> choose action -> explai
 Design rationale: sensing + execution + empowerment. Detection must lead to a useful action and a person able to carry it out.
 
 READY TO REVIEW
-1. pitch-slides.html - ten slides; keyboard arrows, print export and speaker notes.
-2. pitch-slides.pdf - ten-page submission deck, 282,229 bytes, below the five-megabyte limit.
-   Frozen SHA256: 0518667304988e1f5b4e06d53c9cc22f2e5dbf0f35fc66acf2dd1271eb3997e2
+1. pitch-slides.html - 13 template-ordered slides; navigation, print export and speaker notes.
+2. pitch-slides.pdf - 13-page submission deck, 1,482,018 bytes, below five megabytes.
+   Frozen SHA256: 6adc59272a0d31954630abea66aca59c944471227d135c7f3ee36f07087290b4
    Hosted PDF: https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf
 3. demo/RetailIQ_Abhishek_voice_demo.mp4 - final submission video, 222.44 seconds (3:42.44).
    8,781,377 bytes; nine synchronized scenes; full audio/video decode passed.
@@ -22,11 +23,13 @@ READY TO REVIEW
 4. SUBMISSION_BRIEF.txt - form-ready description below 1,024 characters.
 5. README.md - local launch, personas, workflow, architecture, evidence and limits.
 6. submission/evidence/ - retained credential-free release evidence.
+7. submission/FORM_FIELDS.txt - five verified submission fields, ready to paste.
+8. submission/TEMPLATE_COMPLIANCE.txt - exact required-section mapping.
 
 PUBLIC AND LOCAL ACCESS
 Public guided demo: https://retailiq-free-20261018-7ce297.web.app/?demo=recorded
 Firebase Spark, unbilled project retailiq-free-20261018-7ce297.
-18 public files deployed; billing-disabled checks at four deployment checkpoints.
+Public files use a bounded allowlist; billing-disabled checks run at four deployment checkpoints.
 18 deployed HTTP/browser checks passed: published hashes, private-path rejection,
 audit and local manager workflow, mobile layouts and zero AI/backend requests.
 Recorded mode sends no AI requests; static saves stay in that browser.
@@ -57,6 +60,11 @@ These checks establish the exercised software contracts. Static hosting is separ
 historical cloud API reports do not establish a current hosted backend.
 
 EVIDENCE INDEX
+submission/evidence/public-media-smoke.json
+  Six public video checks passed: published hashes, correct MIME, native browser
+  playback at 222.44 seconds, no JavaScript errors or AI/backend requests.
+submission/evidence/public-source-smoke.json
+  Exact user-selected GitHub repository verified public without authentication.
 submission/evidence/media-verification.json
   Final creator-voice MP4: 222.44 seconds, nine scene intervals synchronized,
   full-stream audio/video decoding passed. No live AI request is shown or claimed.
@@ -108,12 +116,13 @@ A comparison with an older stockout estimate is not a same-panel longitudinal fi
 
 PILOT AND REMAINING RELEASE CONDITIONS
 The public static no-key judge URL is supplied above.
-The three-to-four-minute creator-voice submission video is generated and Google-hosted;
-final native-browser playback checks are in progress.
+The three-to-four-minute creator-voice submission video is Google-hosted and verified
+in native browser playback (six public-media checks passed).
 Google Drive is administrator-blocked. The Google-hosted video page supplies a direct fallback;
 a Drive mirror is optional and would need a manual upload.
 The user-selected source URL is https://github.com/abhishek-0706/AI-BUILDER-CUP-2026
-Public access verification is pending before that field can be marked ready.
+Public source access is verified. The final PDF follows all substantive template sections.
+See submission/TEMPLATE_COMPLIANCE.txt for the 13-section mapping and timing distinction.
 For an optional company backend: obtain an approved sandbox with deployment/billing-link
 permissions, confirm credits and cost controls, then revalidate authenticated APIs/evidence.
 Measure the current model profile before making any claim about its quality.

@@ -1,0 +1,41 @@
+MANDATORY TEMPLATE COMPLIANCE
+Source: Submission Template _ AI Builder Cup.pdf, 16 pages.
+Final presentation: pitch-slides.pdf, 13 substantive slides.
+
+The required content sections follow the template's exact order.
+Only original page 2 (download/editing instructions) and blank pages 15-16 are omitted.
+Both optional content sections are retained.
+
+ORIGINAL PAGE -> FINAL SLIDE -> SECTION
+01 -> 01 -> Team Details
+03 -> 02 -> Brief about the idea
+04 -> 03 -> Opportunities
+05 -> 04 -> List of features offered by the solution
+06 -> 05 -> Process flow diagram or Use-case diagram
+07 -> 06 -> Wireframes/Mock diagrams of the proposed solution (optional)
+08 -> 07 -> Architecture diagram of the proposed solution
+09 -> 08 -> Technologies to be used in the solution
+10 -> 09 -> Estimated implementation cost (optional)
+11 -> 10 -> Snapshots of the prototype
+12 -> 11 -> Prototype Performance report/Benchmarking
+13 -> 12 -> Additional Details/Future Development (if any)
+14 -> 13 -> Provide links to your:
+
+CONTENT CHECKS
+Team RetailIQ; Abhishek Agarwal, team leader; Vivek Sharma, team member.
+Explicit problem statement, idea, differentiation, problem-solving approach and USP.
+Feature list, process flow diagram, wireframes, architecture and distinct technology list.
+Current Firebase Spark profile is separate from the historical implemented backend.
+Actual prototype screenshots are embedded and labelled with synthetic-data limits.
+Software/reference benchmarks, future work and all three required links are present.
+The optional cost section labels assumptions; an engineering estimate requires scoping.
+No achieved sales uplift or stockout reduction is claimed.
+
+FORMAT AND MEDIA
+13 pages; final PDF below the five-megabyte form limit.
+All slide layouts fit at 1280 x 720; no missing image assets.
+The template calls the video field 'Demo Video Link (3 Minutes)'.
+The live submission form specifies three to four minutes.
+The final 3:42.44 video satisfies that form range; it is longer than exactly three minutes.
+No fixed slide count or mandatory visual-theme instruction appears in the extracted text.
+The form requests PDF; the template's PowerPoint download note describes its editing workflow.

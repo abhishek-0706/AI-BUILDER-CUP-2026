@@ -101,7 +101,7 @@ npm test
 .\.venv\Scripts\python.exe -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider
 ```
 
-The active free Firebase host passed **18 HTTP/browser checks**, including published asset hashes, private-path rejection, the saved local audit workflow, phone layouts and zero AI/backend requests. The retained local release evidence records **157 browser checks, seven policy checks, 38 evaluator checks and 60 Python checks**. Separate historical reports record 10/10 live reference-model cases, 22 cloud checks and six recorded-browser checks. Those historical results do not establish current company-hosting availability or free-tier model quality. The final media has nine synchronized scenes and passed full-stream decoding. Credential-free reports are in [submission/evidence](submission/evidence); [SUBMISSION_READINESS.txt](SUBMISSION_READINESS.txt) explains their scope.
+The active free Firebase host passed **18 HTTP/browser checks**, including published asset hashes, private-path rejection, the saved local audit workflow, phone layouts and zero AI/backend requests. The retained local release evidence records **157 browser checks, seven policy checks, 38 evaluator checks and 60 Python checks**. Separate historical reports record 10/10 live reference-model cases, 22 cloud checks and six recorded-browser checks. Those historical results do not establish current company-hosting availability or free-tier model quality. The final media has nine synchronized scenes, passed full-stream decoding and passed six public-media checks including native browser playback. Credential-free reports are in [submission/evidence](submission/evidence); [SUBMISSION_READINESS.txt](SUBMISSION_READINESS.txt) explains their scope.
 
 The Node runner starts and stops its own local server. Python uses cloud doubles. Offline evaluation validates known facts, calculations and citations and rejects deliberately wrong responses; it is not measured Gemini quality. A seven-day forecast holdout on synthetic history produced 1.249% WAPE against a 2.824% seasonal-naive baseline. Synthetic-data performance is diagnostic, not production forecast accuracy. See [tests/README.md](tests/README.md).
 
@@ -134,10 +134,14 @@ There is no established RetailIQ sales uplift, stockout reduction or ranking pre
 
 ## Submission packet
 
-- [pitch-slides.pdf](pitch-slides.pdf) / [HTML presentation](pitch-slides.html): ten-slide pitch with speaker notes in HTML.
+**Team RetailIQ:** Abhishek Agarwal (team leader) and Vivek Sharma (team member). The presentation follows all 13 substantive template sections in order; the download-instruction page and blank end pages are omitted. [Public GitHub source](https://github.com/abhishek-0706/AI-BUILDER-CUP-2026) is verified without authentication.
+
+- [pitch-slides.pdf](pitch-slides.pdf) / [HTML presentation](pitch-slides.html): 13-slide pitch following the mandatory template's substantive section order, with speaker notes in HTML.
 - [Submission video](https://retailiq-free-20261018-7ce297.web.app/demo.html) / [final MP4](demo/RetailIQ_Abhishek_voice_demo.mp4): 3:42.44, with AI-assisted narration from the creator-provided voice sample. Recorded scenario; no live AI requests.
 - [Earlier baseline video](demo/RetailIQ_submission_walkthrough.mp4): 117-second Windows-voice version retained locally.
-- [SUBMISSION_BRIEF.txt](SUBMISSION_BRIEF.txt): form paragraph below 1,024 characters.
+- [SUBMISSION_BRIEF.txt](SUBMISSION_BRIEF.txt): complete ready-to-paste description below 1,024 characters.
+- [Five form fields](submission/FORM_FIELDS.txt): verified links, final PDF metadata and the description.
+- [Template compliance](submission/TEMPLATE_COMPLIANCE.txt): original-to-final section mapping.
 - [SUBMISSION_READINESS.txt](SUBMISSION_READINESS.txt): artifact index, evidence scope and remaining release conditions.
 - [submission/evidence](submission/evidence): shareable verification reports without model credentials.
 

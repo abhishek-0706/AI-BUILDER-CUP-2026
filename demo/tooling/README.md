@@ -1,6 +1,6 @@
 # Submission video tooling
 
-The current baseline video, `demo/RetailIQ_submission_walkthrough.mp4`, is a 117-second narrated recording of the labelled no-key scenario. It uses the app's real controls and synthetic commercial context. No live AI request is made while recording. The baseline narration uses the Windows system voice.
+The final submission video, `demo/RetailIQ_Abhishek_voice_demo.mp4`, runs 3:42.44 and uses AI-assisted narration from the creator-provided voice sample. It records the app's real controls with synthetic commercial context and makes no live AI requests. The earlier 117-second Windows-voice version, `demo/RetailIQ_submission_walkthrough.mp4`, remains a separate local baseline.
 
 The submission story is the rep's complete visit: capture shelf evidence, verify the stock discrepancy, save the action, inspect the manager record, review a proposed order and explore shopper discovery. A proposed order remains a draft for a human buyer.
 
