@@ -11,7 +11,8 @@ Design rationale: sensing + execution + empowerment. Detection must lead to a us
 
 READY TO REVIEW
 1. pitch-slides.html - ten slides; keyboard arrows, print export and speaker notes.
-2. pitch-slides.pdf - printable ten-slide submission deck, below the five-megabyte form limit.
+2. pitch-slides.pdf - ten-page submission deck, 282,229 bytes, below the five-megabyte limit.
+   Frozen SHA256: 0518667304988e1f5b4e06d53c9cc22f2e5dbf0f35fc66acf2dd1271eb3997e2
    Hosted PDF: https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf
 3. demo/RetailIQ_Abhishek_voice_demo.mp4 - final submission video, 222.44 seconds (3:42.44).
    8,781,377 bytes; nine synchronized scenes; full audio/video decode passed.

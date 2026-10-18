@@ -1,0 +1,35 @@
+{
+  "verified_at": "2026-10-18T16:21:38.536Z",
+  "url": "https://retailiq-free-20261018-7ce297.web.app/demo.html",
+  "pdf": "https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf",
+  "duration_seconds": 222.44,
+  "passed": 6,
+  "model_requests": 0,
+  "backend_requests": 0,
+  "checks": [
+    {
+      "name": "Published demo.html matches verified local artifact",
+      "passed": true
+    },
+    {
+      "name": "Published demo/RetailIQ_Abhishek_voice_demo.mp4 matches verified local artifact",
+      "passed": true
+    },
+    {
+      "name": "Video endpoint serves the MP4 media type",
+      "passed": true
+    },
+    {
+      "name": "Published video meets mandatory3–4minute duration",
+      "passed": true
+    },
+    {
+      "name": "Published H264/AAC video actually plays in Chromium",
+      "passed": true
+    },
+    {
+      "name": "Player has no JavaScript errors or AI/backend requests",
+      "passed": true
+    }
+  ]
+}
