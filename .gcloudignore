@@ -20,3 +20,14 @@ pitch-slides.pdf
 demo/*.mp4
 demo/tooling
 demo/samples/shelf_videos
+
+pitch-slides.html
+submission
+
+.aws
+.ssh
+.codex
+.agents
+.config
+**/credentials.db
+**/access_tokens.db

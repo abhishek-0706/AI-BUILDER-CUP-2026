@@ -2,11 +2,11 @@
 
 ## Current release and hosting status
 
-The current browser release uses the **free static profile**: `backend:false`, `free_only:true`, and optional direct Gemini requests with an explicitly confirmed unbilled Google AI Studio key. The [public recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) and [free static workspace](https://retailiq-free-20261018-7ce297.web.app/) are deployed on Firebase Spark in an unbilled personal project. The no-key recorded walkthrough also works locally. The selected free-profile model has **not** received a live quality evaluation; offline transport and quota-stop tests use intercepted responses.
+The last verified public browser release is the recorded/static profile, with optional direct Gemini access. The [recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) makes no AI calls. The hosting project now has an explicitly approved billing link for a capped live rollout; it must no longer be described as an unbilled Spark project. Free allowances may be exceeded and do not guarantee a zero bill.
 
-Company credits are approved for use, but the available credit balance has not been verified. An optional future company backend needs an organization-approved sandbox project ID and the required project permissions. An authenticated company Google account alone does not establish those permissions or a credit balance. The current public release is the free Firebase static site, not a company backend.
+The prepared live profile serves same-origin APIs on Cloud Run, uses real Firestore for isolated visit events, and calls Gemini only through a separate unbilled key project. Its catalogue is explicitly synthetic. The [direct Cloud Run service](https://retailiq-live-olhqdslz2q-uc.a.run.app) passed 14 actual backend checks including Gemini and Firestore. Same-origin Firebase publishing/browser QA remains pending. See [LIVE_DEPLOYMENT.md](LIVE_DEPLOYMENT.md) for the deployment phases and guards.
 
-The previous personal cloud deployment is a **historical reference**, not the current hosting destination. Billing on the earlier Cloud Run reference project has been disabled; the new Firebase Spark project is unbilled. Disabling billing does not verify or settle any previously accrued charges; the historical balance remains unverified. Retired personal URLs must not be presented as live submission links.
+The earlier personal Cloud Run reference is historical and its project billing remains disabled. Previously accrued charges and any company-credit balance have not been verified. Company hosting remains optional and requires an approved sandbox; personal credentials do not establish those permissions.
 
 ## Run the free static profile
 
@@ -20,7 +20,7 @@ Open `http://localhost:5190/index.html?role=rep` and choose **Try guided demo**.
 
 Live AI is optional. Settings requires confirmation that the supplied key belongs to an unbilled AI Studio project; the browser cannot independently verify billing. HTTP 429 stops further requests in the page. There is no automatic retry, alternate model or paid backend fallback. An unbilled project is necessary for the provider's free-quota limit to prevent paid usage.
 
-The separate Firebase Hosting helper accepts only an explicitly verified unbilled project and uploads allowlisted public files. It does not link billing or use Cloud Build, Cloud Run or Vertex AI. The current release uses this path for the allowlisted application, deck and final demo video, with billing-disabled checks at four deployment checkpoints. The [public video player](https://retailiq-free-20261018-7ce297.web.app/demo.html) and [presentation PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf) share the same free site.
+The separate Firebase Hosting helper accepts only an explicitly verified unbilled project and uploads allowlisted public files. It does not link billing or use Cloud Build, Cloud Run or Vertex AI. The original static release used this path for the allowlisted application, deck and final demo video, with billing-disabled checks at four checkpoints. This Spark-only helper now refuses the billed live-hosting project; use it only for a separate unbilled project. The [public video player](https://retailiq-free-20261018-7ce297.web.app/demo.html) and [presentation PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf) share the same free site.
 
 ```powershell
 # Entirely local validation; no Google or model calls:

@@ -11,7 +11,7 @@ COPY gcp/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # API and SQL
-COPY gcp/main.py gcp/queries.sql gcp/fixtures.py ./
+COPY gcp/main.py gcp/queries.sql gcp/fixtures.py gcp/synthetic.py ./
 
 # Static frontend bundle
 COPY index.html retail_data.js runtime-config.js commerce-api.js ./static/

@@ -1,0 +1,9 @@
+# The default pool E2_STANDARD_2 is covered by the Cloud Build free allowance.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', '${_IMAGE}', '.']
+images: ['${_IMAGE}']
+options:
+  machineType: E2_STANDARD_2
+  logging: CLOUD_LOGGING_ONLY
+timeout: 600s

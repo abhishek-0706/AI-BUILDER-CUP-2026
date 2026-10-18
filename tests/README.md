@@ -17,7 +17,7 @@ For backend regressions using in-memory cloud doubles:
 
 ```bash
 python -m pip install -r gcp/requirements.txt -r tests/requirements.txt
-python -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider
+python -m pytest tests/test_api.py tests/test_synthetic.py tests/test_deploy.py tests/test_deploy_free.py tests/test_deploy_live.py -q -p no:cacheprovider
 ```
 
 CI runs both commands with Node 22 and Python 3.12. Dependencies are locked by

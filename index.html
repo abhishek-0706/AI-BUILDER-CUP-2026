@@ -1313,7 +1313,7 @@ body.splash-on{overflow:hidden}
   </div>
   <div class="spacer"></div>
   <select id="mobile-role" aria-label="Workspace role" onchange="switchSurface(this.value)"><option value="rep">Field rep</option><option value="biz">Manager</option><option value="shop">Shopper</option></select>
-  <div class="pill" id="ai-pill"><span class="dot"></span> <span id="ai-status">AI Ready</span></div>
+  <div class="pill" id="ai-pill" role="status" aria-live="polite" aria-atomic="true"><span class="dot" aria-hidden="true"></span> <span id="ai-status">Checking AI connection</span></div>
   <div class="pill store-pill"><svg class="pill-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span id="store-lbl">FreshMart Koramangala</span></div>
   <button class="icon-btn" onclick="openSettings()" title="Settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 </header>
@@ -1328,8 +1328,7 @@ body.splash-on{overflow:hidden}
         <div class="hero-kicker">Protiva · everyday protein</div>
         <h2>Shop by conversation, not by search</h2>
         <p>Tell the assistant what you need in plain language, say "a high protein breakfast under ₹100", and it
-           builds your basket from live store inventory. Every recommendation is grounded in real stock levels, prices
-           and the protein and added sugar printed on the pack.</p>
+           uses the configured catalogue to compare stock, prices and nutrition. The data banner identifies synthetic demo context.</p>
       </div>
 
       <div class="sec-title">Shopping as</div>
@@ -1349,14 +1348,14 @@ body.splash-on{overflow:hidden}
         <div class="ai-mark"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" aria-hidden="true"><path d="M20.83 8.94A9.4 9.4 0 1 1 15.06 3.11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M7.6 16.4A9 9 0 0 1 16.4 7.6 9 9 0 0 1 7.6 16.4Z" fill="currentColor"/></svg></div>
         <div>
           <h3>Shopper Assistant</h3>
-          <p>Gemini Flash · grounded in live inventory</p>
+          <p>Gemini Flash · catalogue stock and nutrition context</p>
         </div>
       </div>
       <div class="chat-body" id="chat-body"></div>
       <div class="suggest" id="suggest"></div>
       <div class="chat-input">
-        <input id="chat-in" placeholder="What are you looking for today?" onkeydown="if(event.key==='Enter')sendChat()">
-        <button id="chat-send" onclick="sendChat()">➤</button>
+        <input id="chat-in" aria-label="Message to the shopper assistant" placeholder="What are you looking for today?" onkeydown="if(event.key==='Enter')sendChat()">
+        <button id="chat-send" aria-label="Send shopper message" onclick="sendChat()">➤</button>
       </div>
     </div>
   </div>
@@ -1623,7 +1622,7 @@ body.splash-on{overflow:hidden}
         <span class="ai-chip" aria-hidden="true"><svg viewBox="0 0 24 24" width="15" height="15" fill="none"><path d="M20.83 8.94A9.4 9.4 0 1 1 15.06 3.11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M7.6 16.4A9 9 0 0 1 16.4 7.6 9 9 0 0 1 7.6 16.4Z" fill="currentColor"/></svg></span> AI Retail Analyst
       </h3>
       <div style="font-size:11.5px;color:var(--text-2);margin-top:4px">
-        Ask about demand, inventory risk, customer segments or promotions. Answers are grounded only in this store's live data.
+        Ask about demand, inventory risk, customer segments or promotions. Answers use the loaded store context; the banner identifies its source.
       </div>
       <div class="suggest" style="padding:12px 0 0" id="biz-suggest"></div>
       <div class="biz-ai-out" id="biz-out">Ask a question to get started, or tap a suggestion above.</div>
@@ -1689,18 +1688,19 @@ body.splash-on{overflow:hidden}
 
 <!-- ── SETTINGS MODAL ─────────────────────────────────────── -->
 <div class="modal-bg" id="modal">
-  <div class="modal">
-    <h3>Gemini Key</h3>
-    <p>Your optional Gemini key stays in this browser and is sent directly to Google to authenticate AI requests.
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" aria-describedby="key-description">
+    <h3 id="settings-title">Gemini Key</h3>
+    <p id="key-description">Your optional Gemini key stays in this browser and is sent directly to Google to authenticate AI requests.
        Get a key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio</a>.</p>
+    <p id="server-connection-note" style="display:none"></p>
     <div id="free-tier-note" style="display:none;font-size:13px;line-height:1.6;margin-bottom:12px">Use an API key from a Google AI Studio project with billing disabled. Free quota exhaustion stops requests; no paid fallback. This app cannot verify the billing status of your Google project.</div>
     <div id="access-settings" style="display:none"><label for="access-in">Access token</label><input id="access-in" type="password" autocomplete="off" placeholder="Server access token"></div>
-    <input id="key-in" type="password" placeholder="Paste your Gemini key" oninput="onKeyInput()">
+    <input id="key-in" aria-label="Gemini API key" type="password" placeholder="Paste your Gemini key" oninput="onKeyInput()">
     <label id="free-key-confirmation" style="display:none;font-size:13px;line-height:1.5;margin-top:12px"><input type="checkbox" id="free-key-confirm" style="width:auto;padding:0;margin:0 7px 0 0;vertical-align:middle"> My key belongs to an unbilled/free-tier project</label>
     <div id="key-cost-status" role="alert" style="font-size:12px;color:#b91c1c;margin-top:8px"></div>
     <div class="modal-btns">
       <button class="btn-ghost" onclick="closeSettings()">Cancel</button>
-      <button class="btn-primary" onclick="saveKey()">Save</button>
+      <button class="btn-primary" id="settings-save" onclick="saveKey()">Save</button>
     </div>
   </div>
 </div>
@@ -1781,8 +1781,17 @@ function getKey(){
 function freeQuotaStopped(){ return !!window.RETAILIQ_RUNTIME?.free_only&&!!window.RETAILIQ_FREE_QUOTA_STOPPED; }
 function freeQuotaMessage(){ return 'Free quota exhausted or rate limited. Requests are stopped in this page; no paid fallback is used. Wait for your free quota to reset and reload, or use the recorded guided demo without a key.'; }
 function onKeyInput(){document.getElementById('free-key-confirm').checked=false;document.getElementById('key-cost-status').textContent='';}
+let settingsReturnFocus=null;
 function openSettings(){
   if(RetailAPI.recordedDemo){eventStatus('Recorded walkthrough: AI is off. Use Open live workspace above to connect.');return;}
+  settingsReturnFocus=document.activeElement;
+  const connected=RetailAPI.enabled,tokenRequired=connected&&window.RETAILIQ_RUNTIME?.token_required!==false;
+  document.getElementById('settings-title').textContent=connected?(tokenRequired?'Workspace access':'Connected workspace'):'Gemini Key';
+  document.getElementById('key-description').style.display=connected?'none':'';
+  const connectionNote=document.getElementById('server-connection-note');connectionNote.style.display=connected?'block':'none';
+  connectionNote.textContent='AI route: '+modelProviderLabel()+'. '+(tokenRequired?'Enter the workspace access token. Your personal Gemini key is not used.':'No personal API key or access token is needed in this workspace.');
+  document.querySelector('#modal [role=dialog]').setAttribute('aria-describedby',connected?'server-connection-note':'key-description');
+  document.getElementById('settings-save').textContent=connected&&!tokenRequired?'Close':'Save';
   const saved=localStorage.getItem('retailiq_gemini_key')||'';
   document.getElementById('key-in').value=saved;
   const freeOnly=!!window.RETAILIQ_RUNTIME?.free_only&&!RetailAPI.enabled;
@@ -1790,13 +1799,23 @@ function openSettings(){
   document.getElementById('free-key-confirmation').style.display=freeOnly?'block':'none';
   document.getElementById('free-key-confirm').checked=!!saved&&localStorage.getItem('retailiq_free_key_confirmation')===keyFingerprint(saved);
   document.getElementById('key-cost-status').textContent=freeQuotaStopped()?freeQuotaMessage():'';
-  document.getElementById('access-settings').style.display=RetailAPI.enabled?'block':'none';
+  document.getElementById('access-settings').style.display=tokenRequired?'block':'none';
   document.getElementById('key-in').style.display=RetailAPI.enabled?'none':'';
   document.getElementById('access-in').value=sessionStorage.getItem('retailiq_access_token')||'';
   document.getElementById('modal').classList.add('on');
+  const first=[...document.querySelectorAll('#modal input,#modal button')].find(el=>!el.disabled&&el.getClientRects().length);first?.focus();
 }
-function closeSettings(){ document.getElementById('modal').classList.remove('on'); }
+function closeSettings(){document.getElementById('modal').classList.remove('on');settingsReturnFocus?.focus?.();}
+function settingsKeyboard(event){
+  if(event.key==='Escape'){event.preventDefault();closeSettings();return;}
+  if(event.key!=='Tab')return;
+  const focusable=[...document.querySelectorAll('#modal a[href],#modal button,#modal input')].filter(el=>!el.disabled&&el.getClientRects().length);
+  const first=focusable[0],last=focusable.at(-1);if(!first)return;
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+}
 function saveKey(){
+  if(RetailAPI.enabled&&window.RETAILIQ_RUNTIME?.token_required===false){closeSettings();return;}
   if(RetailAPI.enabled){
     const token=document.getElementById('access-in').value.trim();
     if(token)sessionStorage.setItem('retailiq_access_token',token);else sessionStorage.removeItem('retailiq_access_token');
@@ -1818,7 +1837,10 @@ function updateStatus(){
   if(RetailAPI.recordedDemo){document.getElementById('ai-status').textContent='Recorded demo - AI off';document.getElementById('ai-pill').classList.remove('warn');return;}
   if(freeQuotaStopped()){document.getElementById('ai-status').textContent='Free quota stopped';document.getElementById('ai-pill').classList.add('warn');return;}
   const ok = aiAvailable();
-  document.getElementById('ai-status').textContent = ok ? (RetailAPI.enabled?'AI via server':window.RETAILIQ_RUNTIME?.free_only?'Free-tier key configured':'AI connected') : (RetailAPI.enabled?'Store connection needed':window.RETAILIQ_RUNTIME?.free_only?'Optional free-tier key':'Gemini key needed');
+  const provider=window.RETAILIQ_RUNTIME?.provider;
+  const serverLabel=provider==='gemini_free'?'Gemini free tier':provider==='vertex'?'Gemini via Vertex':'AI via server';
+  document.getElementById('ai-status').textContent = ok ? (RetailAPI.enabled?serverLabel:window.RETAILIQ_RUNTIME?.free_only?'Free-tier key configured':'AI connected') : (RetailAPI.enabled?'Store connection needed':window.RETAILIQ_RUNTIME?.free_only?'Optional free-tier key':'Gemini key needed');
+  document.getElementById('ai-pill').title=RetailAPI.enabled?'Configured route: '+modelProviderLabel():'';
   document.getElementById('ai-pill').classList.toggle('warn', !ok);
 }
 
@@ -2563,7 +2585,7 @@ function renderKPIs(){
 }
 
 function renderBars(){
-  document.getElementById('forecast-caption').textContent=RetailAPI.enabled?'BigQuery actuals in solid fill; BigQuery ML forecast in outline, with its 90 percent prediction interval.':'Synthetic demo actuals in solid fill; predefined forecast in outline, with its 90 percent interval. Cloud forecast quality is evaluated separately.';
+  document.getElementById('forecast-caption').textContent=RetailAPI.enabled&&RetailAPI.dataSource==='bigquery'?(D.dataIsSynthetic?'Synthetic BigQuery demo history':'BigQuery history')+' in solid fill; BigQuery ML forecast in outline, with its 90 percent prediction interval.':'Synthetic demo history in solid fill; fixture forecast in outline, with its 90 percent interval. This does not establish production forecast accuracy.';
   const all = [...D.revenueWeek.map(r=>r.revenue), ...D.forecast.map(f=>f.upper)];
   const max = Math.max(...all);
   const actual = D.revenueWeek.map(r=>`
@@ -4438,6 +4460,7 @@ async function saveAudit(){
   initSplash();
   updateStatus();
   refreshVisitEvents();
+  document.getElementById('modal').addEventListener('keydown',settingsKeyboard);
   document.getElementById('modal').addEventListener('click', e=>{
     if(e.target.id==='modal') closeSettings();
   });

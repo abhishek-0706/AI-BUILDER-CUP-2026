@@ -1,0 +1,135 @@
+{
+  "verified_at": "2026-10-18T16:55:15.206Z",
+  "anonymous": true,
+  "model_calls_made": 0,
+  "cloud_write_calls_made": 0,
+  "http": [
+    {
+      "name": "prototype",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/?demo=recorded",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 270274
+    },
+    {
+      "name": "live_workspace",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 270274
+    },
+    {
+      "name": "pdf",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf",
+      "status": 200,
+      "content_type": "application/pdf",
+      "bytes": 1482018,
+      "pdf_signature": true,
+      "matches_local": false
+    },
+    {
+      "name": "video_player",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/demo.html",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 2041
+    },
+    {
+      "name": "video_file",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/demo/RetailIQ_Abhishek_voice_demo.mp4",
+      "status": 200,
+      "content_type": "video/mp4",
+      "bytes": 8781377,
+      "matches_local": true
+    },
+    {
+      "name": "github",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026",
+      "status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 365289
+    },
+    {
+      "name": "runtime",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/runtime-config.js",
+      "status": 200,
+      "content_type": "text/javascript; charset=utf-8",
+      "bytes": 188,
+      "backend_enabled": false,
+      "free_only": true
+    },
+    {
+      "name": "api_config",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/api/config",
+      "status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 21376,
+      "functional_json_api": false
+    },
+    {
+      "name": "api_bootstrap",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/api/bootstrap",
+      "status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 21376,
+      "functional_json_api": false
+    },
+    {
+      "name": "api_visits_read",
+      "url": "https://retailiq-free-20261018-7ce297.web.app/api/visits/log",
+      "status": 404,
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 21376,
+      "functional_json_api": false
+    }
+  ],
+  "browser": {
+    "fresh_workspace": {
+      "backend_enabled": false,
+      "recorded_mode": false,
+      "free_only": true,
+      "ai_available": false,
+      "key_present": false,
+      "events": 0,
+      "status": "Free static workspace - optional unbilled AI Studio key. Synthetic data dated 2026-10-22"
+    },
+    "first_context": {
+      "audit_source": "recorded-example",
+      "stored_locally": true,
+      "manager_shows_event": true,
+      "storage_message": "Demo event saved in this browser only."
+    },
+    "separate_fresh_context": {
+      "events": 0,
+      "manager_text": "Demo events stored only in this browser. Other tabs on this device update automatically.No saved visit events yet. Try the guided shelf workflow and save its audit."
+    },
+    "cross_session_cloud_persistence_proven": false,
+    "business_ai_or_api_requests": [],
+    "page_errors": [],
+    "native_video": {
+      "duration_seconds": 222.44,
+      "current_time": 2.023815,
+      "ready_state": 4,
+      "playing": true,
+      "error": null,
+      "video_width": 1440,
+      "video_height": 1000
+    }
+  },
+  "limitations": [
+    "The current video is an explicitly recorded synthetic scenario; its voice conversion is not evidence of live retail AI.",
+    "No Gemini inference or paid model request was made in this audit.",
+    "A successful static page/player is not proof of a live AI API.",
+    "The saved audit is browser-local and was absent from a separate fresh manager context. This does not establish shared Firestore persistence."
+  ],
+  "actual_status": {
+    "public_static_prototype": true,
+    "public_native_video": true,
+    "public_github": true,
+    "live_ai_verified": false,
+    "published_backend_available": false,
+    "shared_firestore_persistence_proven": false,
+    "public_pdf_available": true,
+    "public_pdf_matches_current_local_release": false
+  }
+}

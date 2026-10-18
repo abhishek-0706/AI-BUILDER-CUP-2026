@@ -25,7 +25,7 @@ CONTENT CHECKS
 Team RetailIQ; Abhishek Agarwal, team leader; Vivek Sharma, team member.
 Explicit problem statement, idea, differentiation, problem-solving approach and USP.
 Feature list, process flow diagram, wireframes, architecture and distinct technology list.
-Current Firebase Spark profile is separate from the historical implemented backend.
+The prepared deck describes the prior static/reference profile. The newer live backend rollout is pending and is not established by the template-format checks.
 Actual prototype screenshots are embedded and labelled with synthetic-data limits.
 Software/reference benchmarks, future work and all three required links are present.
 The optional cost section labels assumptions; an engineering estimate requires scoping.

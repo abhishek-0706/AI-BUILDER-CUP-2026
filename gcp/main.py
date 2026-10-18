@@ -14,6 +14,14 @@ Configuration is entirely environment driven. Nothing is hardcoded:
     DEFAULT_STORE_ID   default BLR-KOR-014
     DEMO_AS_OF_DATE    optional YYYY-MM-DD, pins "today" for reproducible demos
     RAG_MODE           keyword (default) or vector
+    RETAILIQ_DATA_SOURCE  bigquery (default) or explicit synthetic snapshot
+    RETAILIQ_AI_PROVIDER  vertex (default) or gemini_free (no Vertex fallback)
+    GEMINI_FREE_PROJECT_ID  required unbilled key project for gemini_free
+    GEMINI_FREE_TIER_CONFIRMED  deployment attestation, also verified before inference
+    RETAILIQ_PUBLIC_JUDGE  opt-in isolated anonymous demo; requires synthetic/free modes
+    JUDGE_SESSION_SECRET  32+ character secret for anonymous HttpOnly session cookies
+    AI_DAILY_REQUEST_LIMIT / JUDGE_DAILY_REQUEST_LIMIT / JUDGE_DAILY_VISIT_LIMIT
+                       persisted ceilings, at most 50 / 500 / 200 per UTC day
     ALLOWED_ORIGINS    comma separated, default same-origin only
     GEMINI_API_KEY     optional, injected from Secret Manager. When absent the
                        service uses Vertex AI with the Cloud Run service
@@ -28,6 +36,7 @@ from __future__ import annotations
 
 import base64
 import hashlib
+import hmac
 import math
 import uuid
 import datetime as dt
@@ -61,7 +70,16 @@ PROJECT = os.environ.get("GCP_PROJECT", "")
 DATASET = os.environ.get("BQ_DATASET", "retailiq")
 BQ_LOCATION = os.environ.get("BQ_LOCATION", "asia-south1")
 VERTEX_LOCATION = os.environ.get("VERTEX_LOCATION", "global")
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
+DATA_SOURCE = os.environ.get("RETAILIQ_DATA_SOURCE", "bigquery")
+AI_PROVIDER = os.environ.get("RETAILIQ_AI_PROVIDER", "vertex")
+PUBLIC_JUDGE = os.environ.get("RETAILIQ_PUBLIC_JUDGE", "").lower() in ("1", "true", "yes")
+FREE_TIER_CONFIRMED = os.environ.get("GEMINI_FREE_TIER_CONFIRMED", "").lower() in ("1", "true", "yes")
+GEMINI_FREE_PROJECT_ID = os.environ.get("GEMINI_FREE_PROJECT_ID", "")
+JUDGE_SESSION_SECRET = os.environ.get("JUDGE_SESSION_SECRET", "")
+AI_DAILY_REQUEST_LIMIT = min(50, max(1, int(os.environ.get("AI_DAILY_REQUEST_LIMIT", "50"))))
+JUDGE_DAILY_REQUEST_LIMIT = min(500, max(1, int(os.environ.get("JUDGE_DAILY_REQUEST_LIMIT", "500"))))
+JUDGE_DAILY_VISIT_LIMIT = min(200, max(1, int(os.environ.get("JUDGE_DAILY_VISIT_LIMIT", "200"))))
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite" if AI_PROVIDER == "gemini_free" else "gemini-3.6-flash")
 DEFAULT_STORE_ID = os.environ.get("DEFAULT_STORE_ID", "BLR-KOR-014")
 DEMO_AS_OF_DATE = os.environ.get("DEMO_AS_OF_DATE", "")
 RAG_MODE = os.environ.get("RAG_MODE", "keyword")
@@ -83,6 +101,139 @@ AI_REQUESTS_PER_MINUTE = int(os.environ.get("AI_REQUESTS_PER_MINUTE", "10"))
 MAX_IMAGE_BYTES = 6 * 1024 * 1024
 _AI_WINDOWS: dict[str, deque] = defaultdict(deque)
 _AI_LOCK = Lock()
+_PUBLIC_BLOCKED: set[tuple[str, str]] = set()
+_FREE_PROVIDER_EXHAUSTED_DAY = ""
+
+
+def data_source() -> str:
+    return "synthetic_fixture" if DATA_SOURCE == "synthetic" else "bigquery"
+
+
+def model_provider() -> str:
+    return "gemini_free" if AI_PROVIDER == "gemini_free" else ("gemini_api" if os.environ.get("GEMINI_API_KEY", "").strip() else "vertex")
+
+
+def public_judge_error() -> str | None:
+    if DATA_SOURCE != "synthetic" or AI_PROVIDER != "gemini_free":
+        return "Public judge access requires the explicit synthetic catalogue and free Gemini provider."
+    if not FREE_TIER_CONFIRMED or not os.environ.get("GEMINI_API_KEY", "").strip():
+        return "An attested unbilled Gemini API key is required; Vertex fallback is disabled."
+    if GEMINI_MODEL != "gemini-3.5-flash-lite":
+        return "The public free profile requires gemini-3.5-flash-lite."
+    if not re.fullmatch(r"[a-z][a-z0-9-]{4,61}[a-z0-9]", GEMINI_FREE_PROJECT_ID):
+        return "An explicit unbilled Gemini key project ID is required for billing verification."
+    if not PROJECT or len(JUDGE_SESSION_SECRET) < 32:
+        return "Public judge access requires Firestore and a 32-character session secret."
+    return None
+
+
+def judge_session(request: Request) -> tuple[str, bool]:
+    raw = request.cookies.get("__session", "")
+    sid, _, signature = raw.partition(".")
+    if re.fullmatch(r"[A-Za-z0-9_-]{32}", sid):
+        expected = hmac.new(JUDGE_SESSION_SECRET.encode(), sid.encode(), hashlib.sha256).hexdigest()
+        if secrets.compare_digest(signature, expected):
+            return sid, False
+    return secrets.token_urlsafe(24), True
+
+
+def session_cookie(sid: str) -> str:
+    return sid + "." + hmac.new(JUDGE_SESSION_SECRET.encode(), sid.encode(), hashlib.sha256).hexdigest()
+
+
+def reserve_public_budget(*, ai_calls: int = 0, visit_writes: int = 0) -> None:
+    """Reserve a bounded global allowance atomically before any model or event work."""
+    if not PUBLIC_JUDGE:
+        return
+    now = dt.datetime.now(dt.timezone.utc)
+    day = now.date().isoformat()
+    wanted = {"requests": (1, JUDGE_DAILY_REQUEST_LIMIT),
+              "ai_calls": (ai_calls, AI_DAILY_REQUEST_LIMIT),
+              "visit_writes": (visit_writes, JUDGE_DAILY_VISIT_LIMIT)}
+    with _AI_LOCK:
+        for name, (amount, _) in wanted.items():
+            if amount and (day, name) in _PUBLIC_BLOCKED:
+                raise HTTPException(429, f"The shared demo daily {name.replace('_', ' ')} allowance is exhausted.")
+        if ai_calls and _FREE_PROVIDER_EXHAUSTED_DAY == day:
+            raise HTTPException(429, "Free Gemini quota is exhausted for today. No paid fallback is enabled.")
+    try:
+        from google.cloud import firestore
+        db = firestore_client()
+        if not db:
+            raise HTTPException(503, "The quota store is unavailable; no work was started.")
+        ref = db.collection("retailiq_judge_limits").document(day)
+        @firestore.transactional
+        def reserve(transaction):
+            snapshot = ref.get(transaction=transaction)
+            current = snapshot.to_dict() or {}
+            if ai_calls and current.get("provider_exhausted"):
+                raise HTTPException(429, "Free Gemini quota is exhausted for today. No paid fallback is enabled.")
+            for name, (amount, limit) in wanted.items():
+                if amount and int(current.get(name, 0)) + amount > limit:
+                    with _AI_LOCK:
+                        _PUBLIC_BLOCKED.add((day, name))
+                    raise HTTPException(429, f"The shared demo daily {name.replace('_', ' ')} allowance is exhausted.")
+            values = {name: int(current.get(name, 0)) + amount for name, (amount, _) in wanted.items()}
+            values.update(updated_at=firestore.SERVER_TIMESTAMP)
+            transaction.set(ref, values, merge=True)
+        reserve(db.transaction())
+    except HTTPException:
+        raise
+    except Exception as exc:
+        log.exception("Public demo quota reservation failed")
+        raise HTTPException(503, "The quota store is unavailable; no model call or event write was started.") from exc
+
+
+def stop_free_provider(exc: Exception) -> bool:
+    """A provider 429 stops further free inference for this UTC day; never retry paid."""
+    global _FREE_PROVIDER_EXHAUSTED_DAY
+    code = getattr(exc, "code", None)
+    if callable(code):
+        code = code()
+    if AI_PROVIDER != "gemini_free" or code not in (429, "429", "RESOURCE_EXHAUSTED"):
+        return False
+    day = dt.datetime.now(dt.timezone.utc).date().isoformat()
+    _FREE_PROVIDER_EXHAUSTED_DAY = day
+    if PUBLIC_JUDGE:
+        try:
+            firestore_client().collection("retailiq_judge_limits").document(day).set({"provider_exhausted": True}, merge=True)
+        except Exception:
+            log.exception("Could not persist free quota stop; local stop remains active")
+    return True
+
+
+@lru_cache(maxsize=1)
+def billing_session():
+    import google.auth
+    from google.auth.transport.requests import AuthorizedSession
+    credentials, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    return AuthorizedSession(credentials)
+
+
+def verify_free_project_billing() -> None:
+    """Fresh billing attestation before each inference; lookup failure stops work."""
+    if not re.fullmatch(r"[a-z][a-z0-9-]{4,61}[a-z0-9]", GEMINI_FREE_PROJECT_ID):
+        raise HTTPException(503, "The free Gemini key project is not configured; no model call was started.")
+    try:
+        response = billing_session().get(
+            f"https://cloudbilling.googleapis.com/v1/projects/{GEMINI_FREE_PROJECT_ID}/billingInfo",
+            headers={"X-Goog-User-Project": PROJECT}, timeout=5)
+        if response.status_code != 200:
+            raise ValueError("Billing lookup was not successful")
+        info = response.json()
+        if info.get("projectId") != GEMINI_FREE_PROJECT_ID or info.get("billingEnabled") is not False:
+            raise ValueError("Gemini project is not explicitly unbilled")
+    except Exception as exc:
+        log.warning("Free Gemini billing verification failed; inference stopped")
+        raise HTTPException(503, "Cannot verify that the Gemini key project is unbilled. No model call or paid fallback was started.") from exc
+
+
+def ensure_free_provider_open() -> None:
+    if AI_PROVIDER != "gemini_free":
+        return
+    if _FREE_PROVIDER_EXHAUSTED_DAY == dt.datetime.now(dt.timezone.utc).date().isoformat():
+        raise HTTPException(429, "Free Gemini quota is exhausted for today. No paid fallback is enabled.")
+    verify_free_project_billing()
 
 def bearer_token(value: str) -> str:
     scheme, _, token = value.partition(" ")
@@ -103,7 +254,42 @@ async def protect_api(request: Request, call_next):
     path = request.url.path
     if path.startswith("/api/") and path != "/api/config" and request.method != "OPTIONS":
         token = bearer_token(request.headers.get("authorization", ""))
-        if API_KEY:
+        new_session = False
+        if PUBLIC_JUDGE:
+            error = public_judge_error()
+            if error:
+                return JSONResponse({"detail": error}, status_code=503)
+            if path.startswith("/api/evidence"):
+                return JSONResponse({"detail": "Cloud photo retention is disabled in this public profile."}, status_code=404)
+            if len(request.url.query) > 4000:
+                return JSONResponse({"detail": "Request query is too large."}, status_code=413)
+            if request.method == "POST":
+                max_body = 6 * 1024 * 1024
+                declared_size = request.headers.get("content-length", "")
+                if declared_size.isdigit() and int(declared_size) > max_body:
+                    return JSONResponse({"detail": "The public demo accepts at most 6 MB per request."}, status_code=413)
+                body = bytearray()
+                async for chunk in request.stream():
+                    if len(body) + len(chunk) > max_body:
+                        return JSONResponse({"detail": "The public demo accepts at most 6 MB per request."}, status_code=413)
+                    body.extend(chunk)
+                request._body = bytes(body)
+            sid, new_session = judge_session(request)
+            request.state.judge_session = sid
+            now = time.monotonic()
+            with _AI_LOCK:
+                window = _AI_WINDOWS["public_requests"]
+                while window and window[0] <= now - 60:
+                    window.popleft()
+                if len(window) >= 60:
+                    return JSONResponse({"detail": "The public demo is busy. Try again in a minute."}, status_code=429)
+                window.append(now)
+            try:
+                ai_calls = (2 if path == "/api/agent/visit-plan" else 1) if path == "/api/chat" or path.startswith("/api/agent/") else 0
+                reserve_public_budget(ai_calls=ai_calls, visit_writes=int(path == "/api/visits/log" and request.method == "POST"))
+            except HTTPException as exc:
+                return JSONResponse({"detail": exc.detail}, status_code=exc.status_code)
+        elif API_KEY:
             if not secrets.compare_digest(token, API_KEY):
                 return JSONResponse({"detail":"A valid access token is required."}, status_code=401)
         elif not (TRUST_IAM or DEMO_OPEN_LOGS):
@@ -119,12 +305,22 @@ async def protect_api(request: Request, call_next):
                 if len(window) >= AI_REQUESTS_PER_MINUTE:
                     return JSONResponse({"detail":"AI request limit reached. Try again in a minute."}, status_code=429, headers={"Retry-After":"60"})
                 window.append(now)
-    return await call_next(request)
+    response = await call_next(request)
+    if PUBLIC_JUDGE:
+        response.headers["Cache-Control"] = "private, no-store"
+        response.headers["Vary"] = "Cookie"
+    if PUBLIC_JUDGE and getattr(request.state, "judge_session", None):
+        response.set_cookie("__session", session_cookie(request.state.judge_session), max_age=86400,
+                            httponly=True, secure=True, samesite="lax")
+    return response
 
 
 @app.get("/runtime-config.js", include_in_schema=False)
 def runtime_config():
-    return Response("window.RETAILIQ_RUNTIME = " + json.dumps({"backend":True,"token_required":bool(API_KEY),"evidence_enabled":bool(PROJECT and PHOTO_BUCKET)}) + ";",
+    return Response("window.RETAILIQ_RUNTIME = " + json.dumps({"backend":True,"token_required":bool(API_KEY) and not PUBLIC_JUDGE,
+        "evidence_enabled":bool(PROJECT and PHOTO_BUCKET) and not PUBLIC_JUDGE,
+        "data_source":data_source(),"provider":model_provider(),"model":GEMINI_MODEL,
+        "public_judge":PUBLIC_JUDGE,"free_only":False}) + ";",
                     media_type="application/javascript", headers={"Cache-Control":"no-store"})
 
 
@@ -211,6 +407,8 @@ def bq_client():
 
 def as_of(value: str | None) -> dt.date:
     raw = value or DEMO_AS_OF_DATE
+    if not raw and DATA_SOURCE == "synthetic":
+        raw = load_fixture()["asOfDate"]
     if not raw:
         return dt.datetime.now(dt.timezone(dt.timedelta(hours=5, minutes=30))).date()
     try:
@@ -225,6 +423,11 @@ def run_query(name: str, **params: Any) -> list[dict[str, Any]]:
     Only the parameters a query actually references are bound, so one param dict
     can be shared across widgets.
     """
+    if DATA_SOURCE == "synthetic":
+        from synthetic import query
+        return query(name, load_fixture(), **params)
+    if DATA_SOURCE != "bigquery":
+        raise HTTPException(503, "Unknown catalogue data source; no fallback was used.")
     from google.cloud import bigquery
 
     sql = sql_for(name)
@@ -287,6 +490,10 @@ def healthz() -> dict[str, Any]:
         "vertex_location": VERTEX_LOCATION,
         "model": GEMINI_MODEL,
         "rag_mode": RAG_MODE,
+        "provider": model_provider(),
+        "data_source": data_source(),
+        "public_judge": PUBLIC_JUDGE,
+        "public_judge_configured": PUBLIC_JUDGE and public_judge_error() is None,
         "queries_loaded": sorted(load_queries()),
     }
 
@@ -299,11 +506,14 @@ def config() -> dict[str, Any]:
         "as_of_date": as_of(None).isoformat(),
         "model": GEMINI_MODEL,
         "chat_proxy": "/api/chat",
-        "data_source": "bigquery" if PROJECT else "unconfigured",
-        "evidence_enabled": bool(PROJECT and PHOTO_BUCKET),
+        "data_source": data_source() if (PROJECT or DATA_SOURCE == "synthetic") else "unconfigured",
+        "provider": model_provider(),
+        "public_judge": PUBLIC_JUDGE,
+        "free_tier_attested": FREE_TIER_CONFIRMED if AI_PROVIDER == "gemini_free" else False,
+        "evidence_enabled": bool(PROJECT and PHOTO_BUCKET) and not PUBLIC_JUDGE,
         "evidence_endpoint": "/api/evidence" if PHOTO_BUCKET else None,
         "photo_retention_days": PHOTO_RETENTION_DAYS,
-        "auth_mode": "bearer" if API_KEY else ("iam" if TRUST_IAM else "unconfigured"),
+        "auth_mode": "anonymous_synthetic_session" if PUBLIC_JUDGE and public_judge_error() is None else ("bearer" if API_KEY else ("iam" if TRUST_IAM else "unconfigured")),
     }
 
 
@@ -315,7 +525,7 @@ def config() -> dict[str, Any]:
 def widget(name: str, store_id: str, date: str | None, limit: int | None = None) -> dict[str, Any]:
     d = as_of(date)
     rows = run_query(name, store_id=store_id, as_of_date=d, limit=limit or 50)
-    return {"store_id": store_id, "as_of_date": d.isoformat(), "source": "bigquery", "rows": rows}
+    return {"store_id": store_id, "as_of_date": d.isoformat(), "source": data_source(), "rows": rows}
 
 
 @app.get("/api/kpis")
@@ -433,7 +643,7 @@ def planogram(planogram_id: str, date: str | None = None) -> dict[str, Any]:
         raise HTTPException(404, f"planogram {planogram_id} has no active rules on {d}")
     return {
         "as_of_date": d.isoformat(),
-        "source": "bigquery",
+        "source": data_source(),
         "planogram": {k: rows[0][k] for k in ("id", "name", "bay")},
         "rules": [{k: r[k] for k in ("rule_id", "rule", "spec", "weight")} for r in rows],
     }
@@ -466,7 +676,7 @@ def bootstrap(store_id: str = DEFAULT_STORE_ID, date: str | None = None) -> dict
                        "action":f"Suggested replenishment: {r['recommended_order_units']} units"}
                       for r in run_query("reorder_alerts", **params, limit=20)]
     data["asOfDate"] = d.isoformat()
-    data["source"] = "bigquery"
+    data["source"] = data_source()
     data["dataIsSynthetic"] = os.environ.get("DATA_IS_SYNTHETIC", "true").lower() in ("1", "true", "yes")
     data["referenceSource"] = "Demo reference: shopper profiles, field targets, visits and team figures"
     return data
@@ -561,6 +771,13 @@ def genai_client():
     from google import genai
 
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if AI_PROVIDER == "gemini_free":
+        if not FREE_TIER_CONFIRMED or not api_key or GEMINI_MODEL != "gemini-3.5-flash-lite":
+            raise HTTPException(503, "Free Gemini requires an attested unbilled key and gemini-3.5-flash-lite. Vertex fallback is disabled.")
+        from google.genai import types
+        return genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=45000, retry_options=types.HttpRetryOptions(attempts=1)))
+    if AI_PROVIDER != "vertex":
+        raise HTTPException(503, "Unknown AI provider; no fallback is enabled.")
     if api_key:
         log.info("Gemini client: API key from environment (Secret Manager)")
         return genai.Client(api_key=api_key)
@@ -619,11 +836,14 @@ def chat(req: ChatRequest) -> StreamingResponse:
     """
     from google.genai import types
 
+    ensure_free_provider_open()
+    if PUBLIC_JUDGE and (any(i.gcs_uri for i in req.images + ([req.image] if req.image else [])) or sum(len(i.data or "") for i in req.images + ([req.image] if req.image else [])) > 4 * 1024 * 1024):
+        raise HTTPException(413, "Public judge images must be inline and total at most 4 MB of base64.")
     client = genai_client()
     contents = _build_contents(req)
     cfg = types.GenerateContentConfig(
         temperature=model_temperature(req.temperature),
-        max_output_tokens=req.max_output_tokens,
+        max_output_tokens=min(req.max_output_tokens, 4096) if AI_PROVIDER == "gemini_free" else req.max_output_tokens,
         system_instruction=req.system_prompt or None,
         response_mime_type="application/json" if req.response_schema is not None else None,
         response_json_schema=req.response_schema,
@@ -638,8 +858,9 @@ def chat(req: ChatRequest) -> StreamingResponse:
                 if text:
                     yield _sse({"candidates": [{"content": {"parts": [{"text": text}]}}]})
         except Exception as exc:
-            log.exception("Vertex AI stream failed")
-            yield _sse({"error": {"status": "UNAVAILABLE", "message": "The model response was interrupted. Please retry."}})
+            exhausted = stop_free_provider(exc)
+            log.exception("Model stream failed")
+            yield _sse({"error": {"status": "RESOURCE_EXHAUSTED" if exhausted else "UNAVAILABLE", "message": "Free Gemini quota is exhausted for today. No paid fallback is enabled." if exhausted else "The model response was interrupted. Please retry."}})
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(
@@ -661,7 +882,7 @@ def _require_log_key(authorization: str = Header(default=""), x_log_key: str = H
     """
     if API_KEY and secrets.compare_digest(bearer_token(authorization), API_KEY):
         return
-    if TRUST_IAM or DEMO_OPEN_LOGS:
+    if TRUST_IAM or DEMO_OPEN_LOGS or (PUBLIC_JUDGE and public_judge_error() is None):
         return
     if LOG_API_KEY and secrets.compare_digest(x_log_key, LOG_API_KEY):
         return
@@ -697,7 +918,7 @@ class VisitLog(BaseModel):
 
 
 @app.post("/api/visits/log", dependencies=[Depends(_require_log_key)])
-def log_visit(entry: VisitLog) -> dict[str, Any]:
+def log_visit(entry: VisitLog, request: Request) -> dict[str, Any]:
     """Persist visit events to Firestore for manager dashboards.
 
     Falls back gracefully when no project is configured (local dev / demo mode).
@@ -709,13 +930,22 @@ def log_visit(entry: VisitLog) -> dict[str, Any]:
     from google.cloud import firestore
 
     try:
-        ref = db.collection("visit_events").document()
+        if PUBLIC_JUDGE:
+            fixture = load_fixture()
+            allowed_visits = {str(v["id"]): str(v["storeId"]) for v in fixture["visits"]}
+            if entry.rep_id != fixture["rep"]["employeeId"] or allowed_visits.get(entry.visit_id) != entry.store_id:
+                raise HTTPException(422, "Only the synthetic catalogue's store, rep and visit identifiers can be saved in this public demo.")
+            ref = db.collection("judge_sessions").document(request.state.judge_session).collection("visit_events").document()
+        else:
+            ref = db.collection("visit_events").document()
         ref.set({
             "visit_id": entry.visit_id, "store_id": entry.store_id,
             "rep_id": entry.rep_id, "event_type": entry.event_type,
             "summary": entry.summary, "score": entry.score,
             "metadata": entry.metadata, "created_at": firestore.SERVER_TIMESTAMP,
         })
+    except HTTPException:
+        raise
     except Exception as exc:
         log.exception("Firestore event write failed")
         raise HTTPException(503, "The visit event was not saved. Check Firestore provisioning and try again.") from exc
@@ -724,7 +954,7 @@ def log_visit(entry: VisitLog) -> dict[str, Any]:
 
 
 @app.get("/api/visits/log", dependencies=[Depends(_require_log_key)])
-def recent_logs(store_id: str = DEFAULT_STORE_ID, limit: int = Query(20, ge=1, le=100)) -> dict[str, Any]:
+def recent_logs(request: Request, store_id: str = DEFAULT_STORE_ID, limit: int = Query(20, ge=1, le=1000)) -> dict[str, Any]:
     """Fetch recent visit events from Firestore for the manager dashboard."""
     db = firestore_client()
     if not db:
@@ -732,10 +962,21 @@ def recent_logs(store_id: str = DEFAULT_STORE_ID, limit: int = Query(20, ge=1, l
 
     try:
         from google.cloud.firestore_v1.base_query import FieldFilter
-        query = (db.collection("visit_events")
+        if PUBLIC_JUDGE:
+            limit = min(limit, 20)
+            if store_id not in {str(v["storeId"]) for v in load_fixture()["visits"]}:
+                raise HTTPException(422, "This demo only reads its synthetic stores.")
+            collection = db.collection("judge_sessions").document(request.state.judge_session).collection("visit_events")
+        else:
+            if limit > 100:
+                raise HTTPException(422, "limit must be at most 100")
+            collection = db.collection("visit_events")
+        query = (collection
                  .where(filter=FieldFilter("store_id", "==", store_id))
                  .order_by("created_at", direction="DESCENDING").limit(limit))
         events = [{"id": doc.id, **_jsonable(doc.to_dict())} for doc in query.stream()]
+    except HTTPException:
+        raise
     except Exception as exc:
         log.exception("Firestore event read failed")
         raise HTTPException(503, "Visit events are unavailable. Check the store/date composite index is ready.") from exc
@@ -864,7 +1105,7 @@ def visit_brief(visit_id: str, date: str | None = None) -> dict[str, Any]:
     rows = run_query("visit_brief", visit_id=visit_id, as_of_date=d)
     if not rows:
         raise HTTPException(404, f"visit {visit_id} not found")
-    return {"as_of_date": d.isoformat(), "source": "bigquery", "visit": rows[0]}
+    return {"as_of_date": d.isoformat(), "source": data_source(), "visit": rows[0]}
 
 
 
@@ -898,6 +1139,7 @@ def apply_guardrails(text: str) -> str:
 
 def generate_text(client, *, prompt: str, config) -> str:
     from google.genai import types
+    ensure_free_provider_open()
     config.temperature = model_temperature(config.temperature)
     config.max_output_tokens = max(4096, config.max_output_tokens or 0)
     try:
@@ -910,6 +1152,8 @@ def generate_text(client, *, prompt: str, config) -> str:
     except HTTPException:
         raise
     except Exception as exc:
+        if stop_free_provider(exc):
+            raise HTTPException(429, "Free Gemini quota is exhausted for today. No paid fallback is enabled.") from exc
         log.exception("Agent model request failed")
         raise HTTPException(503, "The model is unavailable. Please retry.") from exc
 
@@ -925,7 +1169,7 @@ def agent_visit_plan(req: VisitPlanRequest) -> dict[str, Any]:
     alerts_rows = run_query("reorder_alerts",store_id=req.store_id,as_of_date=d,limit=20)
     if not alerts_rows:
         return {"plan_text":"No inventory alerts were found for this store and date.",
-                "checklist":[],"steps_taken":1,"store_id":req.store_id,"source":"bigquery"}
+                "checklist":[],"steps_taken":1,"store_id":req.store_id,"source":data_source()}
     plan_prompt = (
         "You are a CPG field execution planner. Use ONLY the supplied inventory alerts. "
         "Draft a concise prioritized visit plan. Never invent stock or order quantities. "
@@ -954,7 +1198,7 @@ def agent_visit_plan(req: VisitPlanRequest) -> dict[str, Any]:
     except (json.JSONDecodeError,KeyError,TypeError,ValueError) as exc:
         raise HTTPException(502, "The model returned an invalid checklist. Please retry.") from exc
     return {"plan_text":plan_text,"checklist":checklist,"steps_taken":3,"store_id":req.store_id,
-            "source":"bigquery","alerts":alerts_rows}
+            "source":data_source(),"alerts":alerts_rows}
 
 
 _PITCH_OPENINGS = {
@@ -1004,6 +1248,7 @@ def agent_pitch_brief(req: PitchBriefRequest) -> dict[str, Any]:
         "close_style":{"type":"string","enum":list(_PITCH_CLOSES)}},
         "required":["opening_style","claim_doc_ids","close_style"],"additionalProperties":False}
     try:
+        ensure_free_provider_open()
         response = genai_client().models.generate_content(model=GEMINI_MODEL,
             contents=[types.Content(role="user",parts=[types.Part.from_text(text=prompt)])],
             config=types.GenerateContentConfig(temperature=model_temperature(0.2),max_output_tokens=4096,
@@ -1023,6 +1268,8 @@ def agent_pitch_brief(req: PitchBriefRequest) -> dict[str, Any]:
     except HTTPException:
         raise
     except Exception as exc:
+        if stop_free_provider(exc):
+            raise HTTPException(429, "Free Gemini quota is exhausted for today. No paid fallback is enabled.") from exc
         log.exception("Pitch model request failed")
         raise HTTPException(503, "The pitch model is unavailable. Retrieved evidence was not converted into a pitch.") from exc
     evidence = [{"doc_id":key,"title":allowed[key].get("title",key),

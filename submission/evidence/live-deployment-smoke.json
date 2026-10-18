@@ -1,0 +1,75 @@
+{
+  "created_at": "2026-10-18T17:35:12.120179+00:00",
+  "url": "https://retailiq-live-olhqdslz2q-uc.a.run.app",
+  "mode": "actual_live_cloud_run",
+  "checks": [
+    {
+      "name": "cloud_run_healthy",
+      "pass": true,
+      "model": "gemini-3.5-flash-lite"
+    },
+    {
+      "name": "anonymous_scoped_gemini_free_profile",
+      "pass": true
+    },
+    {
+      "name": "dynamic_live_runtime",
+      "pass": true
+    },
+    {
+      "name": "explicit_synthetic_catalogue_and_forecast",
+      "pass": true
+    },
+    {
+      "name": "signed_httponly_workspace_cookie",
+      "pass": true
+    },
+    {
+      "name": "private_path_absent__.env",
+      "pass": true
+    },
+    {
+      "name": "private_path_absent__gcp_main.py",
+      "pass": true
+    },
+    {
+      "name": "private_path_absent__tmp_live-deployment.json",
+      "pass": true
+    },
+    {
+      "name": "photo_retention_disabled",
+      "pass": true
+    },
+    {
+      "name": "synthetic_catalogue_retrieval",
+      "pass": true
+    },
+    {
+      "name": "actual_firestore_write",
+      "pass": true
+    },
+    {
+      "name": "fresh_client_same_workspace_reads_server_record",
+      "pass": true
+    },
+    {
+      "name": "separate_anonymous_workspace_isolated",
+      "pass": true
+    },
+    {
+      "name": "real_gemini_response_from_unbilled_project",
+      "pass": true,
+      "elapsed_seconds": 3.07,
+      "output_characters": 60
+    }
+  ],
+  "model_calls": 1,
+  "limitations": [
+    "Catalogue and forecasts are explicitly synthetic. These checks do not establish business savings or model accuracy."
+  ],
+  "pass": true,
+  "summary": {
+    "passed": 14,
+    "total": 14
+  }
+}

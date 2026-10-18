@@ -8,7 +8,7 @@ The challenge fit is **Retail & Commerce: Intelligent Customer and Business Expe
 
 ## Try the application
 
-Open the [free guided demo](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded). It runs on Firebase Spark in an unbilled project and makes no AI calls in recorded mode. Hosting uses an explicit public-file allowlist and checks that billing remains disabled. The former billed-project Cloud Run endpoint is retired. Watch the [3-minute 42-second submission video](https://retailiq-free-20261018-7ce297.web.app/demo.html). Its AI-assisted narration uses the creator-provided voice sample, converted locally. The [final MP4](demo/RetailIQ_Abhishek_voice_demo.mp4) and [hosted PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf) are also available.
+Open the [prototype](https://retailiq-free-20261018-7ce297.web.app/). The direct Cloud Run backend has passed 14 actual checks, including real Gemini output, Firestore save/read and workspace isolation. Firebase same-origin publishing and browser QA are pending. The [optional recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) makes no AI calls. The site originally shipped on Firebase Spark; its hosting project now has an explicitly approved billing link for an allowance-limited live rollout. Free-tier allowances can be exceeded, so hosting is not a guaranteed zero-cost deployment. The direct Cloud Run backend is verified; end-to-end Firebase browser verification is still pending. Hosting retains an explicit public-file allowlist. The former billed-project Cloud Run endpoint is retired. Watch the [3-minute 42-second submission video](https://retailiq-free-20261018-7ce297.web.app/demo.html). Its AI-assisted narration uses the creator-provided voice sample, converted locally. The [final MP4](demo/RetailIQ_Abhishek_voice_demo.mp4) and [hosted PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf) are also available.
 
 ```powershell
 npm ci
@@ -20,7 +20,7 @@ Open **http://localhost:5190/index.html?demo=recorded**. The guided scenario req
 
 The current static profile is `free_only`, with optional Google AI Studio access. Settings requires confirmation that the key belongs to a project with billing disabled. A quota error stops further requests for that page session; there is no paid fallback. The app cannot verify a key's billing status. The recorded walkthrough sends no AI requests even when a key is stored. This free profile has policy and browser regressions; its actual model quality has not been measured.
 
-The implemented Cloud Run profile uses Vertex AI through a service account and keeps credentials off the browser. Company credits are a separate, metered deployment path; available credit and cost must be checked by the project owner.
+The prepared public judge profile uses Cloud Run, real Firestore and a separate unbilled Gemini API project, with an explicitly synthetic catalogue. It checks the key project is unbilled before each model call, shares persistent daily limits, and isolates browser sessions with a signed HttpOnly cookie. Direct backend checks passed; Firebase browser verification is pending; see [live deployment instructions](gcp/LIVE_DEPLOYMENT.md). The historical backend also implements Vertex AI and BigQuery. Company credits are a separate metered path.
 
 ## Who uses it and why
 

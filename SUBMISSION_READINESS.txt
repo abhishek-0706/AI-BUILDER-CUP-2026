@@ -1,3 +1,5 @@
+CURRENT ROLLOUT STATUS: direct Cloud Run backend verified 14/14, including Gemini and Firestore; Firebase same-origin publishing/browser QA pending. Hosting billing is enabled under explicit allowance-overage consent; Gemini remains in a separate verified unbilled project.
+
 RETAILIQ SUBMISSION READINESS
 Prepared 18 October 2026
 Team RetailIQ: Abhishek Agarwal (team leader), Vivek Sharma (team member).
@@ -11,9 +13,9 @@ Core loop: shelf evidence -> verify stock discrepancy -> choose action -> explai
 Design rationale: sensing + execution + empowerment. Detection must lead to a useful action and a person able to carry it out.
 
 READY TO REVIEW
-1. pitch-slides.html - 13 template-ordered slides; navigation, print export and speaker notes.
-2. pitch-slides.pdf - 13-page submission deck, 1,482,018 bytes, below five megabytes.
-   Frozen SHA256: 6adc59272a0d31954630abea66aca59c944471227d135c7f3ee36f07087290b4
+1. pitch-slides.html - browser viewer for the prepared prescribed-template PDF.
+2. pitch-slides.pdf - prepared 13-page prescribed-template deck, 2,647,732 bytes, below five megabytes.
+   Frozen SHA256: 710db3596542fa5a646b81d266cb7ce3b3a4d12de35efec822ac4df992babaf3
    Hosted PDF: https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf
 3. demo/RetailIQ_Abhishek_voice_demo.mp4 - final submission video, 222.44 seconds (3:42.44).
    8,781,377 bytes; nine synchronized scenes; full audio/video decode passed.
@@ -27,8 +29,9 @@ READY TO REVIEW
 8. submission/TEMPLATE_COMPLIANCE.txt - exact required-section mapping.
 
 PUBLIC AND LOCAL ACCESS
-Public guided demo: https://retailiq-free-20261018-7ce297.web.app/?demo=recorded
-Firebase Spark, unbilled project retailiq-free-20261018-7ce297.
+Canonical prototype: https://retailiq-free-20261018-7ce297.web.app/
+Optional recorded reference: https://retailiq-free-20261018-7ce297.web.app/?demo=recorded
+The static release originally used unbilled Firebase Spark. Hosting billing is now enabled with explicit allowance-overage consent; the live backend rollout is not yet verified.
 Public files use a bounded allowlist; billing-disabled checks run at four deployment checkpoints.
 18 deployed HTTP/browser checks passed: published hashes, private-path rejection,
 audit and local manager workflow, mobile layouts and zero AI/backend requests.
@@ -41,7 +44,7 @@ Static saves remain in that browser, rather than implying cloud persistence.
 
 HOSTING AND COST STATUS
 The former personal-project Cloud Run endpoint is retired; its project billing is disabled.
-The free static Firebase host is deployed. A company backend remains an optional future path.
+The static Firebase review site is deployed. The new personal Cloud Run/Firestore/free-Gemini profile is being provisioned; real live verification is pending. Company hosting remains optional.
 Company backend provisioning needs an approved sandbox project and suitable permissions.
 Work-account access and an available company billing account do not establish project creation or billing-link permissions.
 Current static runtime profile: free_only, optional Google AI Studio key, Gemini 3.5 Flash-Lite.
@@ -54,7 +57,7 @@ The INR 5/visit operating budget in the deck is a planning target, not an actual
 
 SOFTWARE VERIFICATION - CURRENT LOCAL RELEASE
 157 browser checks and seven policy checks passed; 38 offline evaluator assertions passed.
-60 Python checks passed: 51 API, four deployment doubles and five free-hosting safety checks.
+105 offline Python checks passed across two runs: 69 API, nine synthetic-provider, four deployment doubles, five Spark safety and 18 live-deployment guards.
 The six-suite Node runner passed. Browser server responses and Python cloud clients are mocked.
 These checks establish the exercised software contracts. Static hosting is separately deployed;
 historical cloud API reports do not establish a current hosted backend.

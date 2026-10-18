@@ -442,3 +442,184 @@ def test_pitch_agent_uses_reasoning_output_budget(client,monkeypatch):
     response=client.post("/api/agent/pitch-brief",json={"buyer_category":"protein"})
     assert response.status_code==200
     assert seen[0].max_output_tokens==4096 and seen[0].temperature is None
+
+
+class MemoryJudgeFirestore:
+    """Atomic-operation double; each document path has its own persisted value."""
+    def __init__(self):self.docs={};self.next_id=0;self.read_limits=[]
+    def collection(self,name):return self.Ref(self,(name,))
+    def transaction(self):return self.Transaction(self)
+    class Transaction:
+        def __init__(self,db):self.db=db
+        def set(self,ref,data,merge=False):ref.set(data,merge=merge)
+    class Ref:
+        def __init__(self,db,path):self.db=db;self.path=path;self.filters=[];self.read_limit=20
+        def collection(self,name):return self.__class__(self.db,self.path+(name,))
+        def document(self,name=None):
+            if name is None:self.db.next_id+=1;name='doc-'+str(self.db.next_id)
+            ref=self.__class__(self.db,self.path+(name,));ref.id=name;return ref
+        def get(self,transaction=None):return SimpleNamespace(to_dict=lambda:dict(self.db.docs.get(self.path,{})))
+        def set(self,data,merge=False):
+            from google.cloud import firestore
+            resolved={key:(dt.datetime.now(dt.timezone.utc) if value is firestore.SERVER_TIMESTAMP else value) for key,value in data.items()}
+            self.db.docs[self.path]={**(self.db.docs.get(self.path,{}) if merge else {}),**resolved}
+        def where(self,filter):self.filters.append(filter);return self
+        def order_by(self,*args,**kwargs):return self
+        def limit(self,n):self.read_limit=n;self.db.read_limits.append(n);return self
+        def stream(self):
+            rows=[]
+            for path,data in self.db.docs.items():
+                if path[:-1]==self.path and all(data.get(f.field_path)==f.value for f in self.filters):
+                    rows.append(SimpleNamespace(id=path[-1],to_dict=lambda data=data:dict(data)))
+            return rows[:self.read_limit]
+
+
+@pytest.fixture
+def public_profile(monkeypatch):
+    from google.cloud import firestore
+    for key,value in {'API_KEY':'','TRUST_IAM':False,'DEMO_OPEN_LOGS':False,'PROJECT':'offline-public-project',
+        'PUBLIC_JUDGE':True,'DATA_SOURCE':'synthetic','AI_PROVIDER':'gemini_free','FREE_TIER_CONFIRMED':True,
+        'GEMINI_FREE_PROJECT_ID':'offline-free-ai-project','GEMINI_MODEL':'gemini-3.5-flash-lite','JUDGE_SESSION_SECRET':'s'*64,'PHOTO_BUCKET':'',
+        'AI_DAILY_REQUEST_LIMIT':50,'JUDGE_DAILY_REQUEST_LIMIT':500,'JUDGE_DAILY_VISIT_LIMIT':200,
+        'AI_REQUESTS_PER_MINUTE':6,'DEMO_AS_OF_DATE':'2026-10-22','_FREE_PROVIDER_EXHAUSTED_DAY':''}.items():monkeypatch.setattr(api,key,value)
+    monkeypatch.setenv('GEMINI_API_KEY','offline-attested-key')
+    monkeypatch.setattr(firestore,'transactional',lambda function:function)
+    db=MemoryJudgeFirestore();monkeypatch.setattr(api,'firestore_client',lambda:db)
+    api._AI_WINDOWS.clear();api._PUBLIC_BLOCKED.clear()
+    yield db
+    api._AI_WINDOWS.clear();api._PUBLIC_BLOCKED.clear()
+
+
+def test_public_profile_truthful_and_bootstrap_never_queries_bigquery(public_profile,monkeypatch):
+    monkeypatch.setattr(api,'bq_client',lambda:pytest.fail('Explicit synthetic mode must not access BigQuery'))
+    with TestClient(api.app,base_url='https://testserver') as c:
+        config=c.get('/api/config').json()
+        assert config['provider']=='gemini_free' and config['data_source']=='synthetic_fixture'
+        assert config['auth_mode']=='anonymous_synthetic_session' and not config['evidence_enabled']
+        runtime=c.get('/runtime-config.js').text
+        assert '"token_required": false' in runtime and '"model": "gemini-3.5-flash-lite"' in runtime
+        response=c.get('/api/bootstrap')
+        assert response.status_code==200,response.text
+        assert response.json()['source']=='synthetic_fixture' and response.json()['dataIsSynthetic']
+        assert len(response.json()['products'])==len(load_fixture()['products'])
+        assert response.headers['cache-control']=='private, no-store'
+        assert c.get('/health').json()['provider']=='gemini_free'
+
+
+@pytest.mark.parametrize('changes',[{'DATA_SOURCE':'bigquery'},{'AI_PROVIDER':'vertex'},{'FREE_TIER_CONFIRMED':False},
+    {'JUDGE_SESSION_SECRET':'short'},{'GEMINI_MODEL':'gemini-3.6-flash'}])
+def test_public_access_fails_closed_on_inconsistent_profile(public_profile,monkeypatch,changes):
+    for key,value in changes.items():monkeypatch.setattr(api,key,value)
+    monkeypatch.setattr(api,'genai_client',lambda:pytest.fail('Misconfigured profile must not call a model'))
+    with TestClient(api.app,base_url='https://testserver') as c:
+        assert c.get('/api/bootstrap').status_code==503
+    assert public_profile.docs=={}
+
+
+def test_public_judges_save_real_namespaced_events_and_cannot_read_another_session(public_profile):
+    f=load_fixture();event={'visit_id':f['visits'][0]['id'],'store_id':f['visits'][0]['storeId'],
+        'rep_id':f['rep']['employeeId'],'event_type':'audit','summary':'Synthetic shelf check','score':80,
+        'metadata':{'audit':{'criteria':[{'rule_id':'P1','status':'PASS'}]}}}
+    with TestClient(api.app,base_url='https://testserver') as first, TestClient(api.app,base_url='https://testserver') as second:
+        saved=first.post('/api/visits/log',json=event)
+        assert saved.status_code==200,saved.text
+        assert 'HttpOnly' in saved.headers['set-cookie'] and 'Secure' in saved.headers['set-cookie']
+        assert first.get('/api/visits/log?limit=200').json()['count']==1
+        assert public_profile.read_limits[-1]==20
+        assert second.get('/api/visits/log').json()['events']==[]
+        first.cookies.set('__session','tampered.signature')
+        assert first.get('/api/visits/log').json()['events']==[]
+    paths=[path for path in public_profile.docs if path[0]=='judge_sessions']
+    assert len(paths)==1 and paths[0][2]=='visit_events'
+
+
+def test_public_logs_reject_non_demo_identifiers_and_photo_storage(public_profile):
+    with TestClient(api.app,base_url='https://testserver') as c:
+        response=c.post('/api/visits/log',json={'visit_id':'private-client','store_id':'other-store',
+            'rep_id':'outside-rep','event_type':'audit'})
+        assert response.status_code==422
+        assert c.get('/api/evidence/image?gcs_uri=gs://anything/private').status_code==404
+    assert not any(path[0]=='judge_sessions' for path in public_profile.docs)
+
+
+def test_persisted_public_allowance_is_atomic_shared_and_stops_work(public_profile,monkeypatch):
+    monkeypatch.setattr(api,'AI_DAILY_REQUEST_LIMIT',1)
+    api.reserve_public_budget(ai_calls=1)
+    with pytest.raises(api.HTTPException) as error:api.reserve_public_budget(ai_calls=1)
+    assert error.value.status_code==429
+    stored=next(iter(public_profile.docs.values()))
+    assert stored['ai_calls']==1 and stored['requests']==1
+    api._PUBLIC_BLOCKED.clear()  # Simulate a new instance; the persisted limit must still hold.
+    with pytest.raises(api.HTTPException):api.reserve_public_budget(ai_calls=1)
+    assert next(iter(public_profile.docs.values()))['ai_calls']==1
+
+
+def test_quota_store_failure_blocks_model_before_inference(public_profile,monkeypatch):
+    monkeypatch.setattr(api,'firestore_client',lambda:(_ for _ in ()).throw(RuntimeError('offline datastore outage')))
+    monkeypatch.setattr(api,'genai_client',lambda:pytest.fail('A quota failure must stop inference'))
+    with TestClient(api.app,base_url='https://testserver') as c:
+        assert c.post('/api/chat',json={'message':'Hi'}).status_code==503
+
+
+def test_free_provider_initialization_never_falls_back_and_disables_retries(public_profile,monkeypatch):
+    from google import genai
+    original=api.genai_client;original.cache_clear();seen=[]
+    monkeypatch.setattr(genai,'Client',lambda **kwargs:seen.append(kwargs) or object())
+    try:
+        original()
+        assert seen[0]['api_key']=='offline-attested-key' and 'vertexai' not in seen[0]
+        assert seen[0]['http_options'].retry_options.attempts==1
+        original.cache_clear();monkeypatch.delenv('GEMINI_API_KEY')
+        with pytest.raises(api.HTTPException) as error:original()
+        assert error.value.status_code==503 and len(seen)==1
+    finally:original.cache_clear()
+
+
+def test_provider_quota_error_persists_daily_stop_without_paid_fallback(public_profile):
+    class QuotaError(Exception):code=429
+    assert api.stop_free_provider(QuotaError()) is True
+    assert next(iter(public_profile.docs.values()))['provider_exhausted'] is True
+    with pytest.raises(api.HTTPException) as error:api.ensure_free_provider_open()
+    assert error.value.status_code==429
+    api._FREE_PROVIDER_EXHAUSTED_DAY=''  # Another instance still reads the persisted stop.
+    with pytest.raises(api.HTTPException):api.reserve_public_budget(ai_calls=1)
+
+
+@pytest.mark.parametrize('info,status',[
+    ({'projectId':'offline-free-ai-project','billingEnabled':True},200),
+    ({'projectId':'offline-free-ai-project'},200),
+    ({'projectId':'different-project','billingEnabled':False},200),
+    ({'projectId':'offline-free-ai-project','billingEnabled':False},403),
+])
+def test_free_inference_billing_check_fails_closed(public_profile,monkeypatch,info,status):
+    monkeypatch.setattr(api,'billing_session',lambda:SimpleNamespace(get=lambda *a,**k:SimpleNamespace(status_code=status,json=lambda:info)))
+    monkeypatch.setattr(api,'genai_client',lambda:pytest.fail('Billed or unverifiable key project must stop inference'))
+    with TestClient(api.app,base_url='https://testserver') as c:
+        response=c.post('/api/chat',json={'message':'Hi'})
+        assert response.status_code==503 and 'unbilled' in response.json()['detail']
+
+
+def test_free_model_checks_billing_each_call_and_preserves_native_json(public_profile,monkeypatch):
+    lookups=[];calls=[];raw='{"quote":"20%", "items":[]}'
+    def billing_get(url,**kwargs):
+        lookups.append((url,kwargs));return SimpleNamespace(status_code=200,json=lambda:{'projectId':'offline-free-ai-project','billingEnabled':False})
+    def model(**kwargs):
+        calls.append(kwargs);return iter([SimpleNamespace(text=raw)])
+    monkeypatch.setattr(api,'billing_session',lambda:SimpleNamespace(get=billing_get))
+    monkeypatch.setattr(api,'genai_client',lambda:SimpleNamespace(models=SimpleNamespace(generate_content_stream=model)))
+    with TestClient(api.app,base_url='https://testserver') as c:
+        for _ in range(2):
+            response=c.post('/api/chat',json={'message':'Return this schema','max_output_tokens':8192,
+                'response_schema':{'type':'object','properties':{'quote':{'type':'string'},'items':{'type':'array','items':{'type':'string'}}}}})
+            assert response.status_code==200 and '20%' in response.text
+    assert len(lookups)==len(calls)==2
+    assert lookups[0][1]['timeout']==5 and lookups[0][1]['headers']['X-Goog-User-Project']=='offline-public-project'
+    assert all(call['model']=='gemini-3.5-flash-lite' and call['config'].max_output_tokens==4096 for call in calls)
+    assert calls[0]['config'].response_mime_type=='application/json'
+
+
+def test_public_request_size_limit_precedes_quota_or_model_work(public_profile,monkeypatch):
+    monkeypatch.setattr(api,'genai_client',lambda:pytest.fail('Oversized requests must not reach Gemini'))
+    with TestClient(api.app,base_url='https://testserver') as c:
+        assert c.post('/api/chat',content=b'x'*(6*1024*1024+1)).status_code==413
+    assert public_profile.docs=={}

@@ -4,6 +4,7 @@ window.RetailAPI = {
   recordedDemo:recordedDemoRequested,
   enabled: !recordedDemoRequested && !window.RETAILIQ_RUNTIME?.free_only && !!window.RETAILIQ_RUNTIME?.backend,
   ready: false,
+  dataSource: null,
   headers() {
     const token = sessionStorage.getItem('retailiq_access_token');
     return {'Content-Type':'application/json', ...(token ? {Authorization:'Bearer '+token} : {})};
@@ -69,19 +70,33 @@ async function readGeminiResponse(res,onChunk,options={}) {
 
 function aiAvailable(){ return !RetailAPI.recordedDemo && !freeQuotaStopped() && (RetailAPI.enabled ? RetailAPI.ready : !!getKey()); }
 
+function modelProviderLabel(){
+  const provider=window.RETAILIQ_RUNTIME?.provider;
+  if(provider==='gemini_free')return 'Gemini free tier via server';
+  if(provider==='vertex')return 'Gemini via Vertex AI';
+  if(provider==='gemini_api')return 'Gemini API via server';
+  return RetailAPI.enabled?'configured server model':'optional Google AI Studio key';
+}
+function storeDataLabel(){
+  if(RetailAPI.dataSource==='synthetic_fixture')return 'Synthetic demo catalogue';
+  if(RetailAPI.dataSource==='bigquery')return D.dataIsSynthetic?'BigQuery synthetic demo dataset':'BigQuery store dataset';
+  return 'Server catalogue (source not specified)';
+}
+
 function setDataStatus(message,error=false){
   let el=document.getElementById('data-status');
   if(!el){
     el=document.createElement('div');el.id='data-status';el.setAttribute('role','status');
-    el.style.cssText='padding:9px 20px;background:#edf5f3;border-bottom:1px solid #ccdcd7;font-size:12px;position:relative;z-index:20';
+    el.style.cssText='padding:9px 20px;background:#edf5f3;border-bottom:1px solid #ccdcd7;font-size:12px;line-height:1.5;overflow-wrap:anywhere;position:relative;z-index:20';
     document.querySelector('.topbar')?.after(el) || document.body.prepend(el);
   }
+  el.setAttribute('aria-live',error?'assertive':'polite');el.setAttribute('aria-atomic','true');
   el.textContent=message;el.style.color=error?'#b91c1c':'#22534a';
 }
 
 async function initializeData(){
   if(!RetailAPI.enabled){
-    setDataStatus((RetailAPI.recordedDemo?'Recorded walkthrough - no AI calls. Synthetic scenario dated ':window.RETAILIQ_RUNTIME?.free_only?'Free static workspace - optional unbilled AI Studio key. Synthetic data dated ':'Synthetic demo data - ')+D.asOfDate);
+    setDataStatus((RetailAPI.recordedDemo?'Recorded walkthrough - no AI calls. Synthetic scenario dated ':window.RETAILIQ_RUNTIME?.free_only?'Free static workspace - optional unbilled AI Studio key. Synthetic data dated ':'Synthetic demo data - ')+D.asOfDate+'. Visit events stay in this browser.');
     if(RetailAPI.recordedDemo){
       const link=document.createElement('a');link.id='exit-recorded-demo';const live=new URL(location.href);live.searchParams.delete('demo');link.href=live.href;link.textContent=' Open live workspace';link.style.marginLeft='10px';document.getElementById('data-status').append(link);
     }
@@ -92,9 +107,11 @@ async function initializeData(){
   if(!Array.isArray(data.products)||!data.products.length||!Array.isArray(data.forecast)||!data.forecast.length)
     throw new Error('Store inventory or forecast is unavailable.');
   Object.assign(D,data);
+  const source=data.source||window.RETAILIQ_RUNTIME?.data_source;
+  RetailAPI.dataSource=['synthetic_fixture','bigquery'].includes(source)?source:'server_catalogue';
   activeProfile=D.shopperProfiles[0];activeVisit=D.visits[0];
   RetailAPI.ready=true;
-  setDataStatus('Store data: BigQuery'+(D.dataIsSynthetic?' (synthetic demo dataset)':'')+' - '+D.asOfDate+' - Field targets, visits, profiles and team figures use demo reference data');
+  setDataStatus(storeDataLabel()+' dated '+D.asOfDate+'. AI route: '+modelProviderLabel()+'. Field targets, visits, profiles and team figures are demo references. Visit saves use server storage.');
 }
 
 function eventStatus(text,error=false){

@@ -1,14 +1,27 @@
 {
-  "verified_at": "2026-10-18T15:21:46.324955+00:00",
+  "verified_at": "2026-10-18T17:25:50.069003+00:00",
   "mode": "offline_cloud_doubles",
-  "command": ".venv/Scripts/python.exe -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider",
-  "passed": 60,
+  "command": ".venv/Scripts/python.exe -m pytest tests/test_api.py tests/test_synthetic.py tests/test_deploy.py tests/test_deploy_free.py tests/test_deploy_live.py -q -p no:cacheprovider",
+  "passed": 105,
   "breakdown": {
-    "api": 51,
+    "api": 69,
+    "synthetic_query_provider": 9,
     "mock_deployment": 4,
-    "free_hosting_safety": 5
+    "free_hosting_safety": 5,
+    "live_deployment_safety": 18
   },
   "cloud_calls": 0,
   "model_calls": 0,
-  "limitation": "Mocked cloud tests do not establish company deployment availability."
+  "limitation": "Offline cloud doubles verify profile guards and contracts; they do not establish live deployment availability, billing balance, or model quality.",
+  "verified_commands": [
+    {
+      "command": ".venv/Scripts/python.exe -m pytest tests/test_api.py tests/test_synthetic.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider",
+      "passed": 87
+    },
+    {
+      "command": ".venv/Scripts/python.exe -m pytest tests/test_deploy_live.py -q -p no:cacheprovider",
+      "passed": 18
+    }
+  ],
+  "verification_note": "The 87 existing checks and 18 new deployment-helper checks passed in separate offline runs; CI executes the combined command."
 }
