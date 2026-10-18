@@ -8,7 +8,15 @@ The challenge fit is **Retail & Commerce: Intelligent Customer and Business Expe
 
 ## Try the application
 
-Open the [prototype](https://retailiq-free-20261018-7ce297.web.app/). The direct Cloud Run backend has passed 14 actual checks, including real Gemini output, Firestore save/read and workspace isolation. Firebase same-origin publishing and browser QA are pending. The [optional recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) makes no AI calls. The site originally shipped on Firebase Spark; its hosting project now has an explicitly approved billing link for an allowance-limited live rollout. Free-tier allowances can be exceeded, so hosting is not a guaranteed zero-cost deployment. The direct Cloud Run backend is verified; end-to-end Firebase browser verification is still pending. Hosting retains an explicit public-file allowlist. The former billed-project Cloud Run endpoint is retired. Watch the [3-minute 42-second submission video](https://retailiq-free-20261018-7ce297.web.app/demo.html). Its AI-assisted narration uses the creator-provided voice sample, converted locally. The [final MP4](demo/RetailIQ_Abhishek_voice_demo.mp4) and [hosted PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf) are also available.
+Open the [live prototype](https://retailiq-free-20261018-7ce297.web.app/). Firebase Hosting forwards same-origin APIs to Cloud Run in `us-central1`. The application uses real Gemini 3.5 Flash-Lite inference and real Firestore visit persistence, with an explicitly synthetic retail catalogue. No key or access token is required from a judge.
+
+[Actual backend checks](submission/evidence/live-deployment-smoke.json) passed 14/14, including Gemini output, Firestore save/fresh-client read and workspace isolation. [Actual browser QA](submission/evidence/live-ui-deployment-qa.json) covers shelf-video analysis, buyer conversation, shopper comparison and saved-event retrieval in a fresh manager context using the same signed workspace. This is prototype verification, not production reliability or shelf-recognition accuracy. The [hosting configuration audit](submission/evidence/live-deployment-config.json) passed 14/14, including scale/usage limits, same-origin rewrites and `private, no-store` dynamic responses.
+
+The hosting project uses explicitly authorized free-tier allowances that can be exceeded; there is no zero-bill guarantee. Gemini uses a separate unbilled project, checked before each inference, and stops rather than falling back to Vertex or another model. Shared limits can make the public demo temporarily unavailable: 50 AI requests/day, six/minute, 500 API requests/day and 200 saves/day. A provider quota error stops inference for the UTC day.
+
+The [optional recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) makes no AI calls. The [presentation PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf), [video player](https://retailiq-free-20261018-7ce297.web.app/demo.html) and [repository video](demo/RetailIQ_Abhishek_voice_demo.mp4) are available separately. Recorded material does not prove current live behavior.
+
+For a local, keyless recorded scenario:
 
 ```powershell
 npm ci
@@ -16,11 +24,7 @@ npx playwright install chromium
 python -m http.server 5190 --bind 127.0.0.1
 ```
 
-Open **http://localhost:5190/index.html?demo=recorded**. The guided scenario requires no model key and is labelled as a recorded example. It uses a real shelf reference and synthetic commercial context; it is not live Gemini inference. Remove `?demo=recorded` to explore the static workspace.
-
-The current static profile is `free_only`, with optional Google AI Studio access. Settings requires confirmation that the key belongs to a project with billing disabled. A quota error stops further requests for that page session; there is no paid fallback. The app cannot verify a key's billing status. The recorded walkthrough sends no AI requests even when a key is stored. This free profile has policy and browser regressions; its actual model quality has not been measured.
-
-The prepared public judge profile uses Cloud Run, real Firestore and a separate unbilled Gemini API project, with an explicitly synthetic catalogue. It checks the key project is unbilled before each model call, shares persistent daily limits, and isolates browser sessions with a signed HttpOnly cookie. Direct backend checks passed; Firebase browser verification is pending; see [live deployment instructions](gcp/LIVE_DEPLOYMENT.md). The historical backend also implements Vertex AI and BigQuery. Company credits are a separate metered path.
+Open **http://localhost:5190/index.html?demo=recorded**. Local static mode keeps events in that browser. Without the recorded query, optional direct AI Studio access requires confirmation that the key belongs to an unbilled project; the static browser cannot independently check billing. The deployed server profile performs that check. See [live deployment instructions](gcp/LIVE_DEPLOYMENT.md).
 
 ## Who uses it and why
 
@@ -66,7 +70,7 @@ A proposed order is a draft for review. RetailIQ does not place an ERP order or 
 
 ### Grounded language
 
-Backend pitches retrieve passages from BigQuery and accept only retrieved source identifiers. Factual claim text is rendered from those passages. A valid citation identifier alone is not treated as proof for an invented sentence. The interface preserves the synthetic/published distinction.
+Backend pitches retrieve explicitly synthetic passages in the current profile, or BigQuery passages in the optional warehouse profile, and accept only retrieved source identifiers. Factual claim text is rendered from those passages. A valid citation identifier alone is not treated as proof for an invented sentence. The interface preserves the synthetic/published distinction.
 
 General chat and rehearsal are model-generated assistance. Prompt instructions and formatting cleanup are not a guarantee against hallucination or prompt injection. Model text is rendered as text; warehouse text is escaped before HTML display.
 
@@ -74,17 +78,17 @@ General chat and rehearsal are model-generated assistance. Prompt instructions a
 
 ```mermaid
 flowchart LR
-    UI[RetailIQ browser] --> API[Cloud Run / FastAPI]
-    API --> AI[Gemini on Vertex AI]
-    API --> BQ[BigQuery analytics and retrieval]
-    BQ --> ML[BigQuery ML forecasts]
-    API --> DB[Firestore visit events]
-    API --> GCS[Private Cloud Storage evidence]
+    UI[Firebase Hosting browser] --> API[Cloud Run / FastAPI]
+    API --> CHECK[Verify AI project billing disabled]
+    CHECK --> AI[Gemini 3.5 Flash-Lite Developer API]
+    API --> FIXTURE[Explicit synthetic catalogue and evidence]
+    API --> DB[Firestore workspace visit events and budgets]
+    API --> SECRET[Secret Manager server credentials]
 ```
 
-The container serves the frontend and API together. `runtime-config.js` selects the deployment profile. A warehouse failure is shown instead of silently substituting fixture data. Private IAM access is the cloud deployment default; an explicit shared-demo mode uses an application access token. Secret Manager keeps server credentials out of the repository.
+This is the currently verified profile. Firebase rewrites `/api/**`, `/runtime-config.js` and `/health` to Cloud Run; the static runtime file is deliberately excluded from the published version. Commercial data and forecast scenarios are synthetic. Current runtime access needs neither BigQuery nor Vertex AI nor Cloud Storage evidence retention.
 
-See [the cloud guide](gcp/README.md). A historical reference deployment used Gemini 3.6 Flash through Vertex AI's global endpoint, with commerce services in Mumbai. That endpoint is retired. Company backend migration is an optional future path requiring an approved project. The active Firebase host serves the static free-only profile, with an optional unbilled AI Studio key and Gemini 3.5 Flash-Lite; historical reference-model results do not validate that model.
+The same repository implements an optional private warehouse profile with BigQuery analytics/retrieval, BigQuery ML forecasts, Gemini on Vertex AI and private Cloud Storage evidence. That profile is historical/prepared functionality, not the current public deployment. Its default is private IAM or bearer authentication with fail-closed configuration. The public judge exception requires the complete synthetic/free-Gemini profile and signed isolated browser workspaces. There is no silent fixture fallback for a failed warehouse. See [the cloud guide](gcp/README.md).
 
 ## Data and provenance
 
@@ -98,12 +102,53 @@ Shelf sample media is real in-store footage. Protiva is fictional and absent fro
 
 ```powershell
 npm test
-.\.venv\Scripts\python.exe -m pytest tests/test_api.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider
+.\.venv\Scripts\python.exe -m pytest tests/test_api.py tests/test_synthetic.py tests/test_deploy.py tests/test_deploy_free.py tests/test_deploy_live.py -q -p no:cacheprovider
 ```
 
-The active free Firebase host passed **18 HTTP/browser checks**, including published asset hashes, private-path rejection, the saved local audit workflow, phone layouts and zero AI/backend requests. The retained local release evidence records **157 browser checks, seven policy checks, 38 evaluator checks and 60 Python checks**. Separate historical reports record 10/10 live reference-model cases, 22 cloud checks and six recorded-browser checks. Those historical results do not establish current company-hosting availability or free-tier model quality. The final media has nine synchronized scenes, passed full-stream decoding and passed six public-media checks including native browser playback. Credential-free reports are in [submission/evidence](submission/evidence); [SUBMISSION_READINESS.txt](SUBMISSION_READINESS.txt) explains their scope.
+The current free-backend model evaluation passed **8/10 selected cases**. It ran the original ten prompts once through production `callGemini`, the deployed shopper/rep contexts and type-only JSON schemas. Canonical catalogue and all KB identities/titles/facts matched before inference. Exactly ten proxy requests were observed; starts were at least 13 seconds apart, with no retries or result filtering. Actual per-call latency ranged from **1.230 to 2.233 seconds**. [Full current-model report](submission/evidence/eval-live-backend.json).
 
-The Node runner starts and stops its own local server. Python uses cloud doubles. Offline evaluation validates known facts, calculations and citations and rejects deliberately wrong responses; it is not measured Gemini quality. A seven-day forecast holdout on synthetic history produced 1.249% WAPE against a 2.824% seasonal-naive baseline. Synthetic-data performance is diagnostic, not production forecast accuracy. See [tests/README.md](tests/README.md).
+The two failures remain visible: budget discovery included S02/S03 despite the price ceiling, and the model proposed 21 S01 units instead of 5. The deterministic proposed-order calculator is a separate path, covered by arithmetic and shelf-life regressions; this model-only failure does not establish its correctness. Human review remains required.
+
+| Case | Surface / contract | Current live Gemini | Offline evaluator |
+| --- | --- | --- | --- |
+| shake-facts | Shopper: price, protein, stock | PASS | PASS |
+| competitor-facts | Shopper: competitor identity/nutrition | PASS | PASS |
+| budget-discovery | Shopper: every eligible product below budget | **FAIL**: includes over-budget salads | PASS |
+| basket-arithmetic | Shopper: two shakes plus one bar total | PASS | PASS |
+| trade-arithmetic | Rep: unit trade price and margin | PASS | PASS |
+| short-life-replenishment | Rep: trailing demand, stock and four-day shelf life | **FAIL**: 21 instead of 5 | PASS |
+| stock-cover | Rep: daily demand and days of stock | PASS | PASS |
+| source-grounding | Rep: exact supplied fact, citation and synthetic provenance | PASS | PASS |
+| unknown-product | Shopper: abstain on an absent product | PASS | PASS |
+| injection-and-uncertainty | Rep: refuse one injected disclosure/unsupported expiry claim | PASS | PASS |
+
+Offline PASS means the evaluator accepts the known valid answer; it is **not another model run**. Overall offline assertions passed **38/38 with zero model calls**, including deliberately wrong answers and schema checks. [Offline report](submission/evidence/eval-offline.json). These ten synthetic structured cases do not measure general model accuracy, RAGAS, semantic faithfulness, complete injection resistance, vision precision or business ROI. Historical Vertex-model results are labelled separately and do not replace this baseline.
+
+To reproduce the explicit current-backend mode, first obtain authorization for the shared quota. Remove browser-key/access-token environment variables; no judge credential is needed:
+
+```powershell
+$env:RETAILIQ_URL = 'https://retailiq-free-20261018-7ce297.web.app/'
+node tests/eval.js --live-backend --confirm-free-tier
+```
+
+The older `--live` browser-key mode retains its separate static/unbilled guard. The default command `node tests/eval.js` is offline. Both modes stop on quota errors and do not automatically retry failures. [Harness details](tests/README.md).
+
+### Guardrail matrix
+
+| Control | Implementation and evidence | Limit |
+| --- | --- | --- |
+| Agent output validation | `apply_guardrails()` validates typed agent outputs and retrieved citation IDs; API regressions exercise invalid outputs | General chat is not universally covered by this validator; a citation ID alone does not prove a claim |
+| Explicit uncertainty | Missing-product/expiry abstention, unseen shelf criteria and selected injection case are exercised | Selected cases do not establish a complete prompt-injection defense or vision accuracy |
+| Grounded evidence | Retrieved facts retain synthetic/published provenance; factual pitch text is rendered from passages | Synthetic brand evidence is not independently verified market evidence |
+| Safe commercial decisions | Deterministic stock/inbound/case/shelf-life recommendations remain drafts for a human | The live model arithmetic case failed; no automatic ERP ordering or commercial commitment |
+| Authentication and isolation | Private IAM/bearer defaults; explicit anonymous synthetic judge mode uses signed HttpOnly/Secure/SameSite workspace cookies | Separate browser sessions see separate events; no claim of enterprise SSO or a shared production team workspace |
+| AI spend containment | Firestore daily reservations, six/minute cap, 429 stop, unbilled-project verification before inference, one provider with no Vertex fallback | Hosting/build/storage allowances can overrun; caps reduce exposure but do not guarantee zero cost or availability |
+| Bounds and secret handling | Bounded chat/images/output, server-side Secret Manager references, no key in browser config; deployment allowlist tests | Demo data only; public photo retention is disabled |
+| Persistence and privacy | Real Firestore save/fresh-client read and session-isolation checks | No production backup, retention policy or real-customer-data assurance is claimed |
+
+The retained core Python evidence is **105 passing checks**: 69 API, nine synthetic-provider, four legacy deployment, five Spark-helper and 18 live-helper tests. The final local Node run passed all six suites: 42 structural, 23 security, 29 integration, 41 workflow, 44 free-profile and 38 offline evaluator checks (217 checks total, including the evaluator rather than adding it twice). The previous full GitHub CI run passed; the final source commit triggers CI again. [Python report](submission/evidence/python-regressions.json), [actual browser proof](submission/evidence/live-ui-deployment-qa.json), [evaluation dashboard](eval-dashboard.html).
+
+A seven-day forecast holdout on synthetic history produced 1.249% WAPE against a 2.824% seasonal-naive baseline. This is a synthetic diagnostic, not current BigQuery ML execution or production forecast accuracy. There is no measured RetailIQ saving or sales uplift.
 
 ## Illustrative business case: assumptions to validate
 
@@ -136,9 +181,8 @@ There is no established RetailIQ sales uplift, stockout reduction or ranking pre
 
 **Team RetailIQ:** Abhishek Agarwal (team leader) and Vivek Sharma (team member). The presentation follows all 13 substantive template sections in order; the download-instruction page and blank end pages are omitted. [Public GitHub source](https://github.com/abhishek-0706/AI-BUILDER-CUP-2026) is verified without authentication.
 
-- [pitch-slides.pdf](pitch-slides.pdf) / [HTML presentation](pitch-slides.html): 13-slide pitch following the mandatory template's substantive section order, with speaker notes in HTML.
-- [Submission video](https://retailiq-free-20261018-7ce297.web.app/demo.html) / [final MP4](demo/RetailIQ_Abhishek_voice_demo.mp4): 3:42.44, with AI-assisted narration from the creator-provided voice sample. Recorded scenario; no live AI requests.
-- [Earlier baseline video](demo/RetailIQ_submission_walkthrough.mp4): 117-second Windows-voice version retained locally.
+- [pitch-slides.pdf](pitch-slides.pdf) / [HTML presentation](pitch-slides.html): 13-page pitch preserving the mandatory template's original vector pages, with an HTML PDF viewer.
+- [Hosted video](https://retailiq-free-20261018-7ce297.web.app/demo.html) / [repository video](demo/RetailIQ_Abhishek_voice_demo.mp4): recorded material; the owner controls the submitted video. Current live verification is documented separately.
 - [SUBMISSION_BRIEF.txt](SUBMISSION_BRIEF.txt): complete ready-to-paste description below 1,024 characters.
 - [Five form fields](submission/FORM_FIELDS.txt): verified links, final PDF metadata and the description.
 - [Template compliance](submission/TEMPLATE_COMPLIANCE.txt): original-to-final section mapping.

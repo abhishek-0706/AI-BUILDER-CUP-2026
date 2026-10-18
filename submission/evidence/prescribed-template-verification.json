@@ -1,9 +1,15 @@
 {
   "passed": true,
+  "method": "Original PDF vector underlays; original headings, prompts, logos and page geometry retained",
   "original_template_sha256": "02c17e56266dff282946aa4c5da284f35087dad0b69d85e13c4f3ad16726967f",
-  "final_pdf_sha256": "710db3596542fa5a646b81d266cb7ce3b3a4d12de35efec822ac4df992babaf3",
+  "final_pdf_sha256": "912104cbca897490f158513c91c749d3503f417acba3ee2ef32a8932fcb3f501",
   "pages": 13,
-  "bytes": 2647732,
+  "bytes": 2409406,
+  "omitted_original_pages": [
+    2,
+    15,
+    16
+  ],
   "checks": [
     {
       "page": 1,
@@ -83,5 +89,6 @@
       "original_header_and_title_pixels_identical": true,
       "all_original_prompt_text_preserved": true
     }
-  ]
+  ],
+  "limit_bytes": 5000000
 }

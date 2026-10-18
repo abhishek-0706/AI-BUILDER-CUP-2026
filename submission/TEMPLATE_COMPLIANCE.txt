@@ -1,41 +1,58 @@
-MANDATORY TEMPLATE COMPLIANCE
-Source: Submission Template _ AI Builder Cup.pdf, 16 pages.
-Final presentation: pitch-slides.pdf, 13 substantive slides.
+PRESCRIBED TEMPLATE COMPLIANCE
+Original: Submission Template _ AI Builder Cup.pdf, 16 pages, 720 x 405 points.
+Original SHA256: 02c17e56266dff282946aa4c5da284f35087dad0b69d85e13c4f3ad16726967f
+Final: pitch-slides.pdf, 13 substantive pages, 2,409,406 bytes (<5 MB).
+Final SHA256: 912104cbca897490f158513c91c749d3503f417acba3ee2ef32a8932fcb3f501
 
-The required content sections follow the template's exact order.
-Only original page 2 (download/editing instructions) and blank pages 15-16 are omitted.
-Both optional content sections are retained.
+FORMAT: ORIGINAL PDF ARTWORK RETAINED
+Original vector pages are the actual underlay, not a recreated visual theme.
+Google Cloud, AI Builder Cup and H2S branding, original headings, question prompts
+and original page geometry remain intact. Solution content fills unused body regions.
+All 13 original header/title pixel comparisons and all 13 full original-prompt text
+checks passed. Font wrapping and text-box overflow guards ran during PDF generation.
+See submission/evidence/prescribed-template-verification.json.
+Only original page 2 (download/edit instructions) and blank pages 15-16 are omitted.
+Both optional substantive sections are retained.
 
-ORIGINAL PAGE -> FINAL SLIDE -> SECTION
-01 -> 01 -> Team Details
-03 -> 02 -> Brief about the idea
-04 -> 03 -> Opportunities
-05 -> 04 -> List of features offered by the solution
-06 -> 05 -> Process flow diagram or Use-case diagram
-07 -> 06 -> Wireframes/Mock diagrams of the proposed solution (optional)
-08 -> 07 -> Architecture diagram of the proposed solution
-09 -> 08 -> Technologies to be used in the solution
-10 -> 09 -> Estimated implementation cost (optional)
-11 -> 10 -> Snapshots of the prototype
-12 -> 11 -> Prototype Performance report/Benchmarking
-13 -> 12 -> Additional Details/Future Development (if any)
-14 -> 13 -> Provide links to your:
+ORIGINAL PAGE -> FINAL PAGE -> REQUIRED CONTENT AND ANSWER
+01 -> 01 -> Team Details:
+  a. Team RetailIQ; b. Abhishek Agarwal, team leader;
+  c. Retail & Commerce: Intelligent Customer and Business Experiences.
+  Known additional member: Vivek Sharma.
+03 -> 02 -> Brief about the idea:
+  Primary rep, manager/buyer decision owners, shopper discovery and the closed loop.
+04 -> 03 -> Opportunities:
+  All three original questions remain: differentiation, how it solves the problem,
+  and USP. Separate answer columns include synthetic stock-reconciliation example.
+05 -> 04 -> List of features offered by the solution:
+  Rep shelf audit/pitch/debrief; manager Firestore review; shopper discovery.
+06 -> 05 -> Process flow diagram or Use-case diagram:
+  Connected eight-step rep-to-manager loop plus secondary shopper journey.
+07 -> 06 -> Wireframes/Mock diagrams (optional):
+  Three role surfaces and action controls; labelled explanatory wireframes.
+08 -> 07 -> Architecture diagram:
+  Actual Hosting -> Cloud Run -> Gemini path, Firestore and synthetic data source;
+  code/human guardrails and anonymous-workspace boundary explicitly identified.
+09 -> 08 -> Technologies:
+  Separate actual live services from optional BigQuery/Vertex/Storage reference code.
+10 -> 09 -> Estimated implementation cost (optional):
+  Metered cost limits, unverified actual cost and explicit assumption-based capacity
+  scenario; implementation estimate remains unmeasured and requires scoping.
+11 -> 10 -> Snapshots of the prototype:
+  Actual live rep, manager and shopper PNGs; manager record is labelled QA capture.
+12 -> 11 -> Prototype Performance report/Benchmarking:
+  Actual current-model 8/10 contract matrix with two visible failures.
+  Live API/UI proof and offline regressions are separate from model-quality claims.
+13 -> 12 -> Additional Details/Future Development:
+  Permissioned data feeds, shelf labels, enterprise identity, ERP draft handoffs,
+  expanded evaluation and a falsifiable measured pilot.
+14 -> 13 -> Links:
+  Exact public GitHub repository, existing project video URL and live product BASE URL.
 
-CONTENT CHECKS
-Team RetailIQ; Abhishek Agarwal, team leader; Vivek Sharma, team member.
-Explicit problem statement, idea, differentiation, problem-solving approach and USP.
-Feature list, process flow diagram, wireframes, architecture and distinct technology list.
-The prepared deck describes the prior static/reference profile. The newer live backend rollout is pending and is not established by the template-format checks.
-Actual prototype screenshots are embedded and labelled with synthetic-data limits.
-Software/reference benchmarks, future work and all three required links are present.
-The optional cost section labels assumptions; an engineering estimate requires scoping.
-No achieved sales uplift or stockout reduction is claimed.
-
-FORMAT AND MEDIA
-13 pages; final PDF below the five-megabyte form limit.
-All slide layouts fit at 1280 x 720; no missing image assets.
-The template calls the video field 'Demo Video Link (3 Minutes)'.
-The live submission form specifies three to four minutes.
-The final 3:42.44 video satisfies that form range; it is longer than exactly three minutes.
-No fixed slide count or mandatory visual-theme instruction appears in the extracted text.
-The form requests PDF; the template's PowerPoint download note describes its editing workflow.
+CLAIMS AND MEDIA BOUNDARY
+Synthetic catalogue, customer figures and forecasts are explicit.
+No achieved uplift, savings, general accuracy or production forecast quality is claimed.
+The original 'Demo Video Link (3 Minutes)' prompt remains unchanged.
+The form/user requirements specify three to four minutes and a working-solution video.
+Media is user-managed and excluded from this release; these template checks do not
+certify the existing video's contents, duration or alignment to the current live path.

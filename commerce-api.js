@@ -88,7 +88,18 @@ function setDataStatus(message,error=false){
   if(!el){
     el=document.createElement('div');el.id='data-status';el.setAttribute('role','status');
     el.style.cssText='padding:9px 20px;background:#edf5f3;border-bottom:1px solid #ccdcd7;font-size:12px;line-height:1.5;overflow-wrap:anywhere;position:relative;z-index:20';
-    document.querySelector('.topbar')?.after(el) || document.body.prepend(el);
+    const topbar=document.querySelector('.topbar');
+    if(topbar)topbar.after(el);else document.body.prepend(el);
+    const syncLayout=()=>{
+      const header=document.querySelector('.topbar');
+      const reserved=(header?.getBoundingClientRect().height||56)+el.getBoundingClientRect().height+4;
+      document.documentElement.style.setProperty('--workspace-header-height',Math.ceil(reserved)+'px');
+    };
+    if(typeof ResizeObserver==='function'){
+      const observer=new ResizeObserver(syncLayout);observer.observe(el);if(topbar)observer.observe(topbar);
+      window.addEventListener('pagehide',()=>observer.disconnect(),{once:true});
+    }
+    window.addEventListener('resize',syncLayout);requestAnimationFrame(syncLayout);
   }
   el.setAttribute('aria-live',error?'assertive':'polite');el.setAttribute('aria-atomic','true');
   el.textContent=message;el.style.color=error?'#b91c1c':'#22534a';
@@ -154,6 +165,7 @@ async function refreshVisitEvents(){
       ? (await RetailAPI.json('/api/visits/log?store_id='+encodeURIComponent(D.store.storeId))).events
       : readDemoEvents();
     if(request!==eventsRequest)return;
+    if(typeof renderManagerOverview==='function')renderManagerOverview(Array.isArray(events)?events:[],'ready');
     box.replaceChildren();
     const status=document.createElement('p');status.style.color='var(--text-3)';
     status.textContent=RetailAPI.enabled?'Saved visit events from server storage. Refreshes while this manager view is open.':'Demo events stored only in this browser. Other tabs on this device update automatically.';box.append(status);
@@ -183,7 +195,7 @@ async function refreshVisitEvents(){
       }
       box.append(row);
     });
-  } catch(error){if(request===eventsRequest)box.textContent='Visit events unavailable: '+error.message;}
+  } catch(error){if(request===eventsRequest){box.textContent='Visit events unavailable: '+error.message;if(typeof renderManagerOverview==='function')renderManagerOverview([],'error');}}
 }
 async function saveOrder(){
   const context=beginOperation('order-save');

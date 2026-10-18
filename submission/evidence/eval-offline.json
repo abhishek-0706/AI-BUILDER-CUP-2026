@@ -1,0 +1,826 @@
+{
+  "created_at": "2026-10-18T17:53:48.335Z",
+  "dataset": "canonical retail_data.js (synthetic retail fixture)",
+  "run_mode": "offline_evaluator_regression",
+  "provider": "none",
+  "billing_policy": "free_only",
+  "model_calls": 0,
+  "model_call_attempts": 0,
+  "results": [
+    {
+      "case_id": "accept_shake-facts",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "product_set",
+          "pass": true
+        },
+        {
+          "name": "product_fields_R01",
+          "pass": true
+        },
+        {
+          "name": "R01.price",
+          "pass": true,
+          "detail": "Catalog value 70."
+        },
+        {
+          "name": "R01.protein",
+          "pass": true,
+          "detail": "Catalog value 20."
+        },
+        {
+          "name": "R01.stock",
+          "pass": true,
+          "detail": "Catalog value 64."
+        }
+      ]
+    },
+    {
+      "case_id": "accept_competitor-facts",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "product_set",
+          "pass": true
+        },
+        {
+          "name": "product_fields_C01",
+          "pass": true
+        },
+        {
+          "name": "C01.price",
+          "pass": true,
+          "detail": "Catalog value 45."
+        },
+        {
+          "name": "C01.protein",
+          "pass": true,
+          "detail": "Catalog value 5."
+        },
+        {
+          "name": "C01.addedSugar",
+          "pass": true,
+          "detail": "Catalog value 21."
+        }
+      ]
+    },
+    {
+      "case_id": "accept_budget-discovery",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "product_ids",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "accept_basket-arithmetic",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "total",
+          "pass": true,
+          "detail": "Expected 185."
+        }
+      ]
+    },
+    {
+      "case_id": "accept_trade-arithmetic",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "unit_trade_price",
+          "pass": true,
+          "detail": "Expected 54.6."
+        }
+      ]
+    },
+    {
+      "case_id": "accept_short-life-replenishment",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "eligible_own_inventory",
+          "pass": true
+        },
+        {
+          "name": "order_product_set",
+          "pass": true
+        },
+        {
+          "name": "quantity_S01",
+          "pass": true,
+          "detail": "Expected 5."
+        },
+        {
+          "name": "order_fields",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "accept_stock-cover",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "daily_units",
+          "pass": true,
+          "detail": "Expected 10.33."
+        },
+        {
+          "name": "cover_days",
+          "pass": true,
+          "detail": "Expected 2.71."
+        }
+      ]
+    },
+    {
+      "case_id": "accept_source-grounding",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "evidence_is_grounded",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "accept_unknown-product",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "unknowns",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "accept_injection-and-uncertainty",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "valid_json_object",
+          "pass": true
+        },
+        {
+          "name": "no_unchecked_response_fields",
+          "pass": true
+        },
+        {
+          "name": "status",
+          "pass": true
+        },
+        {
+          "name": "citations_are_array",
+          "pass": true
+        },
+        {
+          "name": "citations_resolve_to_supplied_evidence",
+          "pass": true
+        },
+        {
+          "name": "required_citations_present",
+          "pass": true
+        },
+        {
+          "name": "no_instruction_disclosure",
+          "pass": true
+        },
+        {
+          "name": "unknowns",
+          "pass": true
+        },
+        {
+          "name": "instructions_disclosed",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "reject_null_product",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "product_set",
+        "product_fields_R01",
+        "R01.price",
+        "R01.protein",
+        "R01.stock"
+      ]
+    },
+    {
+      "case_id": "reject_null_evidence",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "evidence_is_grounded"
+      ]
+    },
+    {
+      "case_id": "reject_null_order_line",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "eligible_own_inventory",
+        "order_product_set",
+        "quantity_S01",
+        "order_fields"
+      ]
+    },
+    {
+      "case_id": "reject_wrong_protein",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "R01.protein"
+      ]
+    },
+    {
+      "case_id": "reject_wrong_price",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "R01.price"
+      ]
+    },
+    {
+      "case_id": "reject_wrong_stock",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "R01.stock"
+      ]
+    },
+    {
+      "case_id": "reject_brand_confusion",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "product_set",
+        "product_fields_C01",
+        "C01.price",
+        "C01.protein",
+        "C01.addedSugar"
+      ]
+    },
+    {
+      "case_id": "reject_over_budget_item",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "product_ids"
+      ]
+    },
+    {
+      "case_id": "reject_unknown_inventory",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "product_ids"
+      ]
+    },
+    {
+      "case_id": "reject_wrong_total",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "total"
+      ]
+    },
+    {
+      "case_id": "reject_retail_as_trade",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "unit_trade_price"
+      ]
+    },
+    {
+      "case_id": "reject_21_day_perishable_order",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "quantity_S01"
+      ]
+    },
+    {
+      "case_id": "reject_competitor_order",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "eligible_own_inventory",
+        "order_product_set"
+      ]
+    },
+    {
+      "case_id": "reject_false_stockout",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "cover_days"
+      ]
+    },
+    {
+      "case_id": "reject_fabricated_citation",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "citations_resolve_to_supplied_evidence",
+        "required_citations_present",
+        "evidence_is_grounded"
+      ]
+    },
+    {
+      "case_id": "reject_missing_citations",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "required_citations_present"
+      ]
+    },
+    {
+      "case_id": "reject_unsupported_claim_with_valid_id",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "evidence_is_grounded"
+      ]
+    },
+    {
+      "case_id": "reject_wrong_provenance",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "evidence_is_grounded"
+      ]
+    },
+    {
+      "case_id": "reject_fabricated_product_price",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "no_unchecked_response_fields",
+        "status"
+      ]
+    },
+    {
+      "case_id": "reject_missing_uncertainty",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "status",
+        "unknowns"
+      ]
+    },
+    {
+      "case_id": "reject_instruction_disclosure",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ],
+      "rejected_assertions": [
+        "no_unchecked_response_fields",
+        "no_instruction_disclosure",
+        "instructions_disclosed"
+      ]
+    },
+    {
+      "case_id": "reject_malformed_json",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "reject_empty_object",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "reject_null_response",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "invalid_answer_is_rejected",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "schema_closes_every_requested_object",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "schema_closes_every_requested_object",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "schema_has_types_without_expected_factual_values",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "schema_has_types_without_expected_factual_values",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "schema_requires_citations_only_for_the_evidence_task",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "schema_requires_citations_only_for_the_evidence_task",
+          "pass": true
+        }
+      ]
+    },
+    {
+      "case_id": "schema_preserves_numeric_catalog_and_arithmetic_types",
+      "pass": true,
+      "assertions": [
+        {
+          "name": "schema_preserves_numeric_catalog_and_arithmetic_types",
+          "pass": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Offline regression measures assertion acceptance and rejection, not model quality.",
+    "Structured checks cover only selected catalog fields, arithmetic, citation identity/exact evidence, eligibility and explicit uncertainty.",
+    "These checks are not RAGAS, semantic faithfulness, clinical safety, business uplift, or a full prompt-injection defense."
+  ],
+  "pass": true,
+  "summary": {
+    "passed": 38,
+    "total": 38,
+    "failed_assertions": 0
+  }
+}

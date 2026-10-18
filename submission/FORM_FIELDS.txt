@@ -1,22 +1,27 @@
 RETAILIQ - FIVE SUBMISSION FORM FIELDS
-Public review destinations were verified for the prior static release. Direct live backend checks passed; Firebase browser QA is pending. The prepared PDF below is available in source; reconfirm its hosted copy after publishing.
+Team RetailIQ: Abhishek Agarwal (leader); Vivek Sharma (member).
 
 1. PROTOTYPE / WORKING SOLUTION LINK
 https://retailiq-free-20261018-7ce297.web.app/
+Live Firebase Hosting -> Cloud Run -> Gemini / Firestore.
+Commercial catalogue, customer figures and forecasts are explicitly synthetic.
 
 2. SOLUTION PRESENTATION (PDF, MAXIMUM 5 MB)
 Upload: pitch-slides.pdf
 Hosted PDF: https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf
-Prepared local PDF: 13 prescribed-template pages; 2,647,732 bytes; below 5 MB.
+Prepared local PDF: 13 original-template pages; 2,409,406 bytes; below 5 MB.
+SHA256: 912104cbca897490f158513c91c749d3503f417acba3ee2ef32a8932fcb3f501
+Original template logos, headers and prompts retained; 26 preservation checks passed.
+Public release/hash verification is recorded separately from local preparation.
 
 3. PUBLIC GITHUB SOURCE LINK
 https://github.com/abhishek-0706/AI-BUILDER-CUP-2026
+Exact user-selected repository verified public.
 
-4. DEMO VIDEO LINK (THREE TO FOUR MINUTES)
+4. DEMO VIDEO LINK (FORM REQUIRES THREE TO FOUR MINUTES)
 https://retailiq-free-20261018-7ce297.web.app/demo.html
-Duration: 3:42.44. Public native playback and full-stream decoding passed.
-AI-assisted narration from the creator-provided voice sample; recorded scenario.
-Google Drive is administrator-blocked; this free Google-hosted player supplies the video link.
+Existing project video is user-managed and unchanged in this release.
+Video content/duration validation is separate from this deployment and deck release.
 
-5. SOLUTION DESCRIPTION (964 CHARACTERS; LIMIT 1,024)
-RetailIQ connects sensing, execution and empowerment in CPG retail. Field reps capture shelf evidence, confirm inventory gaps, prepare source-linked buyer conversations and save records for manager review. Gemini supports audits, rehearsal and discovery; code computes scores and stock-aware quantities using demand, inbound stock, case sizes and shelf life. Own-brand compliance is separate from competitor benchmarking. Buyers retain order approval. Managers inspect evidence; shoppers compare catalogue options by need, price and nutrition. The public review site offers a no-key recorded scenario. A capped Cloud Run/Firestore/free-Gemini backend passed direct checks; Firebase browser QA is pending. The implemented backend reference uses Cloud Run, Vertex AI, BigQuery/BQML, Firestore and private Cloud Storage. Commercial data is synthetic. Reports distinguish local regressions from historical cloud checks; time savings and uplift remain pilot hypotheses.
+5. SOLUTION DESCRIPTION (935 CHARACTERS; LIMIT 1,024)
+RetailIQ turns shelf evidence into accountable CPG retail actions. Field reps audit shelf photos/video with Gemini, confirm stock gaps, prepare source-linked buyer pitches and save structured visit records. Managers review workspace-scoped Firestore records; shoppers compare catalogue options by need, price and nutrition. Firebase Hosting routes the same-origin application and APIs to Cloud Run. Gemini 3.5 Flash-Lite uses a separate unbilled AI project with no paid fallback. Retail code sizes proposed orders using demand, stock, inbound, case sizes and shelf life. Buyers retain approval; orders remain drafts. Own-brand compliance is separate from competitor benchmarking. Catalogue, customer figures and forecasts are explicitly synthetic. BigQuery/Vertex are optional reference implementations, not the live data/model path. Live Gemini and Firestore checks passed; sales uplift, cost and time savings remain pilot hypotheses.

@@ -5,3 +5,5 @@
 `build_template_deck.py` reproduces that prepared deck snapshot using the original PDF, the included prototype screenshots, Python packages `pypdf` and `reportlab`, and Arial or DejaVu Sans fonts. Install those packages and run `python submission/build_template_deck.py` from the root. It writes the root PDF and an ignored `tmp/` build report; it makes no model or cloud calls. The deck snapshot predates the current live rollout; use the root README and `gcp/LIVE_DEPLOYMENT.md` for current provisioning status.
 
 Historical release reports retain their timestamps and original scope. They do not prove the pending live Cloud Run/Firestore/Gemini deployment. The final approved submission MP4 is under `demo/`; raw voice inputs, model weights, working recordings and credentials are excluded from public source.
+
+Optional deck reproduction: install pypdf, reportlab, pypdfium2 and Pillow in a separate environment, then run `python submission/build_template_deck.py`, `python submission/verify_template_deck.py` and `python submission/finalize_submission_packet.py`. These are presentation tools, not application runtime dependencies. Arial or DejaVu Sans is required.

@@ -1,0 +1,43 @@
+{
+  "mode": "local_dashboard_contract",
+  "model_calls": 0,
+  "checks": [
+    {
+      "name": "ten_actual_live_contract_rows",
+      "pass": true
+    },
+    {
+      "name": "eight_of_ten_live_results_visible",
+      "pass": true
+    },
+    {
+      "name": "two_failures_visible",
+      "pass": true
+    },
+    {
+      "name": "ten_guardrail_controls",
+      "pass": true
+    },
+    {
+      "name": "needs_review_filter_shows_two_failures",
+      "pass": true
+    },
+    {
+      "name": "passed_filter_shows_eight_cases",
+      "pass": true
+    },
+    {
+      "name": "actual_latency_values",
+      "pass": true
+    },
+    {
+      "name": "mobile_document_fits",
+      "pass": true
+    },
+    {
+      "name": "no_page_errors",
+      "pass": true
+    }
+  ],
+  "pass": true
+}

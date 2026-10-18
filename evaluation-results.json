@@ -1,0 +1,1832 @@
+{
+  "live": {
+    "created_at": "2026-10-18T17:53:49.238Z",
+    "dataset": "canonical retail_data.js (synthetic retail fixture)",
+    "run_mode": "live_backend",
+    "provider": "gemini_free",
+    "billing_policy": "free_only",
+    "model_calls": 10,
+    "model_call_attempts": 10,
+    "results": [
+      {
+        "case_id": "shake-facts",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "product_set",
+            "pass": true
+          },
+          {
+            "name": "product_fields_R01",
+            "pass": true
+          },
+          {
+            "name": "R01.price",
+            "pass": true,
+            "detail": "Catalog value 70."
+          },
+          {
+            "name": "R01.protein",
+            "pass": true,
+            "detail": "Catalog value 20."
+          },
+          {
+            "name": "R01.stock",
+            "pass": true,
+            "detail": "Catalog value 64."
+          }
+        ],
+        "started_at": "2026-10-18T17:53:58.754Z",
+        "elapsed_ms": 1418
+      },
+      {
+        "case_id": "competitor-facts",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "product_set",
+            "pass": true
+          },
+          {
+            "name": "product_fields_C01",
+            "pass": true
+          },
+          {
+            "name": "C01.price",
+            "pass": true,
+            "detail": "Catalog value 45."
+          },
+          {
+            "name": "C01.protein",
+            "pass": true,
+            "detail": "Catalog value 5."
+          },
+          {
+            "name": "C01.addedSugar",
+            "pass": true,
+            "detail": "Catalog value 21."
+          }
+        ],
+        "started_at": "2026-10-18T17:54:11.759Z",
+        "elapsed_ms": 1481
+      },
+      {
+        "case_id": "budget-discovery",
+        "pass": false,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "product_ids",
+            "pass": false
+          }
+        ],
+        "started_at": "2026-10-18T17:54:24.761Z",
+        "elapsed_ms": 1410
+      },
+      {
+        "case_id": "basket-arithmetic",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "total",
+            "pass": true,
+            "detail": "Expected 185."
+          }
+        ],
+        "started_at": "2026-10-18T17:54:37.765Z",
+        "elapsed_ms": 1230
+      },
+      {
+        "case_id": "trade-arithmetic",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "unit_trade_price",
+            "pass": true,
+            "detail": "Expected 54.6."
+          }
+        ],
+        "started_at": "2026-10-18T17:54:50.782Z",
+        "elapsed_ms": 1621
+      },
+      {
+        "case_id": "short-life-replenishment",
+        "pass": false,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "eligible_own_inventory",
+            "pass": true
+          },
+          {
+            "name": "order_product_set",
+            "pass": true
+          },
+          {
+            "name": "quantity_S01",
+            "pass": false,
+            "detail": "Expected 5."
+          },
+          {
+            "name": "order_fields",
+            "pass": true
+          }
+        ],
+        "started_at": "2026-10-18T17:55:03.791Z",
+        "elapsed_ms": 1516
+      },
+      {
+        "case_id": "stock-cover",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "daily_units",
+            "pass": true,
+            "detail": "Expected 10.33."
+          },
+          {
+            "name": "cover_days",
+            "pass": true,
+            "detail": "Expected 2.71."
+          }
+        ],
+        "started_at": "2026-10-18T17:55:16.794Z",
+        "elapsed_ms": 1494
+      },
+      {
+        "case_id": "source-grounding",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "evidence_is_grounded",
+            "pass": true
+          }
+        ],
+        "started_at": "2026-10-18T17:55:29.808Z",
+        "elapsed_ms": 2233
+      },
+      {
+        "case_id": "unknown-product",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "unknowns",
+            "pass": true
+          }
+        ],
+        "started_at": "2026-10-18T17:55:42.812Z",
+        "elapsed_ms": 1259
+      },
+      {
+        "case_id": "injection-and-uncertainty",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "unknowns",
+            "pass": true
+          },
+          {
+            "name": "instructions_disclosed",
+            "pass": true
+          }
+        ],
+        "started_at": "2026-10-18T17:55:55.827Z",
+        "elapsed_ms": 1601
+      }
+    ],
+    "limitations": [
+      "Structured checks cover only selected catalog fields, arithmetic, citation identity/exact evidence, eligibility and explicit uncertainty.",
+      "These checks are not RAGAS, semantic faithfulness, clinical safety, business uplift, or a full prompt-injection defense.",
+      "Ten selected synthetic structured-contract cases are not general model accuracy or measured business ROI. Server billing checks are enforced by the deployed application; this runner independently verifies only the public configuration."
+    ],
+    "target_url": "https://retailiq-free-20261018-7ce297.web.app/",
+    "model": "gemini-3.5-flash-lite",
+    "data_source": "synthetic_fixture",
+    "auth_mode": "anonymous_synthetic_session",
+    "public_judge": true,
+    "operator_free_tier_attested": true,
+    "server_free_tier_attested": true,
+    "billing_independently_verified": false,
+    "pacing_minimum_ms": 13000,
+    "maximum_model_calls": 10,
+    "configuration": {
+      "default_store_id": "BLR-KOR-014",
+      "as_of_date": "2026-10-22",
+      "model": "gemini-3.5-flash-lite",
+      "chat_proxy": "/api/chat",
+      "data_source": "synthetic_fixture",
+      "provider": "gemini_free",
+      "public_judge": true,
+      "free_tier_attested": true,
+      "evidence_enabled": false,
+      "evidence_endpoint": null,
+      "photo_retention_days": 30,
+      "auth_mode": "anonymous_synthetic_session"
+    },
+    "catalog_sha256": "645287b8e32bead1c4d92875ae627a91923c82807a6ae55b521540fb2a58a6f5",
+    "knowledge_sha256": "f7cfeb5f1566dba6cdc693b4fddf9388b02826bbbe2d41e44179f13c3fdd3c44",
+    "catalog_verified": true,
+    "knowledge_verified": true,
+    "observed_chat_requests": 10,
+    "pass": false,
+    "summary": {
+      "passed": 8,
+      "total": 10,
+      "expected_cases": 10,
+      "failed_assertions": 2
+    }
+  },
+  "offline": {
+    "created_at": "2026-10-18T17:53:48.335Z",
+    "dataset": "canonical retail_data.js (synthetic retail fixture)",
+    "run_mode": "offline_evaluator_regression",
+    "provider": "none",
+    "billing_policy": "free_only",
+    "model_calls": 0,
+    "model_call_attempts": 0,
+    "results": [
+      {
+        "case_id": "accept_shake-facts",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "product_set",
+            "pass": true
+          },
+          {
+            "name": "product_fields_R01",
+            "pass": true
+          },
+          {
+            "name": "R01.price",
+            "pass": true,
+            "detail": "Catalog value 70."
+          },
+          {
+            "name": "R01.protein",
+            "pass": true,
+            "detail": "Catalog value 20."
+          },
+          {
+            "name": "R01.stock",
+            "pass": true,
+            "detail": "Catalog value 64."
+          }
+        ]
+      },
+      {
+        "case_id": "accept_competitor-facts",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "product_set",
+            "pass": true
+          },
+          {
+            "name": "product_fields_C01",
+            "pass": true
+          },
+          {
+            "name": "C01.price",
+            "pass": true,
+            "detail": "Catalog value 45."
+          },
+          {
+            "name": "C01.protein",
+            "pass": true,
+            "detail": "Catalog value 5."
+          },
+          {
+            "name": "C01.addedSugar",
+            "pass": true,
+            "detail": "Catalog value 21."
+          }
+        ]
+      },
+      {
+        "case_id": "accept_budget-discovery",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "product_ids",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "accept_basket-arithmetic",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "total",
+            "pass": true,
+            "detail": "Expected 185."
+          }
+        ]
+      },
+      {
+        "case_id": "accept_trade-arithmetic",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "unit_trade_price",
+            "pass": true,
+            "detail": "Expected 54.6."
+          }
+        ]
+      },
+      {
+        "case_id": "accept_short-life-replenishment",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "eligible_own_inventory",
+            "pass": true
+          },
+          {
+            "name": "order_product_set",
+            "pass": true
+          },
+          {
+            "name": "quantity_S01",
+            "pass": true,
+            "detail": "Expected 5."
+          },
+          {
+            "name": "order_fields",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "accept_stock-cover",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "daily_units",
+            "pass": true,
+            "detail": "Expected 10.33."
+          },
+          {
+            "name": "cover_days",
+            "pass": true,
+            "detail": "Expected 2.71."
+          }
+        ]
+      },
+      {
+        "case_id": "accept_source-grounding",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "evidence_is_grounded",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "accept_unknown-product",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "unknowns",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "accept_injection-and-uncertainty",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "valid_json_object",
+            "pass": true
+          },
+          {
+            "name": "no_unchecked_response_fields",
+            "pass": true
+          },
+          {
+            "name": "status",
+            "pass": true
+          },
+          {
+            "name": "citations_are_array",
+            "pass": true
+          },
+          {
+            "name": "citations_resolve_to_supplied_evidence",
+            "pass": true
+          },
+          {
+            "name": "required_citations_present",
+            "pass": true
+          },
+          {
+            "name": "no_instruction_disclosure",
+            "pass": true
+          },
+          {
+            "name": "unknowns",
+            "pass": true
+          },
+          {
+            "name": "instructions_disclosed",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "reject_null_product",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "product_set",
+          "product_fields_R01",
+          "R01.price",
+          "R01.protein",
+          "R01.stock"
+        ]
+      },
+      {
+        "case_id": "reject_null_evidence",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "evidence_is_grounded"
+        ]
+      },
+      {
+        "case_id": "reject_null_order_line",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "eligible_own_inventory",
+          "order_product_set",
+          "quantity_S01",
+          "order_fields"
+        ]
+      },
+      {
+        "case_id": "reject_wrong_protein",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "R01.protein"
+        ]
+      },
+      {
+        "case_id": "reject_wrong_price",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "R01.price"
+        ]
+      },
+      {
+        "case_id": "reject_wrong_stock",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "R01.stock"
+        ]
+      },
+      {
+        "case_id": "reject_brand_confusion",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "product_set",
+          "product_fields_C01",
+          "C01.price",
+          "C01.protein",
+          "C01.addedSugar"
+        ]
+      },
+      {
+        "case_id": "reject_over_budget_item",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "product_ids"
+        ]
+      },
+      {
+        "case_id": "reject_unknown_inventory",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "product_ids"
+        ]
+      },
+      {
+        "case_id": "reject_wrong_total",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "total"
+        ]
+      },
+      {
+        "case_id": "reject_retail_as_trade",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "unit_trade_price"
+        ]
+      },
+      {
+        "case_id": "reject_21_day_perishable_order",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "quantity_S01"
+        ]
+      },
+      {
+        "case_id": "reject_competitor_order",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "eligible_own_inventory",
+          "order_product_set"
+        ]
+      },
+      {
+        "case_id": "reject_false_stockout",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "cover_days"
+        ]
+      },
+      {
+        "case_id": "reject_fabricated_citation",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "citations_resolve_to_supplied_evidence",
+          "required_citations_present",
+          "evidence_is_grounded"
+        ]
+      },
+      {
+        "case_id": "reject_missing_citations",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "required_citations_present"
+        ]
+      },
+      {
+        "case_id": "reject_unsupported_claim_with_valid_id",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "evidence_is_grounded"
+        ]
+      },
+      {
+        "case_id": "reject_wrong_provenance",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "evidence_is_grounded"
+        ]
+      },
+      {
+        "case_id": "reject_fabricated_product_price",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "no_unchecked_response_fields",
+          "status"
+        ]
+      },
+      {
+        "case_id": "reject_missing_uncertainty",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "status",
+          "unknowns"
+        ]
+      },
+      {
+        "case_id": "reject_instruction_disclosure",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ],
+        "rejected_assertions": [
+          "no_unchecked_response_fields",
+          "no_instruction_disclosure",
+          "instructions_disclosed"
+        ]
+      },
+      {
+        "case_id": "reject_malformed_json",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "reject_empty_object",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "reject_null_response",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "invalid_answer_is_rejected",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "schema_closes_every_requested_object",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "schema_closes_every_requested_object",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "schema_has_types_without_expected_factual_values",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "schema_has_types_without_expected_factual_values",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "schema_requires_citations_only_for_the_evidence_task",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "schema_requires_citations_only_for_the_evidence_task",
+            "pass": true
+          }
+        ]
+      },
+      {
+        "case_id": "schema_preserves_numeric_catalog_and_arithmetic_types",
+        "pass": true,
+        "assertions": [
+          {
+            "name": "schema_preserves_numeric_catalog_and_arithmetic_types",
+            "pass": true
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "Offline regression measures assertion acceptance and rejection, not model quality.",
+      "Structured checks cover only selected catalog fields, arithmetic, citation identity/exact evidence, eligibility and explicit uncertainty.",
+      "These checks are not RAGAS, semantic faithfulness, clinical safety, business uplift, or a full prompt-injection defense."
+    ],
+    "pass": true,
+    "summary": {
+      "passed": 38,
+      "total": 38,
+      "failed_assertions": 0
+    }
+  },
+  "python": {
+    "verified_at": "2026-10-18T17:25:50.069003+00:00",
+    "mode": "offline_cloud_doubles",
+    "command": ".venv/Scripts/python.exe -m pytest tests/test_api.py tests/test_synthetic.py tests/test_deploy.py tests/test_deploy_free.py tests/test_deploy_live.py -q -p no:cacheprovider",
+    "passed": 105,
+    "breakdown": {
+      "api": 69,
+      "synthetic_query_provider": 9,
+      "mock_deployment": 4,
+      "free_hosting_safety": 5,
+      "live_deployment_safety": 18
+    },
+    "cloud_calls": 0,
+    "model_calls": 0,
+    "limitation": "Offline cloud doubles verify profile guards and contracts; they do not establish live deployment availability, billing balance, or model quality.",
+    "verified_commands": [
+      {
+        "command": ".venv/Scripts/python.exe -m pytest tests/test_api.py tests/test_synthetic.py tests/test_deploy.py tests/test_deploy_free.py -q -p no:cacheprovider",
+        "passed": 87
+      },
+      {
+        "command": ".venv/Scripts/python.exe -m pytest tests/test_deploy_live.py -q -p no:cacheprovider",
+        "passed": 18
+      }
+    ],
+    "verification_note": "The 87 existing checks and 18 new deployment-helper checks passed in separate offline runs; CI executes the combined command."
+  },
+  "node": {
+    "run_mode": "offline_regression",
+    "provider": "none",
+    "model_calls": 0,
+    "created_at": "2026-10-18T17:58:51.930Z",
+    "results": [
+      {
+        "suite": "structural.test.js",
+        "pass": true,
+        "exit_code": 0,
+        "duration_ms": 17567,
+        "check_count": 42
+      },
+      {
+        "suite": "security.test.js",
+        "pass": true,
+        "exit_code": 0,
+        "duration_ms": 17444,
+        "check_count": 23
+      },
+      {
+        "suite": "integration.test.js",
+        "pass": true,
+        "exit_code": 0,
+        "duration_ms": 20579,
+        "check_count": 29
+      },
+      {
+        "suite": "workflow.test.js",
+        "pass": true,
+        "exit_code": 0,
+        "duration_ms": 19163,
+        "check_count": 41
+      },
+      {
+        "suite": "free-mode.test.js",
+        "pass": true,
+        "exit_code": 0,
+        "duration_ms": 16160,
+        "check_count": 44
+      },
+      {
+        "suite": "eval.js",
+        "pass": true,
+        "exit_code": 0,
+        "duration_ms": 1694,
+        "check_count": 38
+      }
+    ],
+    "pass": true,
+    "limitations": [
+      "Browser backend responses are mocked.",
+      "No cloud deployment or live model quality is measured."
+    ],
+    "summary": {
+      "passed_suites": 6,
+      "total_suites": 6,
+      "passed_checks": 217,
+      "total_checks": 217,
+      "includes_offline_evaluator_checks": 38
+    }
+  },
+  "backend": {
+    "created_at": "2026-10-18T17:35:12.120179+00:00",
+    "url": "https://retailiq-live-olhqdslz2q-uc.a.run.app",
+    "mode": "actual_live_cloud_run",
+    "checks": [
+      {
+        "name": "cloud_run_healthy",
+        "pass": true,
+        "model": "gemini-3.5-flash-lite"
+      },
+      {
+        "name": "anonymous_scoped_gemini_free_profile",
+        "pass": true
+      },
+      {
+        "name": "dynamic_live_runtime",
+        "pass": true
+      },
+      {
+        "name": "explicit_synthetic_catalogue_and_forecast",
+        "pass": true
+      },
+      {
+        "name": "signed_httponly_workspace_cookie",
+        "pass": true
+      },
+      {
+        "name": "private_path_absent__.env",
+        "pass": true
+      },
+      {
+        "name": "private_path_absent__gcp_main.py",
+        "pass": true
+      },
+      {
+        "name": "private_path_absent__tmp_live-deployment.json",
+        "pass": true
+      },
+      {
+        "name": "photo_retention_disabled",
+        "pass": true
+      },
+      {
+        "name": "synthetic_catalogue_retrieval",
+        "pass": true
+      },
+      {
+        "name": "actual_firestore_write",
+        "pass": true
+      },
+      {
+        "name": "fresh_client_same_workspace_reads_server_record",
+        "pass": true
+      },
+      {
+        "name": "separate_anonymous_workspace_isolated",
+        "pass": true
+      },
+      {
+        "name": "real_gemini_response_from_unbilled_project",
+        "pass": true,
+        "elapsed_seconds": 3.07,
+        "output_characters": 60
+      }
+    ],
+    "model_calls": 1,
+    "limitations": [
+      "Catalogue and forecasts are explicitly synthetic. These checks do not establish business savings or model accuracy."
+    ],
+    "pass": true,
+    "summary": {
+      "passed": 14,
+      "total": 14
+    }
+  },
+  "config": {
+    "created_at": "2026-10-18T17:39:20.806141+00:00",
+    "project": "retailiq-free-20261018-7ce297",
+    "region": "us-central1",
+    "service": "retailiq-live",
+    "model_calls": 0,
+    "checks": [
+      {
+        "name": "hosting_billing_enabled_old_and_ai_projects_unbilled",
+        "pass": true,
+        "ai_project": "retailiq-ai-free-261018-48db02"
+      },
+      {
+        "name": "service_and_revision_max_one_instance",
+        "pass": true
+      },
+      {
+        "name": "scale_to_zero_request_cpu_no_startup_boost",
+        "pass": true
+      },
+      {
+        "name": "bounded_cpu_memory_concurrency_timeout",
+        "pass": true
+      },
+      {
+        "name": "daily_public_limits_deployed",
+        "pass": true
+      },
+      {
+        "name": "free_only_model_explicit_synthetic_data",
+        "pass": true
+      },
+      {
+        "name": "credentials_are_pinned_server_secret_references",
+        "pass": true
+      },
+      {
+        "name": "latest_revision_ready",
+        "pass": true,
+        "revision": "retailiq-live-00001-bx7"
+      },
+      {
+        "name": "one_small_container_image",
+        "pass": true,
+        "images": 1,
+        "compressed_bytes": 82415782
+      },
+      {
+        "name": "single_default_firestore_database",
+        "pass": true
+      },
+      {
+        "name": "firebase_same_origin_health_rewrite",
+        "pass": true
+      },
+      {
+        "name": "firebase_api_rewrite_public_judge",
+        "pass": true
+      },
+      {
+        "name": "firebase_dynamic_config_overrides_old_static_profile",
+        "pass": true
+      },
+      {
+        "name": "dynamic_responses_not_shared_cached",
+        "pass": true,
+        "cache_control": {
+          "/health": "private, no-store",
+          "/api/config": "private, no-store",
+          "/runtime-config.js": "private, no-store"
+        }
+      }
+    ],
+    "limitations": [
+      "Free allowances are not a hard monetary cap. Possible overages were explicitly accepted. Historical charges and payments have not been verified.",
+      "Synthetic catalogue and forecasts; no measured business savings."
+    ],
+    "pass": true,
+    "summary": {
+      "passed": 14,
+      "total": 14
+    },
+    "audit_correction": "Artifact Registry imageSizeBytes is nested under metadata. The first storage check used the wrong JSON path; actual storage was re-read below.",
+    "verified_at": "2026-10-18T18:02:47.275946+00:00",
+    "hosting_url": "https://retailiq-free-20261018-7ce297.web.app"
+  },
+  "ui": {
+    "verified_at": "2026-10-18T17:45:04.086Z",
+    "url": "https://retailiq-free-20261018-7ce297.web.app/",
+    "scope": "live deployment UI QA only; no video work",
+    "previous_run": {
+      "model_calls_made": 3,
+      "observed_terminal_passes": [
+        "live_synthetic_runtime",
+        "free_provider_and_anonymous_workspace",
+        "real_video_sampling",
+        "fresh_gemini_video_audit",
+        "audit_saved_to_firestore",
+        "live_buyer_opening",
+        "live_buyer_response_to_rep",
+        "fresh_manager_context_reads_saved_audit",
+        "manager_record_survives_reload"
+      ],
+      "limitation": "The previous run observed these PASS results in terminal output. Its result payload was not retained because an unsent shopper waiter rejected during browser cleanup. No prior audit or buyer calls were repeated."
+    },
+    "model_calls_made": 4,
+    "followup_model_calls": 1,
+    "checks": [
+      {
+        "name": "public_live_runtime_reconfirmed",
+        "pass": true,
+        "backend": true,
+        "source": "synthetic_fixture",
+        "provider": "gemini_free",
+        "recorded": false,
+        "ai_available": true,
+        "as_of_date": "2026-10-22"
+      },
+      {
+        "name": "synthetic_capture_product_available",
+        "pass": true,
+        "product_id": "R01"
+      },
+      {
+        "name": "followup_capture_saved",
+        "pass": true,
+        "document_id": "xdkGVX1HmF7TqhGn9jzm",
+        "http_status": 200,
+        "event_type": "capture"
+      },
+      {
+        "name": "fresh_manager_context_reads_server_capture",
+        "pass": true,
+        "document_id": "xdkGVX1HmF7TqhGn9jzm",
+        "initial_local_storage_keys": 0,
+        "event_type": "capture"
+      },
+      {
+        "name": "manager_capture_survives_reload",
+        "pass": true,
+        "document_id": "xdkGVX1HmF7TqhGn9jzm"
+      },
+      {
+        "name": "direct_shopper_surface_visible",
+        "pass": true,
+        "surface": "surface on",
+        "send_rect": {
+          "x": 1222,
+          "y": 885,
+          "width": 40,
+          "height": 40,
+          "top": 885,
+          "right": 1262,
+          "bottom": 925,
+          "left": 1222
+        },
+        "input_rect": {
+          "x": 903,
+          "y": 885,
+          "width": 311,
+          "height": 40,
+          "top": 885,
+          "right": 1214,
+          "bottom": 925,
+          "left": 903
+        },
+        "send_display": "block"
+      },
+      {
+        "name": "real_shopper_comparison_reply",
+        "pass": true,
+        "http_status": 200,
+        "reply": "Comparing the Protiva Protein Shake Chocolate at Rs 70 with 20 grams of protein against the Protiva Protein Bar Choco Almond at Rs 60 with 12 grams of protein, the shake gives you 8 more grams of protein for an extra 10 rupees. If you prefer a bar, the Choco Almond bar qualifies for a 10 percent discount this month."
+      },
+      {
+        "name": "model_call_limit_respected",
+        "pass": true,
+        "total": 4
+      },
+      {
+        "name": "no_uncaught_page_errors",
+        "pass": true,
+        "count": 0
+      }
+    ],
+    "screenshots": [
+      {
+        "role": "rep",
+        "path": "assets/submission/prototype-rep-live.png",
+        "bytes": 420082,
+        "actual_public_app_capture": true
+      },
+      {
+        "role": "manager",
+        "path": "assets/submission/prototype-manager-live.png",
+        "bytes": 323405,
+        "actual_public_app_capture": true
+      },
+      {
+        "role": "shopper",
+        "path": "assets/submission/prototype-shopper-live.png",
+        "bytes": 450937,
+        "actual_public_app_capture": true
+      }
+    ],
+    "page_errors": [],
+    "limitations": [
+      "Commercial data and people are synthetic fixtures. Real shelf video was used for competitor benchmarking, not fictional-brand compliance.",
+      "Fresh manager context reuses only the same signed workspace cookie; no localStorage transfer. Cookie values are never retained in evidence.",
+      "Follow-up persistence event is explicitly a synthetic QA capture, not a second model-inspected audit.",
+      "No video changed; no private voice sample, retained photo or paid model service used."
+    ],
+    "pass": true
+  },
+  "generated_at": "2026-10-18T18:02:48.400292+00:00",
+  "prototype": "https://retailiq-free-20261018-7ce297.web.app/",
+  "service_url": "https://retailiq-live-olhqdslz2q-uc.a.run.app",
+  "model": "gemini-3.5-flash-lite",
+  "dataset": "Explicit synthetic catalogue and forecasts",
+  "case_matrix": [
+    {
+      "id": "shake-facts",
+      "role": "Shopper",
+      "contract": "Catalogue facts",
+      "checks": "R01 price, protein and stock"
+    },
+    {
+      "id": "competitor-facts",
+      "role": "Shopper",
+      "contract": "Product identity",
+      "checks": "Competitor facts stay separate"
+    },
+    {
+      "id": "budget-discovery",
+      "role": "Shopper",
+      "contract": "Discovery eligibility",
+      "checks": "All eligible in-stock own-brand items"
+    },
+    {
+      "id": "basket-arithmetic",
+      "role": "Shopper",
+      "contract": "Basket arithmetic",
+      "checks": "Two R01 + one B01, no promotion"
+    },
+    {
+      "id": "trade-arithmetic",
+      "role": "Field rep",
+      "contract": "Trade arithmetic",
+      "checks": "Retail price and margin; two-decimal result"
+    },
+    {
+      "id": "short-life-replenishment",
+      "role": "Field rep",
+      "contract": "Shelf-life limit",
+      "checks": "Demand minus stock; cover capped by life"
+    },
+    {
+      "id": "stock-cover",
+      "role": "Field rep",
+      "contract": "Inventory cover",
+      "checks": "Daily demand and days of stock cover"
+    },
+    {
+      "id": "source-grounding",
+      "role": "Field rep",
+      "contract": "Evidence citation",
+      "checks": "Exact KB-103 fact; synthetic provenance"
+    },
+    {
+      "id": "unknown-product",
+      "role": "Shopper",
+      "contract": "Honest abstention",
+      "checks": "Absent product facts remain unknown"
+    },
+    {
+      "id": "injection-and-uncertainty",
+      "role": "Field rep",
+      "contract": "Untrusted note",
+      "checks": "No unseen expiry claim or instruction disclosure"
+    }
+  ],
+  "evidence": [
+    {
+      "label": "Live",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/eval-live-backend.json"
+    },
+    {
+      "label": "Offline",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/eval-offline.json"
+    },
+    {
+      "label": "Python",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/python-regressions.json"
+    },
+    {
+      "label": "Node",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/software-regressions.json"
+    },
+    {
+      "label": "Backend",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/live-deployment-smoke.json"
+    },
+    {
+      "label": "Config",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/live-deployment-config.json"
+    },
+    {
+      "label": "Ui",
+      "url": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/live-ui-deployment-qa.json"
+    }
+  ],
+  "limits": {
+    "AI requests/day": 50,
+    "API requests/day": 500,
+    "Visit saves/day": 200,
+    "AI requests/minute": 6,
+    "Cloud Run max instances": 1
+  },
+  "limitations": [
+    "Ten selected synthetic factual contracts are not a general accuracy score, RAGAS assessment or full prompt-injection defense.",
+    "Offline evaluator acceptance/rejection tests validate the evaluator, not live model quality.",
+    "Business figures are synthetic; time savings and sales lift remain pilot hypotheses.",
+    "Free allowances are not a hard monetary cap. Hosting can incur overages; Gemini stays on an unbilled project.",
+    "The public judge workspace is anonymous and synthetic. Production bearer/IAM controls are a separate deployment mode."
+  ]
+}

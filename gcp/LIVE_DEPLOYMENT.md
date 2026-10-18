@@ -1,6 +1,6 @@
 # Allowance-limited live judge deployment
 
-Status: the direct Cloud Run service (https://retailiq-live-olhqdslz2q-uc.a.run.app) passed 14 actual backend checks, including real Gemini, Firestore save/read and session isolation. Same-origin Firebase publishing and browser QA are pending. Recorded walkthroughs and historical cloud results do not prove this rollout works.
+Status: the direct Cloud Run service (https://retailiq-live-olhqdslz2q-uc.a.run.app) passed 14 actual backend checks, including real Gemini, Firestore save/read and session isolation. The Firebase base URL now passed actual browser Gemini, shopper, buyer and Firestore persistence checks; see `submission/evidence/live-ui-deployment-qa.json`. The actual configuration audit passed 14/14, including `private, no-store` headers for dynamic Firebase rewrites; see `submission/evidence/live-deployment-config.json`. Recorded walkthroughs and historical cloud results do not prove this rollout works.
 
 The hosting project has explicit approval to use free-tier allowances with possible overages. These allowances are not a zero-cost guarantee. The retired project must stay unbilled. Gemini uses a separate key project whose billing must remain disabled; the runtime checks that project before every inference and fails closed on lookup failure. There is no Vertex or paid-model fallback.
 
@@ -23,3 +23,5 @@ The catalogue is an explicit synthetic snapshot, never a fallback for a failed w
 Firebase Hosting rewrites `/api/**`, `/runtime-config.js` and `/health` to Cloud Run. Its static version deliberately omits runtime-config.js because static files take priority over rewrites. Confirm the Firestore visit_events composite index is READY before manager testing.
 
 Before declaring the rollout available, verify anonymous browser bootstrap, actual Gemini output, server-side Firestore save/read after reload, session isolation and final published runtime metadata. Do not substitute recorded answers for those checks.
+
+Current selected structured-model baseline: 8/10, with budget-discovery and short-life-replenishment failures retained in `submission/evidence/eval-live-backend.json`. Offline evaluator 38/38 makes no model calls. These results are not general accuracy, RAGAS or measured ROI.

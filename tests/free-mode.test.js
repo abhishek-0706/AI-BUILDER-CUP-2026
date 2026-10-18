@@ -1,9 +1,9 @@
-﻿'use strict';
+'use strict';
 // Free-profile safety/transport regressions. All model responses are intercepted locally.
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
 const {offlineNetwork}=require('./browser-utils');
-const {assertFreeLiveOptions,assertFreeRuntime}=require('./eval-policy');
+const {assertFreeLiveOptions,assertFreeRuntime,assertFreeBackendOptions,assertFreeBackendConfig,assertFreeBackendRuntime}=require('./eval-policy');
 const url=process.env.RETAILIQ_URL||'http://localhost:5190/index.html?role=rep';
 let checks=0;
 const check=(ok,name)=>{assert.ok(ok,name);checks++;console.log('PASS '+name);};
@@ -96,6 +96,15 @@ const rejects=(action,name)=>{assert.throws(action);checks++;console.log('PASS '
   assertFreeLiveOptions({confirmed:true,key:'test-key',url:'http://127.0.0.1:5190'});
   assertFreeRuntime({backendEnabled:false,freeOnly:true,model:'gemini-3.5-flash-lite'});
   check(true,'live evaluator accepts only the explicitly attested direct free-profile contract');
+  const approvedBackend={provider:'gemini_free',model:'gemini-3.5-flash-lite',data_source:'synthetic_fixture',public_judge:true,auth_mode:'anonymous_synthetic_session',free_tier_attested:true,chat_proxy:'/api/chat'};
+  rejects(()=>assertFreeBackendOptions({confirmed:false,url:'https://example.web.app/'}),'backend evaluator requires explicit free-tier confirmation');
+  for(const target of ['http://example.test/','https://user:password@example.test/','https://example.test/?demo=recorded'])rejects(()=>assertFreeBackendOptions({confirmed:true,url:target}),'backend evaluator rejects unsafe or recorded URL '+new URL(target).hostname);
+  rejects(()=>assertFreeBackendOptions({confirmed:true,url:'https://example.web.app/',key:'test-only'}),'anonymous backend evaluator rejects an injected browser key');
+  for(const [field,value] of Object.entries({provider:'vertex',model:'gemini-3.6-flash',data_source:'bigquery',public_judge:false,auth_mode:'bearer',free_tier_attested:false,chat_proxy:'https://elsewhere.test/chat'}))rejects(()=>assertFreeBackendConfig({...approvedBackend,[field]:value}),'backend evaluator rejects mismatched '+field);
+  rejects(()=>assertFreeBackendRuntime({backendEnabled:false,ready:true,model:'gemini-3.5-flash-lite'}),'backend evaluator refuses an offline production adapter');
+  rejects(()=>assertFreeBackendRuntime({backendEnabled:true,ready:false,model:'gemini-3.5-flash-lite'}),'backend evaluator refuses an unready catalogue');
+  assertFreeBackendOptions({confirmed:true,url:'https://example.web.app/'});assertFreeBackendConfig(approvedBackend);assertFreeBackendRuntime({backendEnabled:true,ready:true,model:'gemini-3.5-flash-lite'});
+  check(true,'explicit backend evaluation accepts only the ready attested anonymous synthetic profile');
   check(errors.length===0,'no uncaught JavaScript errors: '+errors.join(', '));
   console.log(checks+' free-profile checks passed; every model response was mocked');
  }finally{await browser.close();}

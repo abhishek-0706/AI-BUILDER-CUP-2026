@@ -241,10 +241,24 @@ class LiveDeployment(SparkDeployment):
         self.ensure_firebase();site=self.ensure_site()
         files=collect_files(include_deck=True,include_demo=True)
         del files['/runtime-config.js'] # Static files precede rewrites; serve live config from Run.
+        # These two public, credential-free dashboard assets are explicit additions.
+        for asset in ('eval-dashboard.html', 'evaluation-results.json'):
+            source = ROOT / asset
+            if source.exists():
+                if source.is_symlink() or not source.resolve().is_relative_to(ROOT.resolve()):
+                    raise DeploymentError('Unsafe dashboard asset path')
+                raw = source.read_bytes()
+                if len(raw) > 8 * 1024 * 1024:
+                    raise DeploymentError('Dashboard asset exceeds the public file limit')
+                files['/' + asset] = raw
+        if sum(map(len, files.values())) > 32 * 1024 * 1024:
+            raise DeploymentError('Live bundle exceeds the bounded public bundle limit')
         run={'serviceId':SERVICE,'region':REGION}
         config={'rewrites':[{'glob':'/api/**','run':run},{'glob':'/runtime-config.js','run':run},{'glob':'/health','run':run}],
                 'headers':[{'glob':'**','headers':{'Cache-Control':'no-cache','X-Content-Type-Options':'nosniff',
-                    'Referrer-Policy':'strict-origin-when-cross-origin'}}]}
+                    'Referrer-Policy':'strict-origin-when-cross-origin'}},
+                    *[{'glob':path,'headers':{'Cache-Control':'private, no-store'}}
+                      for path in ('/api/**','/runtime-config.js','/health')]]}
         version=self.request('POST',HOSTING+'/sites/'+site+'/versions',{'config':config})
         name=version['name']
         if not re.fullmatch(r'sites/'+re.escape(site)+r'/versions/[A-Za-z0-9_-]+',name): raise DeploymentError('Invalid hosting version')

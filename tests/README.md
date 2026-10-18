@@ -122,7 +122,7 @@ Reports are written under the ignored `tmp/` directory:
 - `eval-vertex-reference-report.json`: archived Vertex reference from before the
   free-only profile; this is not evidence of free-profile model quality.
 
-Only a report explicitly labeled `live` represents model execution. Offline
+Only reports explicitly labelled `live` or `live_backend` represent model execution. Offline
 passes and cloud-double tests do not establish deployed cloud availability,
 sales uplift, time savings, or model accuracy. Measure those separately before
 making submission claims.
@@ -131,3 +131,11 @@ Audit scores are computed from one recognized verdict per assigned rule.
 Unseen rules are marked NOT VISIBLE and excluded from the judged denominator.
 Missing/unknown rules cannot produce a complete score; a fully unseen shelf is
 reported as not assessable.
+
+## Current anonymous free-backend evaluation
+
+`RETAILIQ_URL=https://retailiq-free-20261018-7ce297.web.app/ node tests/eval.js --live-backend --confirm-free-tier` is a separate explicit mode. It refuses supplied key/token environment variables, non-HTTPS or recorded URLs, incorrect provider/model/auth/data/free-tier metadata, and an unready production adapter. It compares the canonical catalogue and every KB identity/title/fact before any model call. Browser requests to direct Gemini/Vertex endpoints are blocked.
+
+The runner uses the existing production contexts, prompts, identity map and type-only schemas; expected factual answers remain assertions only. It allows at most ten observed `/api/chat` requests, starts requests at least 13 seconds apart, and stops on provider/HTTP/quota errors without retries. Wrong answers remain failed cases and do not trigger a rerun. Per-case elapsed_ms is actual wall-clock time. Partial error reports preserve completed outcomes and call counts.
+
+The 2026-10-18 current-backend baseline passed 8/10, with budget-discovery and short-life-replenishment failures retained in `submission/evidence/eval-live-backend.json`. The offline evaluator passed 38/38 in `submission/evidence/eval-offline.json`, with zero model calls. These selected synthetic structured contracts are neither RAGAS nor general model quality or business ROI. Billing metadata is attested by the public configuration; the backend independently checks the separate AI project's billing before inference. Hosting allowances may generate overages.

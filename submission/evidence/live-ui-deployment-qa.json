@@ -1,0 +1,128 @@
+{
+  "verified_at": "2026-10-18T17:45:04.086Z",
+  "url": "https://retailiq-free-20261018-7ce297.web.app/",
+  "scope": "live deployment UI QA only; no video work",
+  "previous_run": {
+    "model_calls_made": 3,
+    "observed_terminal_passes": [
+      "live_synthetic_runtime",
+      "free_provider_and_anonymous_workspace",
+      "real_video_sampling",
+      "fresh_gemini_video_audit",
+      "audit_saved_to_firestore",
+      "live_buyer_opening",
+      "live_buyer_response_to_rep",
+      "fresh_manager_context_reads_saved_audit",
+      "manager_record_survives_reload"
+    ],
+    "limitation": "The previous run observed these PASS results in terminal output. Its result payload was not retained because an unsent shopper waiter rejected during browser cleanup. No prior audit or buyer calls were repeated."
+  },
+  "model_calls_made": 4,
+  "followup_model_calls": 1,
+  "checks": [
+    {
+      "name": "public_live_runtime_reconfirmed",
+      "pass": true,
+      "backend": true,
+      "source": "synthetic_fixture",
+      "provider": "gemini_free",
+      "recorded": false,
+      "ai_available": true,
+      "as_of_date": "2026-10-22"
+    },
+    {
+      "name": "synthetic_capture_product_available",
+      "pass": true,
+      "product_id": "R01"
+    },
+    {
+      "name": "followup_capture_saved",
+      "pass": true,
+      "document_id": "xdkGVX1HmF7TqhGn9jzm",
+      "http_status": 200,
+      "event_type": "capture"
+    },
+    {
+      "name": "fresh_manager_context_reads_server_capture",
+      "pass": true,
+      "document_id": "xdkGVX1HmF7TqhGn9jzm",
+      "initial_local_storage_keys": 0,
+      "event_type": "capture"
+    },
+    {
+      "name": "manager_capture_survives_reload",
+      "pass": true,
+      "document_id": "xdkGVX1HmF7TqhGn9jzm"
+    },
+    {
+      "name": "direct_shopper_surface_visible",
+      "pass": true,
+      "surface": "surface on",
+      "send_rect": {
+        "x": 1222,
+        "y": 885,
+        "width": 40,
+        "height": 40,
+        "top": 885,
+        "right": 1262,
+        "bottom": 925,
+        "left": 1222
+      },
+      "input_rect": {
+        "x": 903,
+        "y": 885,
+        "width": 311,
+        "height": 40,
+        "top": 885,
+        "right": 1214,
+        "bottom": 925,
+        "left": 903
+      },
+      "send_display": "block"
+    },
+    {
+      "name": "real_shopper_comparison_reply",
+      "pass": true,
+      "http_status": 200,
+      "reply": "Comparing the Protiva Protein Shake Chocolate at Rs 70 with 20 grams of protein against the Protiva Protein Bar Choco Almond at Rs 60 with 12 grams of protein, the shake gives you 8 more grams of protein for an extra 10 rupees. If you prefer a bar, the Choco Almond bar qualifies for a 10 percent discount this month."
+    },
+    {
+      "name": "model_call_limit_respected",
+      "pass": true,
+      "total": 4
+    },
+    {
+      "name": "no_uncaught_page_errors",
+      "pass": true,
+      "count": 0
+    }
+  ],
+  "screenshots": [
+    {
+      "role": "rep",
+      "path": "assets/submission/prototype-rep-live.png",
+      "bytes": 420082,
+      "actual_public_app_capture": true
+    },
+    {
+      "role": "manager",
+      "path": "assets/submission/prototype-manager-live.png",
+      "bytes": 323405,
+      "actual_public_app_capture": true
+    },
+    {
+      "role": "shopper",
+      "path": "assets/submission/prototype-shopper-live.png",
+      "bytes": 450937,
+      "actual_public_app_capture": true
+    }
+  ],
+  "page_errors": [],
+  "limitations": [
+    "Commercial data and people are synthetic fixtures. Real shelf video was used for competitor benchmarking, not fictional-brand compliance.",
+    "Fresh manager context reuses only the same signed workspace cookie; no localStorage transfer. Cookie values are never retained in evidence.",
+    "Follow-up persistence event is explicitly a synthetic QA capture, not a second model-inspected audit.",
+    "No video changed; no private voice sample, retained photo or paid model service used."
+  ],
+  "pass": true
+}

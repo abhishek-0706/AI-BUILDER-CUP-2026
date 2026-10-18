@@ -1,0 +1,187 @@
+{
+  "created_at": "2026-10-18T17:58:55.187Z",
+  "mode": "offline_browser_layout",
+  "model_calls": 0,
+  "checks": [
+    {
+      "name": "1440px data banner clear of sidebar",
+      "pass": true,
+      "main": true,
+      "left": 232,
+      "right": 1440,
+      "nav": 232
+    },
+    {
+      "name": "1440px full shopper send control visible",
+      "pass": true,
+      "left": 1382,
+      "top": 844,
+      "bottom": 884,
+      "right": 1422,
+      "overflow": false
+    },
+    {
+      "name": "1440px keyboard focuses send",
+      "pass": true
+    },
+    {
+      "name": "1440px manager cards and header contained",
+      "pass": true,
+      "cards": 3,
+      "source": "Synthetic catalogue snapshot dated 2026-10-22. Visit counts below use this browser only. Stock records do not prove on-shelf availability.",
+      "overflow": false,
+      "crumb": {
+        "x": 256,
+        "y": 9.375,
+        "width": 139.546875,
+        "height": 43.25,
+        "top": 9.375,
+        "right": 395.546875,
+        "bottom": 52.625,
+        "left": 256
+      },
+      "header": {
+        "x": 232,
+        "y": 3,
+        "width": 1208,
+        "height": 56,
+        "top": 3,
+        "right": 1440,
+        "bottom": 59,
+        "left": 232
+      }
+    },
+    {
+      "name": "manager counts only proposed orders from latest loaded records",
+      "pass": true,
+      "counts": [
+        "2",
+        "3",
+        "1"
+      ]
+    },
+    {
+      "name": "unavailable visit data stays visibly unavailable",
+      "pass": true,
+      "counts": [
+        "2",
+        "—",
+        "—"
+      ]
+    },
+    {
+      "name": "1280px data banner clear of sidebar",
+      "pass": true,
+      "main": true,
+      "left": 232,
+      "right": 1280,
+      "nav": 232
+    },
+    {
+      "name": "1280px full shopper send control visible",
+      "pass": true,
+      "left": 1222,
+      "top": 844,
+      "bottom": 884,
+      "right": 1262,
+      "overflow": false
+    },
+    {
+      "name": "1280px keyboard focuses send",
+      "pass": true
+    },
+    {
+      "name": "1280px manager cards and header contained",
+      "pass": true,
+      "cards": 3,
+      "source": "Synthetic catalogue snapshot dated 2026-10-22. Visit counts below use this browser only. Stock records do not prove on-shelf availability.",
+      "overflow": false,
+      "crumb": {
+        "x": 256,
+        "y": 9.375,
+        "width": 139.546875,
+        "height": 43.25,
+        "top": 9.375,
+        "right": 395.546875,
+        "bottom": 52.625,
+        "left": 256
+      },
+      "header": {
+        "x": 232,
+        "y": 3,
+        "width": 1048,
+        "height": 56,
+        "top": 3,
+        "right": 1280,
+        "bottom": 59,
+        "left": 232
+      }
+    },
+    {
+      "name": "390px data banner clear of sidebar",
+      "pass": true,
+      "main": true,
+      "left": 0,
+      "right": 390,
+      "nav": 0
+    },
+    {
+      "name": "390px full shopper send control visible",
+      "pass": true,
+      "left": 332,
+      "top": 792.203125,
+      "bottom": 832.203125,
+      "right": 372,
+      "overflow": false
+    },
+    {
+      "name": "390px keyboard focuses send",
+      "pass": true
+    },
+    {
+      "name": "390px manager cards and header contained",
+      "pass": true,
+      "cards": 3,
+      "source": "Synthetic catalogue snapshot dated 2026-10-22. Visit counts below use this browser only. Stock records do not prove on-shelf availability.",
+      "overflow": false,
+      "crumb": {
+        "x": 12,
+        "y": 20,
+        "width": 107.28125,
+        "height": 22,
+        "top": 20,
+        "right": 119.28125,
+        "bottom": 42,
+        "left": 12
+      },
+      "header": {
+        "x": 0,
+        "y": 3,
+        "width": 390,
+        "height": 56,
+        "top": 3,
+        "right": 390,
+        "bottom": 59,
+        "left": 0
+      }
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true
+    }
+  ],
+  "page_errors": [],
+  "pass": true,
+  "sources": [
+    {
+      "path": "index.html",
+      "bytes": 279089,
+      "sha256": "2f584f986cc540a083fdfce7c39d3fcb775c26d3284a493c7e777c83a83a18ba"
+    },
+    {
+      "path": "commerce-api.js",
+      "bytes": 16844,
+      "sha256": "200061f06d18115e5c79e71c40bb894e021a07c82e6460ed63c753d4049e0269"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ COPY gcp/main.py gcp/queries.sql gcp/fixtures.py gcp/synthetic.py ./
 
 # Static frontend bundle
 COPY index.html retail_data.js runtime-config.js commerce-api.js ./static/
+COPY eval-dashboard.html evaluation-results.json ./static/
 COPY assets/ ./static/assets/
 COPY brand/ ./static/brand/
 # One small reference still supports the guided demo; no videos or tooling.

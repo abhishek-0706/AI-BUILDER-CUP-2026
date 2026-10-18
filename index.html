@@ -1175,6 +1175,38 @@ body.splash-on{overflow:hidden}
 .nav-switch:hover{background:rgba(255,255,255,.12);color:#fff}
 .nav-switch svg{width:14px;height:14px;fill:none;stroke:var(--lime);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
+
+/* Manager priorities and viewport-safe shopper controls */
+.manager-overview{margin:0 0 22px}
+.manager-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.manager-heading h2{font-size:24px;letter-spacing:-.6px;line-height:1.2}
+.manager-kicker{font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--primary);margin-bottom:5px}
+.manager-verify{font-size:12px;font-weight:650;color:var(--primary);border:1px solid var(--primary-100);border-radius:999px;padding:8px 13px;background:white;text-decoration:none}
+.manager-verify:hover{background:var(--primary-50)}
+.manager-provenance{font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:14px}
+.manager-priorities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.manager-priority{min-width:0;padding:18px;border:1px solid var(--border);border-radius:14px;background:#fff;box-shadow:var(--sh-1);display:flex;flex-direction:column}
+.manager-priority:first-child{border-top:3px solid var(--warning)}
+.manager-priority:nth-child(2){border-top:3px solid var(--primary)}
+.manager-priority:nth-child(3){border-top:3px solid #9b1c5c}
+.manager-priority h3{font-size:13px;margin:0 0 8px}
+.manager-number{font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:4px;font-variant-numeric:tabular-nums}
+.manager-priority p{font-size:12px;color:var(--text-2);line-height:1.6;margin:0 0 10px}
+.manager-priority a{color:var(--primary);font-size:12px;font-weight:700;margin-top:auto;text-decoration:none}
+.manager-priority a:hover{text-decoration:underline}
+.manager-stock-item{font-size:11.5px;line-height:1.5;border-top:1px solid var(--line);padding:7px 0}
+.manager-stock-item b{display:block;color:var(--text);font-weight:650;overflow-wrap:anywhere}
+.manager-stock-item span{color:var(--text-2)}
+.manager-section-label{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:20px 0 10px;font-size:15px;font-weight:750}
+.manager-section-label span{font-size:11.5px;font-weight:450;color:var(--text-2)}
+#data-status{flex-shrink:0}
+.chat-panel{min-height:0;height:calc(100vh - var(--workspace-header-height,110px));height:calc(100dvh - var(--workspace-header-height,110px))}
+.chat-body{min-height:0}
+.chat-head,.chat-panel .suggest,.chat-panel>.chat-input{flex-shrink:0}
+@media(max-width:1240px){.chat-panel{height:560px;max-height:calc(100dvh - 64px)}}
+@media(max-width:900px){.manager-priorities{grid-template-columns:1fr}.manager-number{font-size:27px}.manager-heading h2{font-size:22px}}
+@media(max-width:640px){.topbar .crumb span{display:none}.topbar .crumb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.topbar .crumb{flex:1}.topbar>.spacer{display:none}}
+
 /* Shelf action workflow and contained small-screen layouts */
 #mobile-role{display:none;padding:8px;border:1px solid #668e85;border-radius:6px;background:#093f36;color:white;font:inherit;font-size:12px}
 @media(max-width:1024px){#mobile-role{display:block}.topbar{gap:8px}.topbar .crumb{min-width:0}.topbar .crumb b{font-size:14px}}
@@ -1614,6 +1646,12 @@ body.splash-on{overflow:hidden}
       <div class="bh-range" id="biz-range"></div>
     </div>
 
+    <section class="manager-overview" aria-labelledby="manager-title">
+      <div class="manager-heading"><div><div class="manager-kicker">Manager workspace</div><h2 id="manager-title">What needs attention next?</h2></div><a class="manager-verify" href="/eval-dashboard.html">Verification dashboard &rarr;</a></div>
+      <p class="manager-provenance" id="manager-provenance"></p>
+      <div class="manager-priorities" id="manager-priorities"></div>
+    </section>
+    <div class="manager-section-label">Store snapshot <span>Synthetic commercial KPIs; not measured product impact</span></div>
     <div class="kpi-row" id="kpi-row"></div>
 
     <!-- AI Analyst -->
@@ -1634,8 +1672,8 @@ body.splash-on{overflow:hidden}
 
     <!-- TEAM / REP PERFORMANCE -->
     <div class="card" style="margin-bottom:16px">
-      <h3>Team performance and coverage</h3>
-      <div class="cap">Rep-wise view for the territory manager. Coverage is outlets visited at least once
+      <h3 id="manager-team">Team reference and coaching</h3>
+      <div class="cap">Synthetic team reference for the territory manager. Coverage is outlets visited at least once
         this cycle against outlets owned, so a rep hitting quota on half their territory shows up as a risk, not a win.</div>
       <div class="team-head">
         <span>Rep</span><span>Quota</span><span>Coverage</span><span>Sales per visit</span>
@@ -1656,7 +1694,7 @@ body.splash-on{overflow:hidden}
         <div class="chart-scroll"><div class="bars" id="rev-bars"></div></div>
       </div>
       <div class="card">
-        <h3>Inventory alerts</h3>
+        <h3 id="manager-inventory">Inventory watchlist</h3>
         <div class="cap">Products at or below their reorder level, ranked by urgency.</div>
         <div id="alerts-list"></div>
       </div>
@@ -1665,12 +1703,12 @@ body.splash-on{overflow:hidden}
     <div class="grid3">
       <div class="card">
         <h3>Customer segments</h3>
-        <div class="cap">Behavioural clusters from transaction history.</div>
+        <div class="cap">Illustrative synthetic behavioural clusters, not production customer data.</div>
         <div id="seg-list"></div>
       </div>
       <div class="card">
         <h3>Active promotions</h3>
-        <div class="cap">Running campaigns and measured category uplift.</div>
+        <div class="cap">Catalogue campaigns; uplift figures are synthetic demo assumptions.</div>
         <div id="promo-list"></div>
       </div>
       <div class="card">
@@ -2553,13 +2591,35 @@ function askSuggest(el){
 }
 
 /* ── Renderers: Business ────────────────────────────────── */
+
+let managerVisitSnapshot={storeId:null,events:[],state:'loading'};
+function renderManagerOverview(events,state){
+  const box=document.getElementById('manager-priorities');if(!box)return;
+  if(Array.isArray(events))managerVisitSnapshot={storeId:D.store.storeId,events:events.slice(0,20),state:state||'ready'};
+  const loaded=managerVisitSnapshot.storeId===D.store.storeId;
+  const records=loaded?managerVisitSnapshot.events:[];
+  const ready=loaded&&managerVisitSnapshot.state==='ready';
+  const failed=loaded&&managerVisitSnapshot.state==='error';
+  const low=D.products.filter(p=>p.active!==false&&p.id!=='OTHER'&&Number(p.stock)<=Number(p.reorderAt)).sort((a,b)=>(a.stock/Math.max(1,a.reorderAt))-(b.stock/Math.max(1,b.reorderAt)));
+  const orders=records.filter(e=>e.event_type==='order'&&e.metadata?.status==='proposed');
+  const audits=records.filter(e=>e.event_type==='audit');
+  const source=(D.dataIsSynthetic||RetailAPI.dataSource==='synthetic_fixture'||!RetailAPI.enabled)?'Synthetic catalogue snapshot':'Loaded catalogue snapshot';
+  document.getElementById('manager-provenance').textContent=source+' dated '+D.asOfDate+'. '+(RetailAPI.enabled?'Visit counts below use the latest 20 saved records in this authorized workspace.':'Visit counts below use this browser only.')+' Stock records do not prove on-shelf availability.';
+  const rows=low.slice(0,3).map(p=>'<div class="manager-stock-item"><b>'+esc(p.name)+'</b><span>'+esc(p.stock)+' units in system / reorder level '+esc(p.reorderAt)+'</span></div>').join('');
+  const waiting=failed?'Visit records unavailable. Retry refresh below.':'Loading saved visit records...';
+  box.innerHTML='<article class="manager-priority"><h3>01 / Stock risk</h3><div class="manager-number">'+low.length+'</div><p>Tracked products at or below reorder level. Verify sellable stock before replenishing.</p>'+rows+'<a href="#manager-inventory">Inspect inventory watchlist &darr;</a></article>'+
+    '<article class="manager-priority"><h3>02 / Visit follow-up</h3><div class="manager-number">'+(ready?records.length:'&mdash;')+'</div><p>'+(ready?audits.length+' saved audits in the latest '+records.length+' visit records. Review the originating evidence and agree who closes the next action.':waiting)+'</p><a href="#recent-events">Review saved visits &darr;</a></article>'+
+    '<article class="manager-priority"><h3>03 / Human review</h3><div class="manager-number">'+(ready?orders.length:'&mdash;')+'</div><p>'+(ready?'Saved proposed orders in the latest records. Buyer approval remains pending; no purchasing-system order has been placed.':waiting)+'</p><a href="#recent-events">Review draft proposals &darr;</a></article>';
+}
+
 function renderKPIs(){
+  renderManagerOverview();
   const k = D.kpis;
   const today = D.revenueWeek[D.revenueWeek.length-1];
   const basket = Math.round(today.revenue / today.transactions);
   const pct = ((today.revenue - k.revenueTarget) / k.revenueTarget * 100).toFixed(1);
   const cards = [
-    { c: today.revenue >= k.revenueTarget ? 'g' : 'r', lbl:'Revenue Today',
+    { c: today.revenue >= k.revenueTarget ? 'g' : 'r', lbl:'Snapshot Revenue',
       val:inr(today.revenue),
       sub:`<b class="${today.revenue >= k.revenueTarget ? 'up' : 'dn'}">${today.revenue >= k.revenueTarget ? '▲' : '▼'} ${Math.abs(pct)}%</b> against target` },
     { c:'',  lbl:'Average Basket', val:inr(basket), sub:`across ${esc(today.transactions)} transactions` },

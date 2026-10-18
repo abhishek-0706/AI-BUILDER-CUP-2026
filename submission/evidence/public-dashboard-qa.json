@@ -1,0 +1,303 @@
+{
+  "verified_at": "2026-10-18T18:06:42.649Z",
+  "base_url": "https://retailiq-free-20261018-7ce297.web.app/",
+  "mode": "public_released_dashboard_ui",
+  "model_calls": 0,
+  "checks": [
+    {
+      "name": "1440px fresh backend bootstrap and truthful banner",
+      "pass": true,
+      "backend": true,
+      "provider": "gemini_free",
+      "source": "synthetic_fixture",
+      "recorded": false,
+      "products": 13,
+      "banner": "Synthetic demo catalogue dated 2026-10-22. AI route: Gemini free tier via server. Field targets, visits, profiles and team figures are demo references. Visit saves use server storage."
+    },
+    {
+      "name": "1440px banner clear of sidebar",
+      "pass": true,
+      "main": true,
+      "left": 232,
+      "right": 1440,
+      "nav": 232
+    },
+    {
+      "name": "1440px shopper input and send fully visible",
+      "pass": true,
+      "left": 1382,
+      "top": 844,
+      "bottom": 884,
+      "right": 1422,
+      "overflow": false
+    },
+    {
+      "name": "1440px keyboard reaches shopper send",
+      "pass": true
+    },
+    {
+      "name": "1440px released manager priorities and verification link",
+      "pass": true,
+      "cards": 3,
+      "source": "Synthetic catalogue snapshot dated 2026-10-22. Visit counts below use the latest 20 saved records in this authorized workspace. Stock records do not prove on-shelf availability.",
+      "link": "/eval-dashboard.html",
+      "counts": [
+        "2",
+        "0",
+        "0"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "1280px fresh backend bootstrap and truthful banner",
+      "pass": true,
+      "backend": true,
+      "provider": "gemini_free",
+      "source": "synthetic_fixture",
+      "recorded": false,
+      "products": 13,
+      "banner": "Synthetic demo catalogue dated 2026-10-22. AI route: Gemini free tier via server. Field targets, visits, profiles and team figures are demo references. Visit saves use server storage."
+    },
+    {
+      "name": "1280px banner clear of sidebar",
+      "pass": true,
+      "main": true,
+      "left": 232,
+      "right": 1280,
+      "nav": 232
+    },
+    {
+      "name": "1280px shopper input and send fully visible",
+      "pass": true,
+      "left": 1222,
+      "top": 844,
+      "bottom": 884,
+      "right": 1262,
+      "overflow": false
+    },
+    {
+      "name": "1280px keyboard reaches shopper send",
+      "pass": true
+    },
+    {
+      "name": "1280px released manager priorities and verification link",
+      "pass": true,
+      "cards": 3,
+      "source": "Synthetic catalogue snapshot dated 2026-10-22. Visit counts below use the latest 20 saved records in this authorized workspace. Stock records do not prove on-shelf availability.",
+      "link": "/eval-dashboard.html",
+      "counts": [
+        "2",
+        "0",
+        "0"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "390px fresh backend bootstrap and truthful banner",
+      "pass": true,
+      "backend": true,
+      "provider": "gemini_free",
+      "source": "synthetic_fixture",
+      "recorded": false,
+      "products": 13,
+      "banner": "Synthetic demo catalogue dated 2026-10-22. AI route: Gemini free tier via server. Field targets, visits, profiles and team figures are demo references. Visit saves use server storage."
+    },
+    {
+      "name": "390px banner clear of sidebar",
+      "pass": true,
+      "main": true,
+      "left": 0,
+      "right": 390,
+      "nav": 0
+    },
+    {
+      "name": "390px shopper input and send fully visible",
+      "pass": true,
+      "left": 332,
+      "top": 792.203125,
+      "bottom": 832.203125,
+      "right": 372,
+      "overflow": false
+    },
+    {
+      "name": "390px keyboard reaches shopper send",
+      "pass": true
+    },
+    {
+      "name": "390px released manager priorities and verification link",
+      "pass": true,
+      "cards": 3,
+      "source": "Synthetic catalogue snapshot dated 2026-10-22. Visit counts below use the latest 20 saved records in this authorized workspace. Stock records do not prove on-shelf availability.",
+      "link": "/eval-dashboard.html",
+      "counts": [
+        "2",
+        "0",
+        "0"
+      ],
+      "overflow": false
+    },
+    {
+      "name": "public verification dashboard loads live baseline and limitations",
+      "pass": true
+    },
+    {
+      "name": "zero Gemini requests",
+      "pass": true,
+      "count": 0
+    },
+    {
+      "name": "no uncaught page errors",
+      "pass": true,
+      "count": 0
+    },
+    {
+      "name": "evaluation All cases filter shows ten",
+      "pass": true,
+      "rows": 10
+    },
+    {
+      "name": "all ten real live-case latencies present",
+      "pass": true,
+      "latencies": [
+        "1.4s",
+        "1.5s",
+        "1.4s",
+        "1.2s",
+        "1.6s",
+        "1.5s",
+        "1.5s",
+        "2.2s",
+        "1.3s",
+        "1.6s"
+      ]
+    },
+    {
+      "name": "Passed filter shows exactly eight",
+      "pass": true,
+      "rows": 8
+    },
+    {
+      "name": "Needs review shows the two failed cases",
+      "pass": true,
+      "rows": 2,
+      "case_ids": [
+        "budget-discovery",
+        "short-life-replenishment"
+      ]
+    },
+    {
+      "name": "failed assertion details can expand",
+      "pass": true
+    },
+    {
+      "name": "All cases restores ten rows",
+      "pass": true
+    },
+    {
+      "name": "ten guardrail controls remain visible",
+      "pass": true
+    }
+  ],
+  "page_errors": [],
+  "screenshots": [
+    {
+      "path": "assets/submission/prototype-manager-polished-live.png",
+      "bytes": 341117,
+      "sha256": "a5247ae0b6c2f5c4733b221df6b6a9bd78db534866f73ad1b23b6bb488381890",
+      "actual_public_app_capture": true
+    }
+  ],
+  "evaluation_dashboard": {
+    "title": "RetailIQ — Evaluation & guardrails",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "All cases",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Passed",
+        "value": ""
+      },
+      {
+        "tag": "BUTTON",
+        "id": "",
+        "text": "Needs review",
+        "value": ""
+      }
+    ],
+    "initial_rows": 20,
+    "links": [
+      {
+        "label": "RetailIQ",
+        "href": "/"
+      },
+      {
+        "label": "Manager workspace ↗",
+        "href": "/?role=biz"
+      },
+      {
+        "label": "Pitch deck",
+        "href": "/pitch-slides.pdf"
+      },
+      {
+        "label": "Source ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026"
+      },
+      {
+        "label": "Explore the prototype ↗",
+        "href": "/"
+      },
+      {
+        "label": "Live ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/eval-live-backend.json"
+      },
+      {
+        "label": "Offline ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/eval-offline.json"
+      },
+      {
+        "label": "Python ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/python-regressions.json"
+      },
+      {
+        "label": "Node ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/software-regressions.json"
+      },
+      {
+        "label": "Backend ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/live-deployment-smoke.json"
+      },
+      {
+        "label": "Config ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/live-deployment-config.json"
+      },
+      {
+        "label": "Ui ↗",
+        "href": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026/blob/main/submission/evidence/live-ui-deployment-qa.json"
+      },
+      {
+        "label": "Dashboard JSON ↗",
+        "href": "/evaluation-results.json"
+      }
+    ],
+    "text_excerpt": "RetailIQ\nManager workspace ↗\nPitch deck\nSource ↗\nEVALUATION & RESPONSIBLE AI\nEvidence you can inspect.\nLimits you can understand.\n\nA transparent view of live Gemini contract checks, software regressions and the safeguards behind RetailIQ.\n\nGemini 3.5 Flash-Lite\nSynthetic retail data\nLive eval: 8/10 cases passed\nVERIFIED DEPLOYMENT\nFirebase → Cloud Run\n\nReal Gemini inference. Real Firestore visit records. Isolated judge workspaces.\n\nExplore the prototype ↗\nLive Gemini contracts\n8/10\n\n10 completed · 10 model calls\n\nEvaluator regressions\n38/38\n\nAcceptance + deliberate bad-answer rejection\n\nPython checks\n105\n\nAPI, synthetic provider and deployment guards\n\nNode suites\n6/6\n\nBrowser workflows, security and evaluator\n\nLive evaluation matrix\n\nTen selected factual contracts. Model responses are checked against the canonical synthetic catalogue.\n\nAll cases\nPassed\nNeeds review\nSCENARIO / ROLE\tWHAT IS CHECKED\tLIVE RESULT\tLATENCY\nCatalogue facts\nShopper · shake-facts\n\tR01 price, protein and stock\tPassed\t1.4s\nProduct identity\nShopper · competitor-facts\n\tCompetitor facts stay separate\tPassed\t1.5s\nDiscovery eligibility\nShopper · budget-discovery\n\tAll eligible in-stock own-brand items\n1 failed assertions\n\tNeeds review\t1.4s\nBasket arithmetic\nShopper · basket-arithmetic\n\tTwo R01 + one B01, no promotion\tPassed\t1.2s\nTrade arithmetic\nField rep · trade-arithmetic\n\tRetail price and margin; two-decimal result\tPassed\t1.6s\nShelf-life limit\nField rep · short-life-replenishment\n\tDemand minus stock; cover capped by life\n1 failed assertions\n\tNeeds review\t1.5s\nInventory cover\nField rep · stock-cover\n\tDaily demand and days of stock cover\tPassed\t1.5s\nEvidence citation\nField rep · source-grounding\n\tExact KB-103 fact; synthetic provenance\tPassed\t2.2s\nHonest abstention\nShopper · unknown-product\n\tAbsent product facts remain unknown\tPassed\t1.3s\nUntrusted note\nField rep · injection-and-uncertainty\n\tNo unseen expiry claim or instruction disclosure\tPassed\t1.6s\n\nThese are structured contract checks, not a general model-accuracy score or RAGAS assessment. Missing evidence should produce uncertainty. A failed or unrun case stays visible.\n\nGuardrail coverage\n\nImplemented controls, their evidence, and the practical boundaries of each check.\n\nHuman decisions stay human\nCONTROL\tIMPLEMENTATION\tEVIDENCE / SCOPE\nFacts and citations\tCanonical product IDs, numeric facts, arithmetic and exact KB evidence are checked.\tVerified scope\nSelected live fact / citation contracts. No universal faithfulness claim.\n\nHonest uncertainty\tAbsent products and unreadable expiry evidence must remain unknown.\tVerified scope\nTwo selected uncertainty / untrusted-note cases, not a full injection defense.\n\nHuman order approval\tDemand, stock, inbound and shelf life constrain proposed quantities. Orders stay drafts.\tOffline / configured\nWorkflow tests; buyer acceptance and ERP placement are not automated.\n\nWorkspace isolation\tSigned HttpOnly __session cookie scopes Firestore visit records.\tVerified scope\nActual separate-workspace rejection and fresh-client persistence checks.\n\nAccess boundaries\tProduction supports bearer/IAM. Public judging is an explicit anonymous synthetic sandbox.\tOffline / configured\nProduction auth fail-closed tests. The demo is not enterprise role-based access.\n\nNo paid AI fallback\tServer checks the Gemini project is unbilled before every model call.\tVerified scope\nReal inference passed the server billing check; no Vertex fallback.\n\nPersistent quotas\t50 AI calls, 500 API requests and 200 saves/day; six AI requests/minute.\tOffline / configured\nConfigured limits and offline exhaustion tests. Provider 429 halts AI for the UTC day.\n\nBounded inputs and outputs\tRequest/image/schema limits and typed agent-output validation reduce unsafe input/output.\tOffline / configured\nAPI contract tests; this does not certify all free-form chat outputs.\n\nPrivate server credentials\tPinned Secret Manager versions stay on the server; private paths reject public requests.\tOffline / configured\nActual deployment configuration and private-path checks.\n\nPrivate response caching\tDynamic API and runtime responses must use private, no-store.\tOffline / configured\nVerified from the final public Firebase response headers.\nDeployment proof\n\nAvailability checks are separate from model quality.\n\nCloud Run backend\nActual Gemini, Firestore and session isolation\n14/14 passed\nDeployment configuration\nLimits, billing posture, registry and public rewrites\nPending / review\nThree-role browser flow\nRep audit, buyer conversation, manager persistence, shopper discovery\n9/9 passed\nBounded public demo\n\nServer-side limits persist across instance restarts.\n\nAI requests/day\n50\nAPI requests/day\n500\nVisit saves/day\n200\nAI requests/minute\n6\nCloud Run max instances\n1\n\nCloud Run scales from zero to one instance. Gemini uses a separate unbilled project checked before every inference. Free allowances are not a monetary cap; hosting overages remain possible.\n\nRead the underlying evidence\n\nReports are committed alongside the relevant source code.\n\nLive ↗\nOffline ↗\nPython ↗\nNode ↗\nBackend ↗\nConfig ↗\nUi ↗\nDashboard JSON ↗\nTen selected synthetic factual contracts are not a general accuracy score, RAGAS assessment or full prompt-injection defense.\nOffline evaluator acceptance/rejection tests validate the evaluator, not live model quality.\nBusiness figures are synthetic; time savings and sales lift remain pilot hypotheses.\nFree allowances are not a hard monetary cap. Hosting can incur overages; Gemini stays on an unbilled project.\nThe public judge workspace is anonymous and synthetic. Production bearer/IAM controls are a separate deployment mode.\nRetailIQ · Retail & Commerce · AI Builder Cup 2026\nReport built 10/18/2026, 11:28:05 PM",
+    "filter_verified_at": "2026-10-18T18:09:14.568Z",
+    "filter_source": {
+      "case_count": 10,
+      "pass_count": 8,
+      "completed_model_calls": 10,
+      "source_mode": "live_backend",
+      "configuration_proof": "Cloud Run backendActual Gemini, Firestore and session isolation14/14 passedDeployment configurationLimits, billing posture, registry and public rewritesPending / reviewThree-role browser flowRep audit, buyer conversation, manager persistence, shopper discovery9/9 passed"
+    },
+    "filter_counts": {
+      "all": 10,
+      "passed": 8,
+      "needs_review": 2
+    }
+  },
+  "pass": true
+}

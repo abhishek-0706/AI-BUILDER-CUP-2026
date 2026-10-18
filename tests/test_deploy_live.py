@@ -109,6 +109,11 @@ def test_publish_omits_static_runtime_and_uses_same_origin_run_rewrites(deployme
     config=requests[0][2]['config'];rewrites={r['glob']:r['run'] for r in config['rewrites']}
     assert set(rewrites)=={'/api/**','/runtime-config.js','/health'}
     assert all(run=={'serviceId':'retailiq-live','region':'us-central1'} for run in rewrites.values())
+    header_rules=config['headers']
+    assert header_rules[0]['glob']=='**' and header_rules[0]['headers']['Cache-Control']=='no-cache'
+    # Hosting applies matching headers in order; private routes must override the global static policy.
+    assert [rule['glob'] for rule in header_rules[-3:]]==['/api/**','/runtime-config.js','/health']
+    assert all(rule['headers']['Cache-Control']=='private, no-store' for rule in header_rules[-3:])
 
 
 def test_secret_values_never_enter_cli_or_saved_state(deployment,monkeypatch):

@@ -1,40 +1,77 @@
 {
-  "verified_at": "2026-10-18T16:35:06.971Z",
+  "prepared_at": "2026-10-18T18:02:12.907115+00:00",
+  "scope": "local final non-media artifacts; publication byte matching recorded separately",
   "template_substantive_sections": 13,
   "pdf_below_5MB": true,
-  "video_duration_seconds": 222.44,
+  "description_characters": 935,
+  "description_file_characters": 936,
+  "current_model_evaluation": {
+    "passed": 8,
+    "total": 10,
+    "model_calls": 10,
+    "report": "submission/evidence/eval-live-backend.json"
+  },
   "public_repository": "https://github.com/abhishek-0706/AI-BUILDER-CUP-2026",
-  "repository_private": false,
   "artifacts": [
     {
-      "path": "pitch-slides.html",
-      "http": 200,
-      "bytes": 38908,
-      "sha256": "ea3af9f304b76c9c06d3e6cabc99a845960e4f48354c7846af37d311293f367e"
-    },
-    {
       "path": "pitch-slides.pdf",
-      "http": 200,
-      "bytes": 1482018,
-      "sha256": "6adc59272a0d31954630abea66aca59c944471227d135c7f3ee36f07087290b4"
+      "bytes": 2409406,
+      "sha256": "912104cbca897490f158513c91c749d3503f417acba3ee2ef32a8932fcb3f501"
     },
     {
-      "path": "assets/submission/prototype-manager.png",
-      "http": 200,
-      "bytes": 361388,
-      "sha256": "7c45cacd2ae40737bf0975c15de42404f28b2fbcddafea2b0fc496fa02aabd8b"
+      "path": "pitch-slides.html",
+      "bytes": 1661,
+      "sha256": "6a92a22241cf0578a7a3aa1d6f7bbb6db8811df9befb8df803d9191f06cec71b"
     },
     {
-      "path": "assets/submission/prototype-mobile.png",
-      "http": 200,
-      "bytes": 105543,
-      "sha256": "24ba48a00b78c65914c1dd1c0ddd1b6cfe86c5e9a34dc0c49912eddaf9a55dfc"
+      "path": "SUBMISSION_BRIEF.txt",
+      "bytes": 936,
+      "sha256": "89c3eada7586d1a786b1a88488ff58178c693e022b3e93c52e4abde368ffd17d"
     },
     {
-      "path": "assets/submission/prototype-shelf-gap.png",
-      "http": 200,
-      "bytes": 806034,
-      "sha256": "7fdbb8934d922c632034d4518f958b6b50be7540cc211d47a67faf2a21e6ddc0"
+      "path": "SUBMISSION_READINESS.txt",
+      "bytes": 7094,
+      "sha256": "3a78b6209a794e64912cd6e2a700a19369f95d36407734c6fbbd991b05a0e730"
+    },
+    {
+      "path": "submission/FORM_FIELDS.txt",
+      "bytes": 2179,
+      "sha256": "1fd0c3b426f49a48695c03ae7b9e377e156490f7279984ed37fb411e70f58fea"
+    },
+    {
+      "path": "submission/TEMPLATE_COMPLIANCE.txt",
+      "bytes": 3608,
+      "sha256": "e6b5b578f0f4d7b833db3676cfef6dd4fce45e12dfd3beafad97b674a4b9c3bb"
+    },
+    {
+      "path": "submission/build_template_deck.py",
+      "bytes": 20093,
+      "sha256": "0ea1ed98f06b7c620094244325e8cd31509cf1a31b1f376f3b33f3f61d65d57e"
+    },
+    {
+      "path": "submission/verify_template_deck.py",
+      "bytes": 2454,
+      "sha256": "3fb10146bc5c8ace52303583bd2315c0534e96cb26096de24bbb95c042a150bc"
+    },
+    {
+      "path": "submission/AI_Builder_Cup_Original_Template.pdf",
+      "bytes": 302779,
+      "sha256": "02c17e56266dff282946aa4c5da284f35087dad0b69d85e13c4f3ad16726967f"
+    },
+    {
+      "path": "assets/submission/prototype-rep-live.png",
+      "bytes": 420082,
+      "sha256": "fe536a72d965e213977e555e5efc90e3e3a746f434b6e59e0d3a58a9bde52379"
+    },
+    {
+      "path": "assets/submission/prototype-manager-live.png",
+      "bytes": 323405,
+      "sha256": "3b89cb72e4365fe51a27a7f39c4d71fa185e7067491d67fd281d1fcfafc7f542"
+    },
+    {
+      "path": "assets/submission/prototype-shopper-live.png",
+      "bytes": 450937,
+      "sha256": "4458b2f38b1954b603257b265370477e86aad16c7ceba4fb2adfc206362f30b7"
     }
   ]
 }
