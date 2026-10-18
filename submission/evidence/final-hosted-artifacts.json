@@ -1,0 +1,86 @@
+{
+  "verified_at": "2026-10-18T18:21:13.516661+00:00",
+  "url": "https://retailiq-free-20261018-7ce297.web.app",
+  "model_calls": 0,
+  "checks": [
+    {
+      "path": "/pitch-slides.pdf",
+      "http_status": 200,
+      "bytes": 2409406,
+      "sha256": "912104cbca897490f158513c91c749d3503f417acba3ee2ef32a8932fcb3f501",
+      "local_bytes_match": true,
+      "pass": true
+    },
+    {
+      "path": "/pitch-slides.html",
+      "http_status": 200,
+      "bytes": 1661,
+      "sha256": "6a92a22241cf0578a7a3aa1d6f7bbb6db8811df9befb8df803d9191f06cec71b",
+      "local_bytes_match": true,
+      "pass": true
+    },
+    {
+      "path": "/eval-dashboard.html",
+      "http_status": 200,
+      "bytes": 16442,
+      "sha256": "336041c522aea910151b305813799ec8c9a175efd6b379cb4e7ed33f946e3974",
+      "local_bytes_match": true,
+      "pass": true
+    },
+    {
+      "path": "/evaluation-results.json",
+      "http_status": 200,
+      "bytes": 49800,
+      "sha256": "e1e8532062ab4bc04cf23171f37c79c3c12751538317aa04263bc7dcaa02d708",
+      "local_bytes_match": true,
+      "pass": true
+    },
+    {
+      "path": "/index.html",
+      "http_status": 200,
+      "bytes": 279089,
+      "sha256": "2f584f986cc540a083fdfce7c39d3fcb775c26d3284a493c7e777c83a83a18ba",
+      "local_bytes_match": true,
+      "pass": true
+    },
+    {
+      "path": "/commerce-api.js",
+      "http_status": 200,
+      "bytes": 16844,
+      "sha256": "200061f06d18115e5c79e71c40bb894e021a07c82e6460ed63c753d4049e0269",
+      "local_bytes_match": true,
+      "pass": true
+    },
+    {
+      "path": "/runtime-config.js",
+      "http_status": 200,
+      "dynamic_runtime_not_static_file": true,
+      "pass": true
+    },
+    {
+      "path": "/health",
+      "http_status": 200,
+      "pass": true
+    },
+    {
+      "path": "/api/config",
+      "http_status": 200,
+      "pass": true
+    },
+    {
+      "name": "private_dynamic_cache_headers",
+      "pass": true,
+      "headers": {
+        "/health": "private, no-store",
+        "/api/config": "private, no-store",
+        "/runtime-config.js": "private, no-store"
+      }
+    },
+    {
+      "name": "published_evaluation_and_configuration_summary",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "video_scope": "User-managed; unchanged and not assessed in this release."
+}

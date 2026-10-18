@@ -1,4 +1,4 @@
-﻿"""Live deployment policy/REST/CLI checks. Entirely offline; no credentials or cloud calls."""
+"""Live deployment policy/REST/CLI checks. Entirely offline; no credentials or cloud calls."""
 import base64
 import json
 import sys
@@ -97,11 +97,17 @@ def test_publish_omits_static_runtime_and_uses_same_origin_run_rewrites(deployme
     monkeypatch.setattr(deployment,'ensure_firebase',lambda:None);monkeypatch.setattr(deployment,'ensure_site',lambda:deployment.project)
     monkeypatch.setattr(live,'collect_files',lambda **kwargs:{'/runtime-config.js':b'backend:false','/index.html':b'public','/pitch-slides.pdf':b'PDF'})
     version='sites/'+deployment.project+'/versions/testversion';requests=[]
+    deployment.state['hosting_version']='sites/'+deployment.project+'/versions/previous'
     def request(method,url,body=None,**kwargs):
         requests.append((method,url,body,kwargs))
         if url.endswith('/versions'):return {'name':version}
+        if '/versions/previous/files?' in url:
+            return {'files':[{'path':'/demo.html','hash':'a'*64},{'path':'/demo/RetailIQ_Abhishek_voice_demo.mp4','hash':'b'*64},{'path':'/private.txt','hash':'c'*64}]}
         if url.endswith(':populateFiles'):
             assert '/runtime-config.js' not in body['files']
+            assert body['files']['/demo.html']=='a'*64
+            assert body['files']['/demo/RetailIQ_Abhishek_voice_demo.mp4']=='b'*64
+            assert '/private.txt' not in body['files']
             return {'uploadUrl':'https://upload-firebasehosting.googleapis.com/upload/'+version+'/files','uploadRequiredHashes':[]}
         if '/releases?' in url:return {'type':'DEPLOY'}
         return {}

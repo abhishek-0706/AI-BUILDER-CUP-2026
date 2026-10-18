@@ -1430,7 +1430,7 @@
     }
   },
   "backend": {
-    "created_at": "2026-10-18T17:35:12.120179+00:00",
+    "created_at": "2026-10-18T18:08:19.014484+00:00",
     "url": "https://retailiq-live-olhqdslz2q-uc.a.run.app",
     "mode": "actual_live_cloud_run",
     "checks": [
@@ -1490,8 +1490,8 @@
       {
         "name": "real_gemini_response_from_unbilled_project",
         "pass": true,
-        "elapsed_seconds": 3.07,
-        "output_characters": 60
+        "elapsed_seconds": 2.68,
+        "output_characters": 74
       }
     ],
     "model_calls": 1,
@@ -1505,11 +1505,10 @@
     }
   },
   "config": {
-    "created_at": "2026-10-18T17:39:20.806141+00:00",
+    "created_at": "2026-10-18T18:10:30.909075+00:00",
     "project": "retailiq-free-20261018-7ce297",
     "region": "us-central1",
     "service": "retailiq-live",
-    "model_calls": 0,
     "checks": [
       {
         "name": "hosting_billing_enabled_old_and_ai_projects_unbilled",
@@ -1543,13 +1542,14 @@
       {
         "name": "latest_revision_ready",
         "pass": true,
-        "revision": "retailiq-live-00001-bx7"
+        "revision": "retailiq-live-00002-tz2"
       },
       {
-        "name": "one_small_container_image",
+        "name": "small_container_registry_within_allowance",
         "pass": true,
-        "images": 1,
-        "compressed_bytes": 82415782
+        "images": 2,
+        "sum_compressed_image_bytes": 164861233,
+        "note": "Conservative sum; shared layers can reduce actual stored bytes."
       },
       {
         "name": "single_default_firestore_database",
@@ -1577,18 +1577,19 @@
         }
       }
     ],
+    "model_calls": 0,
     "limitations": [
-      "Free allowances are not a hard monetary cap. Possible overages were explicitly accepted. Historical charges and payments have not been verified.",
-      "Synthetic catalogue and forecasts; no measured business savings."
+      "Free allowances are not a hard monetary cap; possible hosting overages were accepted. Past charges and payments remain unverified.",
+      "Synthetic retail data. Selected contract tests do not establish business savings."
     ],
+    "service_url": "https://retailiq-live-olhqdslz2q-uc.a.run.app",
+    "hosting_url": "https://retailiq-free-20261018-7ce297.web.app",
+    "revision": "retailiq-live-00002-tz2",
     "pass": true,
     "summary": {
       "passed": 14,
       "total": 14
-    },
-    "audit_correction": "Artifact Registry imageSizeBytes is nested under metadata. The first storage check used the wrong JSON path; actual storage was re-read below.",
-    "verified_at": "2026-10-18T18:02:47.275946+00:00",
-    "hosting_url": "https://retailiq-free-20261018-7ce297.web.app"
+    }
   },
   "ui": {
     "verified_at": "2026-10-18T17:45:04.086Z",
@@ -1718,7 +1719,7 @@
     ],
     "pass": true
   },
-  "generated_at": "2026-10-18T18:02:48.400292+00:00",
+  "generated_at": "2026-10-18T18:11:44.481294+00:00",
   "prototype": "https://retailiq-free-20261018-7ce297.web.app/",
   "service_url": "https://retailiq-live-olhqdslz2q-uc.a.run.app",
   "model": "gemini-3.5-flash-lite",

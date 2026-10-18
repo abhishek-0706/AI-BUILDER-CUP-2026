@@ -239,7 +239,7 @@ class LiveDeployment(SparkDeployment):
     def publish(self):
         self.policy()
         self.ensure_firebase();site=self.ensure_site()
-        files=collect_files(include_deck=True,include_demo=True)
+        files=collect_files(include_deck=True,include_demo=False)
         del files['/runtime-config.js'] # Static files precede rewrites; serve live config from Run.
         # These two public, credential-free dashboard assets are explicit additions.
         for asset in ('eval-dashboard.html', 'evaluation-results.json'):
@@ -263,6 +263,21 @@ class LiveDeployment(SparkDeployment):
         name=version['name']
         if not re.fullmatch(r'sites/'+re.escape(site)+r'/versions/[A-Za-z0-9_-]+',name): raise DeploymentError('Invalid hosting version')
         manifest,blobs=compressed_files(files)
+        # Video is managed independently by the owner. Reuse the active version's
+        # two known media hashes instead of reading or overwriting local media.
+        previous = self.state.get('hosting_version')
+        if previous:
+            if not re.fullmatch(r'sites/' + re.escape(site) + r'/versions/[A-Za-z0-9_-]+', previous):
+                raise DeploymentError('Invalid prior hosting version')
+            listing = self.request('GET', HOSTING + '/' + previous + '/files?pageSize=1000')
+            if listing.get('nextPageToken'):
+                raise DeploymentError('Prior media manifest exceeds the bounded page size')
+            for item in listing.get('files', []):
+                if item.get('path') in ('/demo.html', '/demo/RetailIQ_Abhishek_voice_demo.mp4'):
+                    digest = item.get('hash', '')
+                    if not re.fullmatch(r'[a-f0-9]{64}', digest):
+                        raise DeploymentError('Invalid existing public media hash')
+                    manifest[item['path']] = digest
         populated=self.request('POST',HOSTING+'/'+name+':populateFiles',{'files':manifest})
         upload=populated['uploadUrl'].rstrip('/')
         if upload!='https://upload-firebasehosting.googleapis.com/upload/'+name+'/files': raise DeploymentError('Invalid upload destination')
