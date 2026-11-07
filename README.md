@@ -14,7 +14,7 @@ Open the [live prototype](https://retailiq-free-20261018-7ce297.web.app/). Fireb
 
 The hosting project uses explicitly authorized free-tier allowances that can be exceeded; there is no zero-bill guarantee. Gemini uses a separate unbilled project, checked before each inference, and stops rather than falling back to Vertex or another model. Shared limits can make the public demo temporarily unavailable: 50 AI requests/day, six/minute, 500 API requests/day and 200 saves/day. A provider quota error stops inference for the UTC day.
 
-The [optional recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) makes no AI calls. The [presentation PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf), [video player](https://retailiq-free-20261018-7ce297.web.app/demo.html) and [repository video](demo/RetailIQ_Abhishek_voice_demo.mp4) are available separately. Recorded material does not prove current live behavior.
+The [optional recorded walkthrough](https://retailiq-free-20261018-7ce297.web.app/?demo=recorded) makes no AI calls. The [presentation PDF](https://retailiq-free-20261018-7ce297.web.app/pitch-slides.pdf), [video player](https://retailiq-free-20261018-7ce297.web.app/demo.html) and [repository video](demo/RetailIQ_live_demo.mp4) are available separately. Recorded material does not prove current live behavior.
 
 For a local, keyless recorded scenario:
 
@@ -182,7 +182,7 @@ There is no established RetailIQ sales uplift, stockout reduction or ranking pre
 **Team RetailIQ:** Abhishek Agarwal (team leader) and Vivek Sharma (team member). The presentation follows all 13 substantive template sections in order; the download-instruction page and blank end pages are omitted. [Public GitHub source](https://github.com/abhishek-0706/AI-BUILDER-CUP-2026) is verified without authentication.
 
 - [pitch-slides.pdf](pitch-slides.pdf) / [HTML presentation](pitch-slides.html): 13-page pitch preserving the mandatory template's original vector pages, with an HTML PDF viewer.
-- [Hosted video](https://retailiq-free-20261018-7ce297.web.app/demo.html) / [repository video](demo/RetailIQ_Abhishek_voice_demo.mp4): recorded material; the owner controls the submitted video. Current live verification is documented separately.
+- [Hosted video](https://retailiq-free-20261018-7ce297.web.app/demo.html) / [repository video](demo/RetailIQ_live_demo.mp4): recorded material; the owner controls the submitted video. Current live verification is documented separately.
 - [SUBMISSION_BRIEF.txt](SUBMISSION_BRIEF.txt): complete ready-to-paste description below 1,024 characters.
 - [Five form fields](submission/FORM_FIELDS.txt): verified links, final PDF metadata and the description.
 - [Template compliance](submission/TEMPLATE_COMPLIANCE.txt): original-to-final section mapping.
